@@ -31,16 +31,16 @@ namespace WEbSocketTest.Controllers
             await _socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(reading));
         }
 
-        [HttpGet("Generate")]
-        public async Task Generate()
-        {
-            var rnd = new Random();
+        // [HttpGet("Generate")]
+        // public async Task Generate()
+        // {
+        //     var rnd = new Random();
 
-            for(var i = 0; i < 100; i++)
-            {                
-                await Report(rnd.Next(23, 35));
-                await Task.Delay(5000);
-            }
-        }
+        //     for(var i = 0; i < 100; i++)
+        //     {                
+        //         await Report(rnd.Next(23, 35));
+        //         await Task.Delay(5000);
+        //     }
+        // }
     }
 }
