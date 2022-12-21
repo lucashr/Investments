@@ -1,0 +1,18 @@
+Data collect
+
+1 Access API alphavantage and get daily prices
+2 web scraping site https://www.fundamentus.com.br/fii_resultado.php
+2.1 Get Yeld https://www.fundamentus.com.br/fii_proventos.php?papel={fundCode}
+2.2 Get date next fund payment  https://fnet.bmfbovespa.com.br/fnet/publico/abrirGerenciadorDocumentosCVM?cnpjFundo={CNPJ_DO_FUNDO}#
+2.3 Get date next stock payment https://br.advfn.com/bolsa-de-valores/bovespa
+
+
+Data storage
+
+1 Create table Stocks
+2 Create table Funds
+3 Create table User
+
+Data visualization
+
+Generate preview of user stocks and funds
