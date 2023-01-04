@@ -10,7 +10,7 @@ pipeline {
         }
         stage('Run Tests') {
             steps {
-                bat returnStdout: true, script: '''cd /d "C:\\Users\\lucas\\Desktop\\Repositorios\\Meus repositorios\\Investments\\WEB\\Back\\Investimentos.Test" dotnet test --collect="XPlat Code Coverage"'''
+                bat 'dotnet test --collect="XPlat Code Coverage"'
             }
         }
     }
