@@ -5,14 +5,14 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                bat cd /d "C:\\Users\\lucas\\Desktop\\Repositorios\\Meus repositorios\\Investments\\WEB\\Back\\src"
-                bat  "dotnet build"
+                bat cd /d 'C:\\Users\\lucas\\Desktop\\Repositorios\\Meus repositorios\\Investments\\WEB\\Back\\src'
+                bat  'dotnet build'
             }
         }
         stage('Run Tests') {
             steps {
-                bat cd /d "C:\\Users\\lucas\\Desktop\\Repositorios\\Meus repositorios\\Investments\\WEB\\Back\\Investments.Test"
-                bat "dotnet test --collect=""XPlat Code Coverage"""
+                bat cd /d 'C:\\Users\\lucas\\Desktop\\Repositorios\\Meus repositorios\\Investments\\WEB\\Back\\Investments.Test'
+                bat 'dotnet test --collect="XPlat Code Coverage"'
             }
         }
     }
