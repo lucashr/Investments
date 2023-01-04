@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                bat 'dotnet build %WORKSPACE%\\WEB\\Back\\src\\Investments.sln --configuration Release'
+                bat 'dotnet build C:\\Users\\lucas\\AppData\\Local\\Jenkins\\.jenkins\\workspace\\Execução testes App Investimentos\\WEB\\Back\\src\\Investments.sln --configuration Release'
             }
         }
     }
