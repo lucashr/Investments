@@ -10,6 +10,6 @@ namespace Investments.Test.Contracts
         Task<bool> AddFundsYieldsAsync(IEnumerable<FundsYeld> fundsYelds);
         Task<IEnumerable<DetailedFunds>> GetFundsAsync();
         Task<IEnumerable<FundsYeld>> GetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds);
-        Task<bool> AddFundsAsync(IEnumerable<DetailedFunds> detailedFunds);
+        // Task<bool> AddFundsAsync(IEnumerable<DetailedFunds> detailedFunds);
     }
 }

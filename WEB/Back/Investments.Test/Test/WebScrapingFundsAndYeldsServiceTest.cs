@@ -72,6 +72,13 @@ namespace Investments.Test.Test
             ConfigDriver();
 
             var detailedFunds = await GetFundsAsync();
+
+            ConfigDriver();
+
+            // var detailedFunds = new List<DetailedFunds>();
+
+            // detailedFunds.Add(new DetailedFunds(){FundCode = "ABCP11"});
+
             var fundsYelds = await GetYeldsFundsAsync(detailedFunds);
             
             await AddFundsYieldsAsync(fundsYelds);

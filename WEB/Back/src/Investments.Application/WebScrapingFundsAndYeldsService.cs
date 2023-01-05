@@ -61,17 +61,18 @@ namespace Investments.Application
             try
             {
 
-                var wait60 = new WebDriverWait(driver, new TimeSpan(0, 0, 60, 0));
-                var delay4 = new TimeSpan(0, 0, 0, 7, 0);
-                var timestamp4 = DateTime.Now;
+                var wait10 = new WebDriverWait(driver, new TimeSpan(0, 0, 0, 10));
+                // var delay4 = new TimeSpan(0, 0, 0, 7, 0);
+                // var timestamp4 = DateTime.Now;
                 
-                wait60.Until(driver => (DateTime.Now - timestamp4) > delay4);
+                wait10.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='tabelaResultado']/tbody/tr")));
+                // wait60.Until(driver => (DateTime.Now - timestamp4) > delay4);
 
                 var str = driver.PageSource;
                 await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(str));
 
-                var vcs = new VerticalCombineDecorator(new ScreenshotMaker());
-                var screen = driver.TakeScreenshot(vcs);
+                // var vcs = new VerticalCombineDecorator(new ScreenshotMaker());
+                // var screen = driver.TakeScreenshot(vcs);
 
 
                 // //Coverting a byte array to an image:

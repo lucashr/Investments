@@ -22,8 +22,7 @@ namespace Investments.Test
     public class WebScrapingFundsAndYeldsService : ConfigureTest, IWebScrapingFundsAndYeldsService
     {
         IWebDriver driver;
-
-        FundsPersist _fundsYeldPersist;
+        FundsPersist _fundsYeldPersist = new FundsPersist(_context);
 
         public Task<bool> AddDetailedFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
         {
@@ -225,7 +224,7 @@ namespace Investments.Test
                             return await Task.FromResult<IEnumerable<FundsYeld>>(fundsYelds);
                         }
 
-                        Console.Write(driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text + " | ");
+                        // Console.Write(driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text + " | ");
                     }
 
                     var result = await _fundsYeldPersist.GetFundYeldByCodeAsync(fund.FundCode.ToUpper().Trim());
@@ -311,37 +310,37 @@ namespace Investments.Test
              
         }
 
-        public async Task<bool> AddFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
-        {
-            try
-            {
+        // public async Task<bool> AddFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
+        // {
+        //     try
+        //     {
 
-                List<Funds> funds = new List<Funds>();
+        //         List<Funds> funds = new List<Funds>();
 
-                foreach (var item in detailedFunds)
-                {
+        //         foreach (var item in detailedFunds)
+        //         {
 
-                    var fund = new Funds(){
-                        FundCode = item.FundCode
-                    };
+        //             var fund = new Funds(){
+        //                 FundCode = item.FundCode
+        //             };
 
-                    funds.Add(fund);
+        //             funds.Add(fund);
 
-                }
+        //         }
 
-                _context.Database.ExecuteSqlRaw("DELETE FROM [Funds]");
-                _context.AddRange(funds);
+        //         _context.Database.ExecuteSqlRaw("DELETE FROM [Funds]");
+        //         _context.AddRange(funds);
 
-                await _context.SaveChangesAsync();
+        //         await _context.SaveChangesAsync();
 
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
-        }
+        //         return true;
+        //     }
+        //     catch (System.Exception ex)
+        //     {
+        //         Console.WriteLine(ex.Message);
+        //         return false;
+        //     }
+        // }
 
         public void GoToPage(string linkPage)
         {
@@ -349,8 +348,9 @@ namespace Investments.Test
             {
                 driver.Navigate().GoToUrl(linkPage);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 GoToPage(linkPage);
             }
         }
