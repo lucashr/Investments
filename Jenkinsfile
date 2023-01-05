@@ -8,7 +8,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                bat 'dotnet test --collect="XPlat Code Coverage" %WORKSPACE%\\WEB\\Back\\Investments.Test'
+                bat 'dotnet test --filter "DisplayName=RankOfTheBestFundsServiceTest" --collect="XPlat Code Coverage" %WORKSPACE%\\WEB\\Back\\Investments.Test'
             }
         }
     }

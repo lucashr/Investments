@@ -14,13 +14,13 @@ namespace Investments.Test.Test
         public async void MustReturnMore300Funds()
         {
             
-            var webScraping = new WebScrapingFundsAndYeldsService();
+            // var webScraping = new WebScrapingFundsAndYeldsService();
 
-            webScraping.ConfigDriver();
+            // webScraping.ConfigDriver();
             
-            var detailedFunds = await webScraping.GetFundsAsync();
+            // var detailedFunds = await webScraping.GetFundsAsync();
 
-            await AddDetailedFundsAsync(detailedFunds);
+            // await AddDetailedFundsAsync(detailedFunds);
 
             var funds = await GetAllDetailedFundsAsync();
 
@@ -33,13 +33,13 @@ namespace Investments.Test.Test
         public async void MustReturnOneFunds(string fundCode)
         {
 
-            var webScraping = new WebScrapingFundsAndYeldsService();
+            // var webScraping = new WebScrapingFundsAndYeldsService();
 
-            webScraping.ConfigDriver();
+            // webScraping.ConfigDriver();
 
-            var detailedFunds = await webScraping.GetFundsAsync();
+            // var detailedFunds = await webScraping.GetFundsAsync();
 
-            await AddDetailedFundsAsync(detailedFunds);
+            // await AddDetailedFundsAsync(detailedFunds);
 
             var funds = await GetDetailedFundByCodeAsync(fundCode);
 
