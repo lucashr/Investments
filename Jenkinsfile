@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                bat 'echo foiiiiiiiiiiii!'
+                bat 'dotnet build %WORKSPACE%\\Execucao testes App Investments\\WEB\\Back\\src\\Investments.sln'
             }
         }
     }
