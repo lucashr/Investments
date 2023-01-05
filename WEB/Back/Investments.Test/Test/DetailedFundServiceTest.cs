@@ -11,9 +11,19 @@ namespace Investments.Test.Test
 
         [Fact, TestPriority(12)]
         [ConfigureTest]
-        public async void MustReturn360Funds()
+        public async void MustReturnMore300Funds()
         {
+            
+            var webScraping = new WebScrapingFundsAndYeldsService();
+
+            webScraping.ConfigDriver();
+            
+            var detailedFunds = await webScraping.GetFundsAsync();
+
+            await AddDetailedFundsAsync(detailedFunds);
+
             var funds = await GetAllDetailedFundsAsync();
+
             Assert.True(funds.Count() > 300);
         }
 
@@ -22,7 +32,17 @@ namespace Investments.Test.Test
         [ConfigureTest]
         public async void MustReturnOneFunds(string fundCode)
         {
+
+            var webScraping = new WebScrapingFundsAndYeldsService();
+
+            webScraping.ConfigDriver();
+
+            var detailedFunds = await webScraping.GetFundsAsync();
+
+            await AddDetailedFundsAsync(detailedFunds);
+
             var funds = await GetDetailedFundByCodeAsync(fundCode);
+
             Assert.NotNull(funds);
         }
     }
