@@ -15,6 +15,7 @@ using Investments.Persistence;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Investments.Test
 {
@@ -132,6 +133,8 @@ namespace Investments.Test
                             SquareMeterPrice = Convert.ToDouble(obj[10]), RentPerSquareMeter = Convert.ToDouble(obj[11]),
                             CapRate = Convert.ToDouble(obj[12].Replace("%", "")), AverageVacancy = Convert.ToDouble(obj[13].Replace("%", ""))
                         };
+
+                        Console.WriteLine(JsonConvert.SerializeObject(fund));
                         
                         detailedFunds.Add(fund);
                     }
