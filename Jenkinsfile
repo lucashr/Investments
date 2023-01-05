@@ -6,5 +6,10 @@ pipeline {
                 bat 'dotnet build %WORKSPACE%\\WEB\\Back\\src\\Investments.sln'
             }
         }
+        stage('Test') {
+            steps {
+                bat 'dotnet test --collect="XPlat Code Coverage" %WORKSPACE%\\WEB\\Back\\Investments.Test'
+            }
+        }
     }
 }
