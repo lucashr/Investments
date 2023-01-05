@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                bat 'dotnet build %WORKSPACE%\\TestesAppInvestments\\WEB\\Back\\src\\Investments.sln'
+                bat 'dotnet build %WORKSPACE%\\WEB\\Back\\src\\Investments.sln'
             }
         }
     }
