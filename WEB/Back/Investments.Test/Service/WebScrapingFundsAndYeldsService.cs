@@ -256,6 +256,8 @@ namespace Investments.Test
                             Value = Convert.ToDouble(obj[3])
                         };
 
+                        Console.WriteLine(JsonConvert.SerializeObject(fY));
+
                         if(lastDateDB != null)
                         {
                             if(lastDateDB >= fY.LastComputedDate)
