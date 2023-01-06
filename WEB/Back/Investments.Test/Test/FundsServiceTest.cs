@@ -1,14 +1,12 @@
 using System.Linq;
 using Xunit;
-using XUnit.Project.Attributes;
 
 namespace Investments.Test.Test
 {
-    [TestCaseOrderer("Investments.Test.Orderers.PriorityOrderer", "Investments.Test")]
     public class FundsServiceTest : FundsService
     {
 
-        [Theory, TestPriority(7)]
+        [Theory]
         [InlineData("hctr11", "dddd")]
         [ConfigureTest]
         public async void MustUpdateFundCode(string oldFundCode, string newFundCode)
@@ -17,7 +15,7 @@ namespace Investments.Test.Test
             Assert.Equal("dddd", fund.FundCode);
         }
 
-        [Theory, TestPriority(8)]
+        [Theory]
         [InlineData("bbbbbb")]
         [ConfigureTest]
         public async void MustVerifyIfFundExistsAndCreateNewFund(string fundCode)
@@ -26,7 +24,7 @@ namespace Investments.Test.Test
             Assert.Equal("bbbbbb", fund.FundCode);
         }
 
-        [Theory, TestPriority(9)]
+        [Theory]
         [InlineData("cvbi11")]
         [ConfigureTest]
         public async void MustReturnFund(string fundCode)
@@ -35,7 +33,7 @@ namespace Investments.Test.Test
             Assert.Equal("cvbi11", fund.FundCode);
         }
 
-        [Fact, TestPriority(10)]
+        [Fact]
         [ConfigureTest]
         public async void MustReturnAllFunds()
         {
@@ -43,7 +41,7 @@ namespace Investments.Test.Test
             Assert.True(fund.Count() > 300);
         }
 
-        [Theory, TestPriority(11)]
+        [Theory]
         [InlineData("abcp11")]
         [ConfigureTest]
         public async void MustDeleteFundEReturnTrue(string fundCode)

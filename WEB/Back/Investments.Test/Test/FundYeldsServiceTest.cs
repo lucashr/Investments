@@ -1,14 +1,12 @@
 using System.Linq;
 using Xunit;
-using XUnit.Project.Attributes;
 
 namespace Investments.Test.Test
 {
-    [TestCaseOrderer("Investments.Test.Orderers.PriorityOrderer", "Investments.Test")]
     public class FundYeldsServiceTest : FundYeldsService
     {
 
-        [Theory, TestPriority(5)]
+        [Theory]
         [InlineData("MXRF11")]
         [ConfigureTest]
         public async void MustReturnFundYeldByCode(string fundCode)
@@ -17,7 +15,7 @@ namespace Investments.Test.Test
             Assert.NotNull(yelds);
         }
 
-        [Fact, TestPriority(6)]
+        [Fact]
         [ConfigureTest]
         public async void MustReturnAllFundsYeld()
         {

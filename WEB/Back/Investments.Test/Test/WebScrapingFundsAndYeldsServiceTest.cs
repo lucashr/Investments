@@ -1,12 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using Investments.Domain.Models;
 using Investments.Persistence;
 using Xunit;
-using XUnit.Project.Attributes;
 
 namespace Investments.Test.Test
 {
-    [TestCaseOrderer("Investments.Test.Orderers.PriorityOrderer", "Investments.Test")]
     public class WebScrapingFundsAndYeldsServiceTest : WebScrapingFundsAndYeldsService
     {
 
@@ -51,9 +50,9 @@ namespace Investments.Test.Test
         // };
         #endregion
         
-        [Fact, TestPriority(1)]
+        [Fact]
         [ConfigureTest]
-        public async void MustGetFundsAndNotNull()
+        public async void MustGetFundsAndStore()
         {
 
             ConfigDriver();
@@ -68,7 +67,26 @@ namespace Investments.Test.Test
 
         }
 
-        [Fact, TestPriority(2)]
+        [Fact]
+        [ConfigureTest]
+        public async void MustGetFundsAndStoreInFundsTable()
+        {
+
+            ConfigDriver();
+
+            var detailedFunds = await GetFundsAsync();
+
+            var funds = new FundsPersist(_context);
+
+            await funds.AddFundsAsync(detailedFunds);
+
+            var result = await funds.GetAllFundsAsync();
+
+            Assert.Equal(detailedFunds.Count(), result.Count());
+
+        }
+
+        [Fact]
         [ConfigureTest]
         public async void MustGetYeldsFundsAndSave()
         {

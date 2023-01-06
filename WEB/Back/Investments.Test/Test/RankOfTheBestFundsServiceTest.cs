@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 using Investments.Domain.Models;
 using Xunit;
-using XUnit.Project.Attributes;
 
 namespace Investments.Test.Test
 {
-    [TestCaseOrderer("Investments.Test.Orderers.PriorityOrderer", "Investments.Test")]
     public class RankOfTheBestFundsServiceTest : RankOfTheBestFundsService
     {
 
-        [Fact, TestPriority(3)]
+        [Fact]
         [ConfigureTest]
         public async void CalculationRankOfTheBestFunds ()
         {
@@ -17,7 +15,7 @@ namespace Investments.Test.Test
             Assert.NotNull(rankOfTheBestFunds);
         }
 
-        [Fact, TestPriority(4)]
+        [Fact]
         [ConfigureTest]
         public async void StoreAndCalculationAndGetRankOfTheBestFunds()
         {

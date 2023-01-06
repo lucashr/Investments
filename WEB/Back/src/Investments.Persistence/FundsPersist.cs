@@ -116,6 +116,36 @@ namespace Investments.Persistence
             
         }
 
+        public async Task<bool> AddFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
+        {
+            try
+            {
+
+                foreach (var fund in detailedFunds)
+                {
+
+                    IQueryable<Funds> query = _context.Funds.Where(x=> x.FundCode == fund.FundCode);
+
+                    if(query.FirstOrDefault() is not null) continue;
+
+                    var newFund = new Funds() {FundCode = fund.FundCode};
+
+                    _context.Add<Funds>(newFund);
+
+                    await _context.SaveChangesAsync();
+
+                }
+
+                return true;
+
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
         public async Task<Funds> AddFundAsync(string fundCode)
         {
             
@@ -123,7 +153,7 @@ namespace Investments.Persistence
             {
                 IQueryable<Funds> query = _context.Funds.Where(x=> x.FundCode == fundCode);
 
-                if(query.FirstOrDefault() == null) throw new Exception("Fundo já cadastrado na base de dados");
+                if(query.FirstOrDefault() is not null) throw new Exception("Fundo já cadastrado na base de dados");
 
                 var newFund = new Funds() {FundCode = fundCode};
 
