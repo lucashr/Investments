@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                bat 'dotnet build %WORKSPACE%\\WEB\\Back\\src\\Investments.sln'
+                bat 'dotnet build %WORKSPACE%\\WEB\\Back\\src\\Investments.sln --configuration Release'
             }
         }
         stage('Test') {
@@ -13,6 +13,11 @@ pipeline {
                 bat 'dotnet test --filter "DisplayName~FundYeldsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
                 bat 'dotnet test --filter "DisplayName~FundsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
                 bat 'dotnet test --filter "DisplayName~DetailedFundServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
+            }
+        }
+        stage('Release') {
+            steps {
+                bat 'dotnet build %WORKSPACE%\\WEB\\Back\\src\\Investments.sln /p:PublishProfile=" %WORKSPACE%\\WEB\\Back\\src\\Investments.API\\Properties\\PublishProfiles\\JenkinsProfile.pubxml" /p:Platform="Any CPU" /p:DeployOnBuild=true /m'
             }
         }
     }

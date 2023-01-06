@@ -9,18 +9,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Investments.Test
 {
-    public class FundsService : IFundsService
+    public class FundsService : ConfigureTest, IFundsService
     {
-        private readonly InvestmentsContext _context;
 
-        public FundsService(InvestmentsContext context)
-        {
-            _context = context;
-        }
+        // public FundsService(InvestmentsContext context)
+        // {
+        //     _context = context;
+        // }
 
-        public FundsService()
-        {
-        }
+        // public FundsService()
+        // {
+        // }
 
         public async Task<DetailedFunds> GetDetailedFundByCodeAsync(string fundCode)
         {
@@ -127,7 +126,7 @@ namespace Investments.Test
             {
                 IQueryable<Funds> query = _context.Funds.Where(x=> x.FundCode == fundCode);
 
-                if(query.FirstOrDefault() == null) throw new Exception("Fundo já cadastrado na base de dados");
+                if(query.FirstOrDefault() is not null) throw new Exception("Fundo já cadastrado na base de dados");
 
                 var newFund = new Funds() {FundCode = fundCode};
 

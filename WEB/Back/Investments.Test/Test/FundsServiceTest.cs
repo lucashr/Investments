@@ -18,12 +18,12 @@ namespace Investments.Test.Test
         }
 
         [Theory, TestPriority(8)]
-        [InlineData("zzzzz")]
+        [InlineData("bbbbbb")]
         [ConfigureTest]
         public async void MustVerifyIfFundExistsAndCreateNewFund(string fundCode)
         {
             var fund = await AddFundAsync(fundCode);
-            Assert.Equal("zzzzz", fund.FundCode);
+            Assert.Equal("bbbbbb", fund.FundCode);
         }
 
         [Theory, TestPriority(9)]

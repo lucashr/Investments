@@ -44,7 +44,7 @@ namespace Investments.Test
                 // var gggggg = new DetailedFundService(_context).GetAllDetailedFundsAsync();
 
                 var _detailedFundService = new DetailedFundService(_context);
-                var _fundsYeldService = new FundsService(_context);
+                var _fundsYeldService = new FundsService();
 
                 var kkk = await _context.DetailedFunds.ToListAsync();
 

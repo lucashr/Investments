@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Investments.Domain.Models;
+using Investments.Persistence;
 using Xunit;
 using XUnit.Project.Attributes;
 
@@ -58,7 +59,10 @@ namespace Investments.Test.Test
             ConfigDriver();
 
             var detailedFunds = await GetFundsAsync();
-            var result = await AddDetailedFundsAsync(detailedFunds);
+
+            var _detailedFundPersist = new DetailedFundPersist(_context);
+            
+            var result = await _detailedFundPersist.AddDetailedFundsAsync(detailedFunds);
 
             Assert.NotNull(result);
 
@@ -73,6 +77,10 @@ namespace Investments.Test.Test
 
             var detailedFunds = await GetFundsAsync();
 
+            var _detailedFundPersist = new DetailedFundPersist(_context);
+
+            await _detailedFundPersist.AddDetailedFundsAsync(detailedFunds);
+
             ConfigDriver();
 
             // var detailedFunds = new List<DetailedFunds>();
@@ -80,8 +88,10 @@ namespace Investments.Test.Test
             // detailedFunds.Add(new DetailedFunds(){FundCode = "ABCP11"});
 
             var fundsYelds = await GetYeldsFundsAsync(detailedFunds);
+
+            var _fundsYeldPersist = new FundYeldsPersist(_context);
             
-            await AddFundsYieldsAsync(fundsYelds);
+            await _fundsYeldPersist.AddFundsYieldsAsync(fundsYelds);
 
             Assert.NotNull(fundsYelds);
 

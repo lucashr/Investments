@@ -24,40 +24,40 @@ namespace Investments.Test
         IWebDriver driver;
         FundsPersist _fundsYeldPersist = new FundsPersist(_context);
 
-        public Task<bool> AddDetailedFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
-        {
-            try
-            {
-                _context.Database.ExecuteSqlRaw("DELETE FROM [DetailedFunds]");
+        // public Task<bool> AddDetailedFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
+        // {
+        //     try
+        //     {
+        //         _context.Database.ExecuteSqlRaw("DELETE FROM [DetailedFunds]");
                 
-                _context.AddRange(detailedFunds);
-                _context.SaveChanges();
+        //         _context.AddRange(detailedFunds);
+        //         _context.SaveChanges();
 
-                return Task.FromResult(true);
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return Task.FromResult(false);
-            }
-        }
+        //         return Task.FromResult(true);
+        //     }
+        //     catch (System.Exception ex)
+        //     {
+        //         Console.WriteLine(ex.Message);
+        //         return Task.FromResult(false);
+        //     }
+        // }
 
-        public Task<bool> AddFundsYieldsAsync(IEnumerable<FundsYeld> fundsYelds)
-        {
-            try
-            {
-                _context.Database.ExecuteSqlRaw("DELETE FROM [FundsYeld]");
-                _context.AddRange(fundsYelds);
-                _context.SaveChanges();
+        // public Task<bool> AddFundsYieldsAsync(IEnumerable<FundsYeld> fundsYelds)
+        // {
+        //     try
+        //     {
+        //         _context.Database.ExecuteSqlRaw("DELETE FROM [FundsYeld]");
+        //         _context.AddRange(fundsYelds);
+        //         _context.SaveChanges();
 
-                return Task.FromResult(true);
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return Task.FromResult(false);
-            }
-        }
+        //         return Task.FromResult(true);
+        //     }
+        //     catch (System.Exception ex)
+        //     {
+        //         Console.WriteLine(ex.Message);
+        //         return Task.FromResult(false);
+        //     }
+        // }
 
         public async Task<IEnumerable<DetailedFunds>> GetFundsAsync()
         {
@@ -79,11 +79,13 @@ namespace Investments.Test
             try
             {
 
-                    var wait60 = new WebDriverWait(driver, new TimeSpan(0, 0, 60, 0));
-                    var delay4 = new TimeSpan(0, 0, 0, 7, 0);
-                    var timestamp4 = DateTime.Now;
+                    var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+                    // var delay4 = new TimeSpan(0, 0, 0, 7, 0);
+                    // var timestamp4 = DateTime.Now;
                     
-                    wait60.Until(driver => (DateTime.Now - timestamp4) > delay4);
+                    // wait60.Until(driver => (DateTime.Now - timestamp4) > delay4);
+
+                    wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='tabelaResultado']/tbody/tr")));
 
                     var rows = driver.FindElements(By.XPath("//*[@id='tabelaResultado']/tbody/tr"));
                     int numberOfLines = rows.Count;
@@ -184,8 +186,13 @@ namespace Investments.Test
                     try
                     {
                     
-                        var wait10 = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-                        wait10.Until(driver => driver.FindElement(By.XPath("//*[@id='resultado']/tbody/tr")));
+                        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+                        // var delay4 =  TimeSpan.FromSeconds(7);
+                        // var timestamp4 = DateTime.Now;
+
+                        // wait10.Until(driver => (DateTime.Now - timestamp4) > delay4);
+                        wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='resultado']/tbody/tr")));
+                        // wait10.Until(driver => driver.FindElement(By.XPath("//*[@id='resultado']/tbody/tr")));
 
                         rows = driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr"));
                         numberOfLines = rows.Count;
@@ -204,8 +211,9 @@ namespace Investments.Test
                         
                         Console.WriteLine(driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div[2]/p/strong")).Text);
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+                        Console.WriteLine(ex.Message);
                         continue;
                     }
 
