@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Investments.Domain.Models;
+using Investments.Test.Domain.Models;
 
 namespace Investments.Test.Contracts
 {

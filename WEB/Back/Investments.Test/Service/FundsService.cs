@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Investments.Application.Contracts;
-using Investments.Domain.Models;
-using Investments.Persistence.Contexts;
+using Investments.Test.Application.Contracts;
+using Investments.Test.Domain.Models;
+using Investments.Test.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Investments.Test
@@ -185,7 +185,7 @@ namespace Investments.Test
         {
             try
             {
-                IQueryable<Funds> query = _context.Funds.Where(x=> x.FundCode == fundCode);
+                IQueryable<Funds> query = _context.Funds.Where(x=> x.FundCode == fundCode.ToUpper());
 
                 if(query.FirstOrDefault() == null) throw new Exception("Fundo não encontrado na base de dados");
                 
@@ -232,5 +232,6 @@ namespace Investments.Test
                 return false;
             }
         }
+        
     }
 }

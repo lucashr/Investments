@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Investments.Domain.Models;
+using Investments.Test.Domain.Models;
+using Investments.Test.Application;
 using Investments.Test.Contracts;
-using Investments.Test.FunctionsOfCalculationExtend;
 using Microsoft.EntityFrameworkCore;
 
 namespace Investments.Test
@@ -135,5 +135,6 @@ namespace Investments.Test
             }
             
         }
+
     }
 }

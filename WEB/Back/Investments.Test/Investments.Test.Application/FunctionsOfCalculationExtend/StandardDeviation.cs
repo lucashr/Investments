@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace Investments.Test.FunctionsOfCalculationExtend
+namespace Investments.Test.Application
 {
     public static class Extend
     {

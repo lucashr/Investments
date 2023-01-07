@@ -3,8 +3,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AutoMapper;
-using Investments.Application.Dtos;
-using Investments.Domain.Models;
+using Investments.Test.Application.Dtos;
+using Investments.Test.Domain.Models;
 using Investments.Test.Contracts;
 using Newtonsoft.Json;
 

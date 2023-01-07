@@ -7,30 +7,30 @@ namespace Investments.Test.Test
     {
 
         [Theory]
-        [InlineData("hctr11", "dddd")]
+        [InlineData("hctr11", "DDDDD")]
         [ConfigureTest]
         public async void MustUpdateFundCode(string oldFundCode, string newFundCode)
         {
             var fund = await UpdateFundByCodeAsync(oldFundCode, newFundCode);
-            Assert.Equal("dddd", fund.FundCode);
+            Assert.Equal("DDDDD", fund.FundCode);
         }
 
         [Theory]
-        [InlineData("bbbbbb")]
+        [InlineData("BBBBB")]
         [ConfigureTest]
         public async void MustVerifyIfFundExistsAndCreateNewFund(string fundCode)
         {
             var fund = await AddFundAsync(fundCode);
-            Assert.Equal("bbbbbb", fund.FundCode);
+            Assert.Equal("BBBBB", fund.FundCode);
         }
 
         [Theory]
-        [InlineData("cvbi11")]
+        [InlineData("CVBI11")]
         [ConfigureTest]
         public async void MustReturnFund(string fundCode)
         {
             var fund = await GetFundByCodeAsync(fundCode);
-            Assert.Equal("cvbi11", fund.FundCode);
+            Assert.Equal("CVBI11", fund.FundCode);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace Investments.Test.Test
         }
 
         [Theory]
-        [InlineData("abcp11")]
+        [InlineData("ABCP11")]
         [ConfigureTest]
         public async void MustDeleteFundEReturnTrue(string fundCode)
         {

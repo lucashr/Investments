@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Investments.Application.Dtos;
+using Investments.Test.Application.Dtos;
 
 namespace Investments.Test.Contracts
 {

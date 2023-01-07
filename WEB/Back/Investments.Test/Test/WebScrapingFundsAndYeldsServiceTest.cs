@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using System.Linq;
-using Investments.Domain.Models;
-using Investments.Persistence;
+using Investments.Test.Persistence;
 using Xunit;
 
 namespace Investments.Test.Test

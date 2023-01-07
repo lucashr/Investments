@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Investments.Domain.Models;
-using Investments.Persistence.Contexts;
-using Microsoft.EntityFrameworkCore;
+using Investments.Test.Domain.Models;
 using Investments.Test.Contracts;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium;
@@ -11,10 +9,7 @@ using OpenQA.Selenium.Chrome;
 using System.Reflection;
 using System.IO;
 using System.Linq;
-using Investments.Persistence;
-using System.Net.WebSockets;
-using System.Threading;
-using System.Text;
+using Investments.Test.Persistence;
 using Newtonsoft.Json;
 
 namespace Investments.Test
@@ -75,7 +70,7 @@ namespace Investments.Test
 
             int totalOfColumnExpected = orderColumnTableOfFunds.Count;
             var detailedFunds = new List<DetailedFunds>();
-
+            
             try
             {
 
@@ -374,5 +369,6 @@ namespace Investments.Test
             driver.Manage().Window.Maximize();
             driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
         }
+
     }
 }

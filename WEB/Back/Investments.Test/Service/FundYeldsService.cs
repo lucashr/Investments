@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Investments.Domain.Models;
-using Investments.Persistence.Contexts;
+using Investments.Test.Domain.Models;
+using Investments.Test.Persistence.Contexts;
 using Investments.Test.Contracts;
 using Microsoft.EntityFrameworkCore;
 

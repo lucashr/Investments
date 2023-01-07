@@ -10,11 +10,7 @@ using Investments.Persistence.Contracts;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
-using WDSE;
-using WDSE.Decorators;
-using WDSE.ScreenshotMaker;
 
 namespace Investments.Application
 {
@@ -54,7 +50,7 @@ namespace Investments.Application
                 "Aluguel por m2", "Cap Rate", "Vacância Média",
                 "Endereço"
             };
-
+            
             int totalOfColumnExpected = orderColumnTableOfFunds.Count;
             var detailedFunds = new List<DetailedFunds>();
 
@@ -70,7 +66,7 @@ namespace Investments.Application
 
                 var str = driver.PageSource;
                 await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(str));
-
+                wait10.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='tabelaResultado']/tbody/tr")));
                 // var vcs = new VerticalCombineDecorator(new ScreenshotMaker());
                 // var screen = driver.TakeScreenshot(vcs);
 
