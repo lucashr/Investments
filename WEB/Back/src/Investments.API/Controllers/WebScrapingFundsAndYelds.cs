@@ -16,16 +16,19 @@ namespace Investments.API.Controllers
         private readonly IRankOfTheBestFundsService _rankOfTheBestFundsService;
         private readonly WebScrapingSocketManager _socketManager;
         private readonly IDetailedFundService _detailedFundService;
+        private readonly IFundsService _fundsService;
 
         public WebScrapingFundsAndYeldsController(IWebScrapingFundsAndYeldsService webScrapingFundsAndYelds,
                                                   IRankOfTheBestFundsService rankOfTheBestFundsService,
                                                   WebScrapingSocketManager socketManager,
-                                                  IDetailedFundService detailedFundService)
+                                                  IDetailedFundService detailedFundService,
+                                                  IFundsService fundsService)
         {
             _webScrapingFundsAndYelds = webScrapingFundsAndYelds;
             _rankOfTheBestFundsService = rankOfTheBestFundsService;
             _socketManager = socketManager;
             _detailedFundService = detailedFundService;
+            _fundsService = fundsService;
         }
 
         static dynamic result;
@@ -39,6 +42,7 @@ namespace Investments.API.Controllers
                 _socketManager.GetAll();
                 result = await _webScrapingFundsAndYelds.GetFundsAsync();
                 bool storageWentOK = await _detailedFundService.AddDetailedFundsAsync(result);
+
 
                 if(storageWentOK)
                 {

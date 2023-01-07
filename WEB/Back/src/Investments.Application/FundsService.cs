@@ -121,5 +121,20 @@ namespace Investments.Application
             }
         }
 
+        public async Task<bool> AddFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
+        {
+            try
+            {
+
+                var result = await _fundsPersist.AddFundsAsync(detailedFunds);
+
+                return result;
+
+            }
+            catch (System.Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
