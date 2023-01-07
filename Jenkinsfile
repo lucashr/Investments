@@ -17,7 +17,7 @@ pipeline {
         // }
         stage('Release') {
             steps {
-                bat 'dotnet build %WORKSPACE%\\WEB\\Back\\src\\Investments.sln /p:PublishProfile=" %WORKSPACE%\\WEB\\Back\\src\\Investments.API\\Properties\\PublishProfiles\\JenkinsProfile.pubxml" /p:Platform="Any CPU" /p:DeployOnBuild=true /m'
+                bat 'dotnet build %WORKSPACE%\\WEB\\Back\\src\\Investments.sln /p:Platform="Any CPU" /p:DeployOnBuild=true /m'
             }
         }
     }
