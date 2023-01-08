@@ -121,6 +121,8 @@ namespace Investments.Test.Persistence
             try
             {
 
+                _context.Database.ExecuteSqlRaw("DELETE FROM [Funds]");
+
                 foreach (var fund in detailedFunds)
                 {
 

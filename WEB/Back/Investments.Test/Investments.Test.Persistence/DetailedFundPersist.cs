@@ -87,15 +87,5 @@ namespace Investments.Test.Persistence
             }
         }
 
-        Task<DetailedFunds> IDetailedFundPersist.GetDetailedFundByCodeAsync(string fundCode)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<IEnumerable<DetailedFunds>> IDetailedFundPersist.GetAllDetailedFundsAsync()
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }

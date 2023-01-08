@@ -1,6 +1,16 @@
 pipeline {
     agent any
     stages {
+        stage('Restore packages') {
+            steps {
+                bat "dotnet restore %WORKSPACE%\\WEB\\Back\\src\\Investments.sln"
+            }
+        }
+        stage('Clean') {
+            steps {
+                bat "dotnet clean %WORKSPACE%\\WEB\\Back\\src\\Investments.sln"
+            }
+        }
         stage('Build') {
             steps {
                 bat 'dotnet build %WORKSPACE%\\WEB\\Back\\src\\Investments.sln --configuration Release'
