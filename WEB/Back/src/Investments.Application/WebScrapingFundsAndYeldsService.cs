@@ -57,16 +57,15 @@ namespace Investments.Application
             try
             {
 
-                var wait10 = new WebDriverWait(driver, new TimeSpan(0, 0, 0, 10));
+                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
                 // var delay4 = new TimeSpan(0, 0, 0, 7, 0);
                 // var timestamp4 = DateTime.Now;
                 
-                wait10.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='tabelaResultado']/tbody/tr")));
+                wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='tabelaResultado']/tbody/tr")));
                 // wait60.Until(driver => (DateTime.Now - timestamp4) > delay4);
 
-                var str = driver.PageSource;
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(str));
-                wait10.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='tabelaResultado']/tbody/tr")));
+                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(driver.PageSource));
+                
                 // var vcs = new VerticalCombineDecorator(new ScreenshotMaker());
                 // var screen = driver.TakeScreenshot(vcs);
 
@@ -183,8 +182,10 @@ namespace Investments.Application
                     try
                     {
                     
-                        var wait10 = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-                        wait10.Until(driver => driver.FindElement(By.XPath("//*[@id='resultado']/tbody/tr")));
+                        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                        // wait.Until(driver => driver.FindElement(By.XPath("//*[@id='resultado']/tbody/tr")));
+
+                        wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='resultado']/tbody/tr")));
 
                         rows = driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr"));
                         numberOfLines = rows.Count;
