@@ -1,0 +1,331 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador do Microsoft (R) Visual C#",
+        "version": "3.11.0.0",
+        "fileVersion": "3.11.0-4.22157.17 (55ad582d)",
+        "semanticVersion": "3.11.0",
+        "language": "pt-BR"
+      },
+      "results": [
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus%20repositorios/Investments/WEB/Back/src/Investments.VariablesManager/WebScrapingSocketManager.cs",
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 9,
+                  "endLine": 13,
+                  "endColumn": 124
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus%20repositorios/Investments/WEB/Back/src/Investments.VariablesManager/WebScrapingSocketManager.cs",
+                "region": {
+                  "startLine": 31,
+                  "startColumn": 13,
+                  "endLine": 31,
+                  "endColumn": 81
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA2211",
+          "level": "note",
+          "message": "Campos não constantes não devem ser visíveis",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus%20repositorios/Investments/WEB/Back/src/Investments.VariablesManager/ConectionsWebSocket.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 63,
+                  "endLine": 9,
+                  "endColumn": 70
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus%20repositorios/Investments/WEB/Back/src/Investments.VariablesManager/ConectionsWebSocket.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 63,
+                  "endLine": 9,
+                  "endColumn": 118
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2223",
+          "level": "warning",
+          "message": "Change the visibility of 'sockets' or make it 'const' or 'readonly'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus%20repositorios/Investments/WEB/Back/src/Investments.VariablesManager/ConectionsWebSocket.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 63,
+                  "endLine": 9,
+                  "endColumn": 70
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "O membro 'GetAll' não acessa os dados da instância e pode ser marcado como estático",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus%20repositorios/Investments/WEB/Back/src/Investments.VariablesManager/WebScrapingSocketManager.cs",
+                "region": {
+                  "startLine": 19,
+                  "startColumn": 56,
+                  "endLine": 19,
+                  "endColumn": 62
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "O membro 'RemoveSocket' não acessa os dados da instância e pode ser marcado como estático",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus%20repositorios/Investments/WEB/Back/src/Investments.VariablesManager/WebScrapingSocketManager.cs",
+                "region": {
+                  "startLine": 37,
+                  "startColumn": 27,
+                  "endLine": 37,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "O membro 'GetSocketById' não acessa os dados da instância e pode ser marcado como estático",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus%20repositorios/Investments/WEB/Back/src/Investments.VariablesManager/WebScrapingSocketManager.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 26,
+                  "endLine": 14,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "O membro 'GetId' não acessa os dados da instância e pode ser marcado como estático",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus%20repositorios/Investments/WEB/Back/src/Investments.VariablesManager/WebScrapingSocketManager.cs",
+                "region": {
+                  "startLine": 24,
+                  "startColumn": 23,
+                  "endLine": 24,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "O membro 'SendMessageAsync' não acessa os dados da instância e pode ser marcado como estático",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus%20repositorios/Investments/WEB/Back/src/Investments.VariablesManager/WebScrapingSocketManager.cs",
+                "region": {
+                  "startLine": 61,
+                  "startColumn": 28,
+                  "endLine": 61,
+                  "endColumn": 44
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "O membro 'CreateConnectionId' não acessa os dados da instância e pode ser marcado como estático",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus%20repositorios/Investments/WEB/Back/src/Investments.VariablesManager/WebScrapingSocketManager.cs",
+                "region": {
+                  "startLine": 47,
+                  "startColumn": 24,
+                  "endLine": 47,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CA1822": {
+          "id": "CA1822",
+          "shortDescription": "Marcar membros como estáticos",
+          "fullDescription": "Os membros que não acessam os dados da instância nem chamam os métodos da instância podem ser marcados como estáticos. Depois que você marcar os métodos como estáticos, o compilador emitirá os sites de chamada não virtuais para esses membros. Isso pode oferecer um ganho de desempenho mensurável para códigos sensíveis ao desempenho.",
+          "defaultLevel": "note",
+          "helpUri": "https://docs.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "PortedFromFxCop",
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA2211": {
+          "id": "CA2211",
+          "shortDescription": "Campos não constantes não devem ser visíveis",
+          "fullDescription": "Os campos estáticos que não são nem constantes nem somente leitura não são thread-safe. O acesso a esse campo deve ser cuidadosamente controlado e requer técnicas de programação avançadas para sincronizar o acesso com o objeto de classe.",
+          "defaultLevel": "note",
+          "helpUri": "https://docs.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2211",
+          "properties": {
+            "category": "Usage",
+            "isEnabledByDefault": true,
+            "tags": [
+              "PortedFromFxCop",
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "S1104": {
+          "id": "S1104",
+          "shortDescription": "Fields should not have public accessibility",
+          "fullDescription": "Public fields in public classes do not respect the encapsulation principle and has three main disadvantages:",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1104",
+          "properties": {
+            "category": "Minor Vulnerability",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope"
+            ]
+          }
+        },
+        "S125": {
+          "id": "S125",
+          "shortDescription": "Sections of code should not be commented out",
+          "fullDescription": "Programmers should not comment out code as it bloats programs and reduces readability.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-125",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S2223": {
+          "id": "S2223",
+          "shortDescription": "Non-constant static fields should not be visible",
+          "fullDescription": "A static field that is neither constant nor read-only is not thread-safe. Correctly accessing these fields from different threads needs synchronization with locks. Improper synchronization may lead to unexpected results, thus publicly visible static fields are best suited for storing non-changing data shared by many consumers. To enforce this intent, these fields should be marked readonly or converted to constants.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2223",
+          "properties": {
+            "category": "Critical Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
