@@ -8,9 +8,8 @@ namespace Investments.Test.Test
     {
 
         [Fact]
-        public async void Excluir()
+        public void Excluir()
         {
-            
             Assert.True(true);
         }
 
