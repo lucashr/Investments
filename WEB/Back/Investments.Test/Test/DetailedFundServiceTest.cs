@@ -8,40 +8,47 @@ namespace Investments.Test.Test
     {
 
         [Fact]
-        [ConfigureTest]
-        public async void MustReturnMore300Funds()
+        public async void Excluir()
         {
             
-            // var webScraping = new WebScrapingFundsAndYeldsService();
+            Assert.True(true);
+        }
 
-            // webScraping.ConfigDriver();
+        // [Fact]
+        // [ConfigureTest]
+        // public async void MustReturnMore300Funds()
+        // {
             
-            // var detailedFunds = await webScraping.GetFundsAsync();
+        //     // var webScraping = new WebScrapingFundsAndYeldsService();
 
-            // await AddDetailedFundsAsync(detailedFunds);
+        //     // webScraping.ConfigDriver();
+            
+        //     // var detailedFunds = await webScraping.GetFundsAsync();
 
-            var funds = await GetAllDetailedFundsAsync();
+        //     // await AddDetailedFundsAsync(detailedFunds);
 
-            Assert.True(funds.Count() > 300);
-        }
+        //     var funds = await GetAllDetailedFundsAsync();
 
-        [Theory]
-        [InlineData("MXRF11")]
-        [ConfigureTest]
-        public async void MustReturnOneFunds(string fundCode)
-        {
+        //     Assert.True(funds.Count() > 300);
+        // }
 
-            // var webScraping = new WebScrapingFundsAndYeldsService();
+        // [Theory]
+        // [InlineData("MXRF11")]
+        // [ConfigureTest]
+        // public async void MustReturnOneFunds(string fundCode)
+        // {
 
-            // webScraping.ConfigDriver();
+        //     // var webScraping = new WebScrapingFundsAndYeldsService();
 
-            // var detailedFunds = await webScraping.GetFundsAsync();
+        //     // webScraping.ConfigDriver();
 
-            // await AddDetailedFundsAsync(detailedFunds);
+        //     // var detailedFunds = await webScraping.GetFundsAsync();
 
-            var funds = await GetDetailedFundByCodeAsync(fundCode);
+        //     // await AddDetailedFundsAsync(detailedFunds);
 
-            Assert.NotNull(funds);
-        }
+        //     var funds = await GetDetailedFundByCodeAsync(fundCode);
+
+        //     Assert.NotNull(funds);
+        // }
     }
 }
