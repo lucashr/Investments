@@ -54,7 +54,7 @@ namespace Investments.Test.Persistence
             catch (System.Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                return (Task<IEnumerable<RankOfTheBestFunds>>)null;
             }
             
         }
