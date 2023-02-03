@@ -4,8 +4,8 @@ pipeline {
         stage('Test') {
             steps { 
                 dir("WEB\\Back\\Investments.Test") {
-                sh "pwd"
-            }
+                    sh "pwd"
+                }
                 //--no-build --collect:"XPlat Code Coverage"
                 // bat 'dotnet test --filter "DisplayName~WebScrapingFundsAndYeldsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
                 // bat 'dotnet test --filter "DisplayName~RankOfTheBestFundsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
