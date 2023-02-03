@@ -14,7 +14,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Investments.Application
 {
-    public class WebScrapingFundsAndYeldsService : IWebScrapingFundsAndYeldsService
+    public class WebScrapingFundsAndYeldsService : IWebScrapingFundsAndYeldsService, IDisposable
     {
         IWebDriver driver;
         IGeneralPersist _generalPersist;
@@ -58,31 +58,23 @@ namespace Investments.Application
             {
 
                 var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-                // var delay4 = new TimeSpan(0, 0, 0, 7, 0);
-                // var timestamp4 = DateTime.Now;
                 
                 wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='tabelaResultado']/tbody/tr")));
-                // wait60.Until(driver => (DateTime.Now - timestamp4) > delay4);
 
                 await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(driver.PageSource));
                 
-                // var vcs = new VerticalCombineDecorator(new ScreenshotMaker());
-                // var screen = driver.TakeScreenshot(vcs);
-
-
-                // //Coverting a byte array to an image:
-                // using (Image image = Image.FromStream(new MemoryStream(screen)))
-                // {
-                //     var a = image.Size;
-                //     image.Save("image.png", ImageFormat.Jpeg);  // Or Png
-                // }
-
                 var rows = driver.FindElements(By.XPath("//*[@id='tabelaResultado']/tbody/tr"));
-                int numberOfLines = rows.Count;
+                
+                #if DEBUG
+                    int numberOfLines = 10;
+                #else
+                    int numberOfLines = rows.Count;
+                #endif
                 
                 Console.WriteLine($"Total de linhas {numberOfLines}");
                 
                 var columns = driver.FindElements(By.XPath("//*[@id='tabelaResultado']/thead/tr/th"));
+                
                 int numberOfColumn = columns.Count;
                 
                 Console.WriteLine($"Total de colunas {numberOfColumn}");
@@ -188,11 +180,13 @@ namespace Investments.Application
                         wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='resultado']/tbody/tr")));
 
                         rows = driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr"));
+
                         numberOfLines = rows.Count;
                         
                         Console.WriteLine($"Total de linhas {numberOfLines}");
 
                         columns = driver.FindElements(By.XPath("//*[@id='resultado']/thead/tr/th"));
+                        
                         numberOfColumn = columns.Count;
                         
                         Console.WriteLine($"Total de colunas {numberOfColumn}");
@@ -338,73 +332,9 @@ namespace Investments.Application
             driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
         }
 
-        // public async Task<bool> AddDetailedFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
-        // {
-        //     try
-        //     {
-                
-        //         await _webScrapingFundsAndYeldsPersist.AddDetailedFundsAsync(detailedFunds);
-        //         // _generalPersist.AddRange(detailedFunds.ToArray());
-        //         // await _generalPersist.SaveChangesAsync();
-
-        //         return true;
-        //     }
-        //     catch (System.Exception ex)
-        //     {
-        //         Console.WriteLine(ex.Message);
-        //         return false;
-        //     }
-        // }
-
-        public async Task<bool> AddFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
+        public void Dispose()
         {
-
-            try
-            {
-
-                List<Funds> funds = new List<Funds>();
-
-                foreach (var item in detailedFunds)
-                {
-
-                    var fY = new Funds(){
-                        FundCode = item.FundCode
-                    };
-
-                    funds.Add(fY);
-
-                }
-
-                _generalPersist.AddRange(funds.ToArray());
-                await _generalPersist.SaveChangesAsync();
-
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
+            driver.Quit();
         }
-
-        // public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundsYeld> fundsYelds)
-        // {
-        //     try
-        //     {
-
-        //          await _webScrapingFundsAndYeldsPersist.AddFundsYieldsAsync(fundsYelds);
-
-        //         // _generalPersist.AddRange(fundsYelds.ToArray());
-        //         // await _generalPersist.SaveChangesAsync();
-                
-        //         return true;
-        //     }
-        //     catch (System.Exception ex)
-        //     {
-        //         Console.WriteLine(ex.Message);
-        //         return false;
-        //     }
-        // }
-
     }
 }

@@ -13,6 +13,9 @@ using System;
 using Investments.Persistence.Contracts;
 using Investments.Persistence;
 using Investments.VariablesManager;
+using System.Linq;
+using System.Runtime.Loader;
+using System.Reflection;
 
 namespace Investments.API
 {
@@ -44,9 +47,16 @@ namespace Investments.API
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore
                     );
 
-                    
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            
+            if(AppDomain.CurrentDomain.BaseDirectory.ToLower().Contains(".tests"))
+            {
+                var assembly = typeof(Program).GetTypeInfo().Assembly;
+                services.AddAutoMapper(assembly);
+            }
+            else
+            {
+                services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            }
+
             services.AddScoped<IDetailedFundService, DetailedFundService>();
             services.AddScoped<IFundsService, FundsService>();
             services.AddScoped<IFundsYieldService, FundsYieldService>();

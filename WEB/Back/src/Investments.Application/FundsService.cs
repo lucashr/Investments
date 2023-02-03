@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Investments.Application.Contracts;
 using Investments.Domain.Models;
+using Investments.Persistence;
 using Investments.Persistence.Contracts;
 
 namespace Investments.Application
@@ -86,9 +87,11 @@ namespace Investments.Application
                 
                 if(fund == null) throw new Exception("Fundo não encontrado par deleção");
 
+                _generalPersist.DetachLocal<Funds>(x=>x.Id == fund.Id);
+
                 _generalPersist.Delete<Funds>(fund);
 
-                return await _generalPersist.SaveChangesAsync();
+                return true;
                     
             }
             catch (System.Exception ex)
@@ -107,6 +110,8 @@ namespace Investments.Application
 
                 fund.FundCode = newFundCode;
 
+                _generalPersist.DetachLocal<Funds>(x=>x.Id == fund.Id);
+                
                 _generalPersist.Update<Funds>(fund);
 
                 await _generalPersist.SaveChangesAsync();
@@ -125,7 +130,6 @@ namespace Investments.Application
         {
             try
             {
-
                 var result = await _fundsPersist.AddFundsAsync(detailedFunds);
 
                 return result;

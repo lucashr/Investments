@@ -35,11 +35,6 @@ namespace Investments.Application
             }
         }
 
-        public Task<bool> AddFundsYeldsAsync(IEnumerable<DetailedFunds> detailedFunds)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<DetailedFunds>> GetAllDetailedFundsAsync()
         {
             try

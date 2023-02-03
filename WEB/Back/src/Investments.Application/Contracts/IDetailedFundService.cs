@@ -9,6 +9,5 @@ namespace Investments.Application.Contracts
         Task<DetailedFunds> GetDetailedFundByCodeAsync(string fundCode);
         Task<IEnumerable<DetailedFunds>> GetAllDetailedFundsAsync();
         Task<bool> AddDetailedFundsAsync(IEnumerable<DetailedFunds> detailedFunds);
-        Task<bool> AddFundsYeldsAsync(IEnumerable<DetailedFunds> detailedFunds);
     }
 }

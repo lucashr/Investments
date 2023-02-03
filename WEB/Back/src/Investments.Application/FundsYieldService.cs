@@ -54,9 +54,6 @@ namespace Investments.Application
 
                  await _fundsYeldPersist.AddFundsYieldsAsync(fundsYelds);
 
-                // _generalPersist.AddRange(fundsYelds.ToArray());
-                // await _generalPersist.SaveChangesAsync();
-                
                 return true;
             }
             catch (System.Exception ex)

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Investments.Persistence
 {
-    public class FundsPersist : GeneralPersist, IFundsPersist
+    public class FundsPersist : GeneralPersist, IFundsPersist, IDetachLocal
     {
         private readonly InvestmentsContext _context;
 
@@ -118,23 +118,24 @@ namespace Investments.Persistence
 
         public async Task<bool> AddFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
         {
+
+            var funds = new List<Funds>();
+
             try
             {
+
+                _context.Database.ExecuteSqlRaw("DELETE FROM [Funds]");
 
                 foreach (var fund in detailedFunds)
                 {
 
-                    IQueryable<Funds> query = _context.Funds.Where(x=> x.FundCode == fund.FundCode);
-
-                    if(query.FirstOrDefault() is not null) continue;
-
-                    var newFund = new Funds() {FundCode = fund.FundCode};
-
-                    _context.Add<Funds>(newFund);
-
-                    await _context.SaveChangesAsync();
-
+                    funds.Add(new Funds() {FundCode = fund.FundCode});
                 }
+
+                AddRange<Funds>(funds.ToArray());
+                // await _context.AddRangeAsync(funds.ToArray());
+
+                await _context.SaveChangesAsync();
 
                 return true;
 
@@ -212,8 +213,8 @@ namespace Investments.Persistence
         {
             try
             {
-                IQueryable<Funds> query = _context.Funds.Where(x=> x.FundCode == fundCode);
-
+                IQueryable<Funds> query = _context.Funds.AsNoTracking().Where(x=> x.FundCode == fundCode);
+                
                 if(query.FirstOrDefault() == null) throw new Exception("Fundo não encontrado na base de dados");
                 
                 _context.Remove<Funds>(query.FirstOrDefault());

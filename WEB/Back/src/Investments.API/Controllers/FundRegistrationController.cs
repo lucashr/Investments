@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Investments.Application.Contracts;
+using Investments.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Investments.API.Controllers
 {
@@ -26,6 +29,32 @@ namespace Investments.API.Controllers
                 var funds = await _fundsService.AddFundAsync(fundCode);
 
                 if(funds == null)
+                {
+                    return Ok("Fundo já cadastrado na base de dados");
+                }
+
+                return Ok(funds);
+            }
+            catch (System.Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar recuperar fundos. Erro: {ex.Message}");
+            }
+            
+        }
+
+        [HttpPut("FundsRegistration")]
+        public async Task<IActionResult> FundsRegistration(List<string> fundCode)
+        {
+
+            try
+            {
+                var detailedFunds = new List<DetailedFunds>();
+                detailedFunds.AddRange((IEnumerable<DetailedFunds>)fundCode);
+
+                var funds = await _fundsService.AddFundsAsync(detailedFunds);
+
+                if(funds)
                 {
                     return Ok("Fundo já cadastrado na base de dados");
                 }
@@ -101,8 +130,9 @@ namespace Investments.API.Controllers
             try
             {
                 var funds = await _fundsService.GetAllFundsAsync();
+                var result = JsonConvert.SerializeObject(funds);
 
-                return Ok(funds);
+                return Ok(result);
             }
             catch (System.Exception ex)
             {

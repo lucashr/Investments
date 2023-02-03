@@ -70,7 +70,7 @@ namespace Investments.API.Controllers
             {
 
                 var fundYelds = await _webScrapingFundsAndYelds.GetYeldsFundsAsync(result);
-                bool storageWentOK = await _detailedFundService.AddFundsYeldsAsync(fundYelds);
+                bool storageWentOK = await _detailedFundService.AddDetailedFundsAsync(fundYelds);
 
                 if(storageWentOK)
                 {

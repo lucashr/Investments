@@ -65,8 +65,10 @@ namespace Investments.Application
 
         public async Task<IEnumerable<RankOfTheBestFunds>> GetCalculationRankOfTheBestFundsAsync()
         {
+
             try
             {
+
                 var funds = await _detailedFundService.GetAllDetailedFundsAsync();
 
                 var bestFunds = _mapper.Map<IEnumerable<RankOfTheBestFunds>>(funds);
