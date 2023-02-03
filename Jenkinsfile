@@ -1,23 +1,23 @@
 pipeline {
     agent any
     stages {
-        stage('Test') {
-            steps { 
-                // dir("WEB\\Back\\Investments.Test") {
-                //     bat 'dotnet-coverage collect -f xml -o .\\TestResults\\coverage.xml dotnet test'
-                // }
-                // bat 'dotnet-coverage collect -f xml -o .\\TestResults\\coverage.xml dotnet test'
-                //--no-build --collect:"XPlat Code Coverage"
-                // bat 'dotnet test --filter "DisplayName~WebScrapingFundsAndYeldsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
-                // bat 'dotnet test --filter "DisplayName~RankOfTheBestFundsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
-                // bat 'dotnet test --filter "DisplayName~FundYeldsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
-                // bat 'dotnet test --filter "DisplayName~FundsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
-                // bat 'dotnet test --no-build --collect:"XPlat Code Coverage" --filter "DisplayName~DetailedFundServiceTest" C:\\Users\\lucas\\AppData\\Local\\Jenkins\\.jenkins\\workspace\\DeployBack\\WEB\\Back\\Investments.Test'
-                // bat 'dotnet build-server shutdown'
-                // C:\Users\lucas\AppData\Local\Jenkins\.jenkins\workspace\DeployBack\WEB\Back\Investments.Test
-                // bat 'dotnet-coverage --session-id serverdemo -f xml -o .\\TestResults\\coverage.xml "dotnet test"'
-            }
-        }
+        // stage('Test') {
+        //     steps { 
+        //         // dir("WEB\\Back\\Investments.Test") {
+        //         //     bat 'dotnet-coverage collect -f xml -o .\\TestResults\\coverage.xml dotnet test'
+        //         // }
+        //         // bat 'dotnet-coverage collect -f xml -o .\\TestResults\\coverage.xml dotnet test'
+        //         //--no-build --collect:"XPlat Code Coverage"
+        //         // bat 'dotnet test --filter "DisplayName~WebScrapingFundsAndYeldsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
+        //         // bat 'dotnet test --filter "DisplayName~RankOfTheBestFundsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
+        //         // bat 'dotnet test --filter "DisplayName~FundYeldsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
+        //         // bat 'dotnet test --filter "DisplayName~FundsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
+        //         // bat 'dotnet test --no-build --collect:"XPlat Code Coverage" --filter "DisplayName~DetailedFundServiceTest" C:\\Users\\lucas\\AppData\\Local\\Jenkins\\.jenkins\\workspace\\DeployBack\\WEB\\Back\\Investments.Test'
+        //         // bat 'dotnet build-server shutdown'
+        //         // C:\Users\lucas\AppData\Local\Jenkins\.jenkins\workspace\DeployBack\WEB\Back\Investments.Test
+        //         // bat 'dotnet-coverage --session-id serverdemo -f xml -o .\\TestResults\\coverage.xml "dotnet test"'
+        //     }
+        // }
         stage('Code Analysis') {
             steps {
                 bat 'echo chegouuuuuuuuuuuuu 2'
