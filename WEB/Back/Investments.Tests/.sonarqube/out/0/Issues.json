@@ -54,6 +54,27 @@
           }
         },
         {
+          "ruleId": "CA2211",
+          "level": "note",
+          "message": "Non-constant fields should not be visible",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.VariablesManager/ConectionsWebSocket.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 63,
+                  "endLine": 9,
+                  "endColumn": 70
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
           "ruleId": "CA1822",
           "level": "note",
           "message": "Member 'GetAll' does not access instance data and can be marked as static",
@@ -75,18 +96,18 @@
           }
         },
         {
-          "ruleId": "CA2211",
+          "ruleId": "CA1822",
           "level": "note",
-          "message": "Non-constant fields should not be visible",
+          "message": "Member 'GetSocketById' does not access instance data and can be marked as static",
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.VariablesManager/ConectionsWebSocket.cs",
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.VariablesManager/WebScrapingSocketManager.cs",
                 "region": {
-                  "startLine": 9,
-                  "startColumn": 63,
-                  "endLine": 9,
-                  "endColumn": 70
+                  "startLine": 14,
+                  "startColumn": 26,
+                  "endLine": 14,
+                  "endColumn": 39
                 }
               }
             }
@@ -161,27 +182,6 @@
         {
           "ruleId": "CA1822",
           "level": "note",
-          "message": "Member 'GetSocketById' does not access instance data and can be marked as static",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.VariablesManager/WebScrapingSocketManager.cs",
-                "region": {
-                  "startLine": 14,
-                  "startColumn": 26,
-                  "endLine": 14,
-                  "endColumn": 39
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "CA1822",
-          "level": "note",
           "message": "Member 'RemoveSocket' does not access instance data and can be marked as static",
           "locations": [
             {
@@ -203,16 +203,16 @@
         {
           "ruleId": "CA1822",
           "level": "note",
-          "message": "Member 'CreateConnectionId' does not access instance data and can be marked as static",
+          "message": "Member 'SendMessageAsync' does not access instance data and can be marked as static",
           "locations": [
             {
               "resultFile": {
                 "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.VariablesManager/WebScrapingSocketManager.cs",
                 "region": {
-                  "startLine": 47,
-                  "startColumn": 24,
-                  "endLine": 47,
-                  "endColumn": 42
+                  "startLine": 61,
+                  "startColumn": 28,
+                  "endLine": 61,
+                  "endColumn": 44
                 }
               }
             }
@@ -224,16 +224,16 @@
         {
           "ruleId": "CA1822",
           "level": "note",
-          "message": "Member 'SendMessageAsync' does not access instance data and can be marked as static",
+          "message": "Member 'CreateConnectionId' does not access instance data and can be marked as static",
           "locations": [
             {
               "resultFile": {
                 "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.VariablesManager/WebScrapingSocketManager.cs",
                 "region": {
-                  "startLine": 61,
-                  "startColumn": 28,
-                  "endLine": 61,
-                  "endColumn": 44
+                  "startLine": 47,
+                  "startColumn": 24,
+                  "endLine": 47,
+                  "endColumn": 42
                 }
               }
             }

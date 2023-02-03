@@ -1,0 +1,2 @@
+﻿C:\Users\lucas\Desktop\Repositorios\Meus_repositorios\Investments\WEB\Back\src\Investments.VariablesManager\ConectionsWebSocket.cs
+C:\Users\lucas\Desktop\Repositorios\Meus_repositorios\Investments\WEB\Back\src\Investments.VariablesManager\WebScrapingSocketManager.cs
