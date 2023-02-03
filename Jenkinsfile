@@ -1,10 +1,11 @@
 pipeline {
     agent any
+    dir("%WORKSPACE%\\WEB\\Back\\Investments.Test") {
+        cd "pwd"
+    }
     stages {
         stage('Test') {
-            dir("%WORKSPACE%\\WEB\\Back\\Investments.Test") {
-                cd "pwd"
-            }
+            
             steps {
                 //--no-build --collect:"XPlat Code Coverage"
                 // bat 'dotnet test --filter "DisplayName~WebScrapingFundsAndYeldsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
