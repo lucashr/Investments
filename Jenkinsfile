@@ -6,6 +6,7 @@ pipeline {
                 dir("WEB\\Back\\Investments.Test") {
                     cd "pwd"
                 }
+                bat 'echo chegouuuuuuuuuuuuu'
                 //--no-build --collect:"XPlat Code Coverage"
                 // bat 'dotnet test --filter "DisplayName~WebScrapingFundsAndYeldsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
                 // bat 'dotnet test --filter "DisplayName~RankOfTheBestFundsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
@@ -19,6 +20,7 @@ pipeline {
         }
         stage('Code Analysis') {
             steps {
+                bat 'echo chegouuuuuuuuuuuuu 2'
                 // bat 'dotnet sonarscanner begin /k:"DeployBack" /d:sonar.login="f4f2f069bc50fc86e24ecdc8343f0fd7b0239da4" /d:sonar.cs.vscoveragexml.reportsPaths=.\\TestResults\\coverage.xml'
                 // bat 'dotnet build C:\\Users\\lucas\\AppData\\Local\\Jenkins\\.jenkins\\workspace\\DeployBack\\WEB\\Back\\Investments.Test'
                 // bat 'dotnet sonarscanner end /d:sonar.login="f4f2f069bc50fc86e24ecdc8343f0fd7b0239da4"'
