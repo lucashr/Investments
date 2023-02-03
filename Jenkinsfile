@@ -11,7 +11,9 @@ pipeline {
                 // bat 'dotnet test --no-build --collect:"XPlat Code Coverage" --filter "DisplayName~DetailedFundServiceTest" C:\\Users\\lucas\\AppData\\Local\\Jenkins\\.jenkins\\workspace\\DeployBack\\WEB\\Back\\Investments.Test'
                 // bat 'dotnet build-server shutdown'
                 // C:\Users\lucas\AppData\Local\Jenkins\.jenkins\workspace\DeployBack\WEB\Back\Investments.Test
-                bat 'dotnet cd WEB\\Back\\Investments.Test'
+                bat """
+                    cd WEB\\Back\\Investments.Test
+                """
                 bat 'dotnet-coverage --session-id serverdemo -f xml -o .\\TestResults\\coverage.xml "dotnet test"'
             }
         }
