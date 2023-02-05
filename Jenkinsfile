@@ -6,7 +6,7 @@ pipeline {
 
                 bat """
                     cd WEB\\Back\\Investments.Test
-                    bat 'dotnet coverage collect dotnet test --output .\\TestResults\\coverage.xml --output-format xml'
+                    dotnet coverage collect dotnet test --output .\\TestResults\\coverage.xml --output-format xml
                 """
 
                 // bat 'dotnet-coverage collect -f xml -o .\\TestResults\\coverage.xml dotnet test'
