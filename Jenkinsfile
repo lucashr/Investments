@@ -3,9 +3,12 @@ pipeline {
     stages {
         stage('Test') {
             steps { 
-                dir("WEB\\Back\\Investments.Test") {
-                }
-                bat 'dotnet coverage collect dotnet test --output .\\TestResults\\coverage.xml --output-format xml'
+
+                bat """
+                    cd WEB\\Back\\Investments.Test
+                    bat 'dotnet coverage collect dotnet test --output .\\TestResults\\coverage.xml --output-format xml'
+                """
+
                 // bat 'dotnet-coverage collect -f xml -o .\\TestResults\\coverage.xml dotnet test'
                 //--no-build --collect:"XPlat Code Coverage"
                 // bat 'dotnet test --filter "DisplayName~WebScrapingFundsAndYeldsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
