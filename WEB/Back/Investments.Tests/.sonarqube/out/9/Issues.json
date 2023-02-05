@@ -138,6 +138,27 @@
           }
         },
         {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/StocksService.cs",
+                "region": {
+                  "startLine": 26,
+                  "startColumn": 13,
+                  "endLine": 26,
+                  "endColumn": 122
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
           "ruleId": "S2933",
           "level": "warning",
           "message": "Make '_mapper' 'readonly'.",
@@ -165,12 +186,12 @@
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/StocksService.cs",
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/WebScrapingFundsAndYeldsService.cs",
                 "region": {
-                  "startLine": 26,
-                  "startColumn": 13,
-                  "endLine": 26,
-                  "endColumn": 122
+                  "startLine": 178,
+                  "startColumn": 25,
+                  "endLine": 178,
+                  "endColumn": 112
                 }
               }
             }
@@ -192,27 +213,6 @@
                   "startColumn": 34,
                   "endLine": 17,
                   "endColumn": 41
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S125",
-          "level": "warning",
-          "message": "Remove this commented out code.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/WebScrapingFundsAndYeldsService.cs",
-                "region": {
-                  "startLine": 178,
-                  "startColumn": 25,
-                  "endLine": 178,
-                  "endColumn": 112
                 }
               }
             }
@@ -424,53 +424,11 @@
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/DetailedFundService.cs",
-                "region": {
-                  "startLine": 48,
-                  "startColumn": 23,
-                  "endLine": 48,
-                  "endColumn": 48
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S112",
-          "level": "warning",
-          "message": "'System.Exception' should not be thrown by user code.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/DetailedFundService.cs",
-                "region": {
-                  "startLine": 62,
-                  "startColumn": 23,
-                  "endLine": 62,
-                  "endColumn": 48
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S112",
-          "level": "warning",
-          "message": "'System.Exception' should not be thrown by user code.",
-          "locations": [
-            {
-              "resultFile": {
                 "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/FundsService.cs",
                 "region": {
-                  "startLine": 78,
+                  "startLine": 63,
                   "startColumn": 23,
-                  "endLine": 78,
+                  "endLine": 63,
                   "endColumn": 48
                 }
               }
@@ -508,27 +466,6 @@
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/FundsService.cs",
-                "region": {
-                  "startLine": 63,
-                  "startColumn": 23,
-                  "endLine": 63,
-                  "endColumn": 48
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S112",
-          "level": "warning",
-          "message": "'System.Exception' should not be thrown by user code.",
-          "locations": [
-            {
-              "resultFile": {
                 "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/RankOfTheBestFundsService.cs",
                 "region": {
                   "startLine": 41,
@@ -550,11 +487,11 @@
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/FundsYieldService.cs",
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/DetailedFundService.cs",
                 "region": {
-                  "startLine": 46,
+                  "startLine": 48,
                   "startColumn": 23,
-                  "endLine": 46,
+                  "endLine": 48,
                   "endColumn": 48
                 }
               }
@@ -597,6 +534,69 @@
                   "startLine": 48,
                   "startColumn": 23,
                   "endLine": 48,
+                  "endColumn": 48
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S112",
+          "level": "warning",
+          "message": "'System.Exception' should not be thrown by user code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/FundsYieldService.cs",
+                "region": {
+                  "startLine": 46,
+                  "startColumn": 23,
+                  "endLine": 46,
+                  "endColumn": 48
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S112",
+          "level": "warning",
+          "message": "'System.Exception' should not be thrown by user code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/FundsService.cs",
+                "region": {
+                  "startLine": 78,
+                  "startColumn": 23,
+                  "endLine": 78,
+                  "endColumn": 48
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S112",
+          "level": "warning",
+          "message": "'System.Exception' should not be thrown by user code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/DetailedFundService.cs",
+                "region": {
+                  "startLine": 62,
+                  "startColumn": 23,
+                  "endLine": 62,
                   "endColumn": 48
                 }
               }
@@ -854,27 +854,6 @@
           }
         },
         {
-          "ruleId": "S112",
-          "level": "warning",
-          "message": "'System.Exception' should not be thrown by user code.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/FundsService.cs",
-                "region": {
-                  "startLine": 140,
-                  "startColumn": 23,
-                  "endLine": 140,
-                  "endColumn": 48
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
           "ruleId": "CA1816",
           "level": "note",
           "message": "Change WebScrapingFundsAndYeldsService.Dispose() to call GC.SuppressFinalize(object). This will prevent derived types that introduce a finalizer from needing to re-implement 'IDisposable' to call it.",
@@ -950,6 +929,27 @@
                   "startColumn": 57,
                   "endLine": 279,
                   "endColumn": 62
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S112",
+          "level": "warning",
+          "message": "'System.Exception' should not be thrown by user code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Application/FundsService.cs",
+                "region": {
+                  "startLine": 140,
+                  "startColumn": 23,
+                  "endLine": 140,
+                  "endColumn": 48
                 }
               }
             }

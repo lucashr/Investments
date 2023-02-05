@@ -12,27 +12,6 @@
       },
       "results": [
         {
-          "ruleId": "CA2211",
-          "level": "note",
-          "message": "Non-constant fields should not be visible",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.VariablesManager/ConectionsWebSocket.cs",
-                "region": {
-                  "startLine": 9,
-                  "startColumn": 63,
-                  "endLine": 9,
-                  "endColumn": 70
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
           "ruleId": "S125",
           "level": "warning",
           "message": "Remove this commented out code.",
@@ -66,6 +45,27 @@
                   "startColumn": 13,
                   "endLine": 31,
                   "endColumn": 81
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA2211",
+          "level": "note",
+          "message": "Non-constant fields should not be visible",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.VariablesManager/ConectionsWebSocket.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 63,
+                  "endLine": 9,
+                  "endColumn": 70
                 }
               }
             }

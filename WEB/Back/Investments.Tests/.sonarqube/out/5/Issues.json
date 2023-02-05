@@ -35,16 +35,16 @@
         {
           "ruleId": "CS0414",
           "level": "warning",
-          "message": "O campo \"WebScrapingFundsAndYeldsServiceTest.rankOfTheBestFundsPersist\" é atribuído, mas seu valor nunca é usado",
+          "message": "O campo \"WebScrapingFundsAndYeldsServiceTest.rankOfTheBestFundsService\" é atribuído, mas seu valor nunca é usado",
           "locations": [
             {
               "resultFile": {
                 "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/WebScrapingFundsAndYeldsServiceTest.cs",
                 "region": {
-                  "startLine": 19,
-                  "startColumn": 48,
-                  "endLine": 19,
-                  "endColumn": 73
+                  "startLine": 15,
+                  "startColumn": 42,
+                  "endLine": 15,
+                  "endColumn": 67
                 }
               }
             }
@@ -56,16 +56,16 @@
         {
           "ruleId": "CS0414",
           "level": "warning",
-          "message": "O campo \"WebScrapingFundsAndYeldsServiceTest.rankOfTheBestFundsService\" é atribuído, mas seu valor nunca é usado",
+          "message": "O campo \"WebScrapingFundsAndYeldsServiceTest.rankOfTheBestFundsPersist\" é atribuído, mas seu valor nunca é usado",
           "locations": [
             {
               "resultFile": {
                 "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/WebScrapingFundsAndYeldsServiceTest.cs",
                 "region": {
-                  "startLine": 15,
-                  "startColumn": 42,
-                  "endLine": 15,
-                  "endColumn": 67
+                  "startLine": 19,
+                  "startColumn": 48,
+                  "endLine": 19,
+                  "endColumn": 73
                 }
               }
             }
@@ -86,27 +86,6 @@
                   "startLine": 18,
                   "startColumn": 21,
                   "endLine": 18,
-                  "endColumn": 26
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "xUnit1013",
-          "level": "warning",
-          "message": "Public method 'Setup' on test class 'DetailedFundServiceTest' should be marked as a Fact.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/DetailedFundServiceTest.cs",
-                "region": {
-                  "startLine": 24,
-                  "startColumn": 21,
-                  "endLine": 24,
                   "endColumn": 26
                 }
               }
@@ -161,15 +140,15 @@
         {
           "ruleId": "xUnit1013",
           "level": "warning",
-          "message": "Public method 'Setup' on test class 'FundsServiceTest' should be marked as a Fact.",
+          "message": "Public method 'Setup' on test class 'DetailedFundServiceTest' should be marked as a Fact.",
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundsServiceTest.cs",
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/DetailedFundServiceTest.cs",
                 "region": {
-                  "startLine": 21,
+                  "startLine": 24,
                   "startColumn": 21,
-                  "endLine": 21,
+                  "endLine": 24,
                   "endColumn": 26
                 }
               }
@@ -180,17 +159,17 @@
           }
         },
         {
-          "ruleId": "CA1822",
-          "level": "note",
-          "message": "Member 'Setup' does not access instance data and can be marked as static",
+          "ruleId": "xUnit1013",
+          "level": "warning",
+          "message": "Public method 'Setup' on test class 'FundsServiceTest' should be marked as a Fact.",
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundYeldsServiceTest.cs",
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundsServiceTest.cs",
                 "region": {
-                  "startLine": 18,
+                  "startLine": 21,
                   "startColumn": 21,
-                  "endLine": 18,
+                  "endLine": 21,
                   "endColumn": 26
                 }
               }
@@ -243,18 +222,18 @@
           }
         },
         {
-          "ruleId": "S3433",
-          "level": "warning",
-          "message": "Make this test method non-'async' or return 'Task'.",
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'Setup' does not access instance data and can be marked as static",
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundsServiceTest.cs",
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundYeldsServiceTest.cs",
                 "region": {
-                  "startLine": 49,
-                  "startColumn": 27,
-                  "endLine": 49,
-                  "endColumn": 44
+                  "startLine": 18,
+                  "startColumn": 21,
+                  "endLine": 18,
+                  "endColumn": 26
                 }
               }
             }
@@ -276,6 +255,69 @@
                   "startColumn": 21,
                   "endLine": 25,
                   "endColumn": 26
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'ConfigureDatabase' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/ConfigureTest.cs",
+                "region": {
+                  "startLine": 29,
+                  "startColumn": 36,
+                  "endLine": 29,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/WebScrapingFundsAndYeldsServiceTest.cs",
+                "region": {
+                  "startLine": 39,
+                  "startColumn": 27,
+                  "endLine": 39,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundsServiceTest.cs",
+                "region": {
+                  "startLine": 49,
+                  "startColumn": 27,
+                  "endLine": 49,
+                  "endColumn": 44
                 }
               }
             }
@@ -314,6 +356,27 @@
               "resultFile": {
                 "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/RankOfTheBestFundsServiceTest.cs",
                 "region": {
+                  "startLine": 76,
+                  "startColumn": 27,
+                  "endLine": 76,
+                  "endColumn": 56
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/RankOfTheBestFundsServiceTest.cs",
+                "region": {
                   "startLine": 62,
                   "startColumn": 27,
                   "endLine": 62,
@@ -333,96 +396,12 @@
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/DetailedFundServiceTest.cs",
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundYeldsServiceTest.cs",
                 "region": {
-                  "startLine": 56,
+                  "startLine": 57,
                   "startColumn": 27,
-                  "endLine": 56,
-                  "endColumn": 44
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "CA1822",
-          "level": "note",
-          "message": "Member 'Setup' does not access instance data and can be marked as static",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/RankOfTheBestFundsServiceTest.cs",
-                "region": {
-                  "startLine": 22,
-                  "startColumn": 21,
-                  "endLine": 22,
-                  "endColumn": 26
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S3433",
-          "level": "warning",
-          "message": "Make this test method non-'async' or return 'Task'.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/WebScrapingFundsAndYeldsServiceTest.cs",
-                "region": {
-                  "startLine": 39,
-                  "startColumn": 27,
-                  "endLine": 39,
-                  "endColumn": 42
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S3433",
-          "level": "warning",
-          "message": "Make this test method non-'async' or return 'Task'.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/RankOfTheBestFundsServiceTest.cs",
-                "region": {
-                  "startLine": 76,
-                  "startColumn": 27,
-                  "endLine": 76,
-                  "endColumn": 56
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "CA1822",
-          "level": "note",
-          "message": "Member 'ConfigureDatabase' does not access instance data and can be marked as static",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/ConfigureTest.cs",
-                "region": {
-                  "startLine": 29,
-                  "startColumn": 36,
-                  "endLine": 29,
-                  "endColumn": 53
+                  "endLine": 57,
+                  "endColumn": 50
                 }
               }
             }
@@ -444,6 +423,48 @@
                   "startColumn": 13,
                   "endLine": 52,
                   "endColumn": 56
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/WebScrapingFundsAndYeldsServiceTest.cs",
+                "region": {
+                  "startLine": 76,
+                  "startColumn": 27,
+                  "endLine": 76,
+                  "endColumn": 60
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/DetailedFundServiceTest.cs",
+                "region": {
+                  "startLine": 56,
+                  "startColumn": 27,
+                  "endLine": 56,
+                  "endColumn": 44
                 }
               }
             }
@@ -498,18 +519,18 @@
           }
         },
         {
-          "ruleId": "S3433",
-          "level": "warning",
-          "message": "Make this test method non-'async' or return 'Task'.",
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'Setup' does not access instance data and can be marked as static",
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundYeldsServiceTest.cs",
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/RankOfTheBestFundsServiceTest.cs",
                 "region": {
-                  "startLine": 57,
-                  "startColumn": 27,
-                  "endLine": 57,
-                  "endColumn": 50
+                  "startLine": 22,
+                  "startColumn": 21,
+                  "endLine": 22,
+                  "endColumn": 26
                 }
               }
             }
@@ -531,48 +552,6 @@
                   "startColumn": 27,
                   "endLine": 92,
                   "endColumn": 55
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S3433",
-          "level": "warning",
-          "message": "Make this test method non-'async' or return 'Task'.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundsServiceTest.cs",
-                "region": {
-                  "startLine": 63,
-                  "startColumn": 27,
-                  "endLine": 63,
-                  "endColumn": 45
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S3433",
-          "level": "warning",
-          "message": "Make this test method non-'async' or return 'Task'.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/WebScrapingFundsAndYeldsServiceTest.cs",
-                "region": {
-                  "startLine": 76,
-                  "startColumn": 27,
-                  "endLine": 76,
-                  "endColumn": 60
                 }
               }
             }
@@ -611,51 +590,9 @@
               "resultFile": {
                 "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundsServiceTest.cs",
                 "region": {
-                  "startLine": 81,
+                  "startLine": 63,
                   "startColumn": 27,
-                  "endLine": 81,
-                  "endColumn": 65
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S3433",
-          "level": "warning",
-          "message": "Make this test method non-'async' or return 'Task'.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundsServiceTest.cs",
-                "region": {
-                  "startLine": 98,
-                  "startColumn": 27,
-                  "endLine": 98,
-                  "endColumn": 44
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S3433",
-          "level": "warning",
-          "message": "Make this test method non-'async' or return 'Task'.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundsServiceTest.cs",
-                "region": {
-                  "startLine": 115,
-                  "startColumn": 27,
-                  "endLine": 115,
+                  "endLine": 63,
                   "endColumn": 45
                 }
               }
@@ -678,6 +615,27 @@
                   "startColumn": 27,
                   "endLine": 130,
                   "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundsServiceTest.cs",
+                "region": {
+                  "startLine": 81,
+                  "startColumn": 27,
+                  "endLine": 81,
+                  "endColumn": 65
                 }
               }
             }
@@ -711,6 +669,27 @@
           }
         },
         {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundsServiceTest.cs",
+                "region": {
+                  "startLine": 115,
+                  "startColumn": 27,
+                  "endLine": 115,
+                  "endColumn": 45
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
           "ruleId": "xUnit2004",
           "level": "warning",
           "message": "Do not use Assert.Equal() to check for boolean conditions.",
@@ -733,6 +712,27 @@
               "LiteralValue": "True",
               "MethodName": "Equal"
             }
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/Investments.Tests/Test/UnitTest/FundsServiceTest.cs",
+                "region": {
+                  "startLine": 98,
+                  "startColumn": 27,
+                  "endLine": 98,
+                  "endColumn": 44
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
           }
         }
       ],

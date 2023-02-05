@@ -12,27 +12,6 @@
       },
       "results": [
         {
-          "ruleId": "S4487",
-          "level": "warning",
-          "message": "Remove this unread private field '_context' or refactor the code to use its value.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Persistence/WebScrapingFundsAndYeldsPersist.cs",
-                "region": {
-                  "startLine": 13,
-                  "startColumn": 45,
-                  "endLine": 13,
-                  "endColumn": 53
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
           "ruleId": "S125",
           "level": "warning",
           "message": "Remove this commented out code.",
@@ -45,6 +24,27 @@
                   "startColumn": 9,
                   "endLine": 9,
                   "endColumn": 87
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S4487",
+          "level": "warning",
+          "message": "Remove this unread private field '_context' or refactor the code to use its value.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Persistence/WebScrapingFundsAndYeldsPersist.cs",
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 45,
+                  "endLine": 13,
+                  "endColumn": 53
                 }
               }
             }
@@ -102,12 +102,12 @@
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Persistence/GeneralPersist.cs",
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Persistence/DetachLocal.cs",
                 "region": {
-                  "startLine": 30,
-                  "startColumn": 49,
-                  "endLine": 30,
-                  "endColumn": 54
+                  "startLine": 23,
+                  "startColumn": 53,
+                  "endLine": 23,
+                  "endColumn": 58
                 }
               }
             }
@@ -123,12 +123,12 @@
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Persistence/DetachLocal.cs",
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.Persistence/GeneralPersist.cs",
                 "region": {
-                  "startLine": 23,
-                  "startColumn": 53,
-                  "endLine": 23,
-                  "endColumn": 58
+                  "startLine": 30,
+                  "startColumn": 49,
+                  "endLine": 30,
+                  "endColumn": 54
                 }
               }
             }
