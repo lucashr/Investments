@@ -5,7 +5,7 @@ pipeline {
             steps { 
 
                 bat """
-                    cd WEB\\Back\\Investments.Test
+                    cd %WORKSPACE%\\WEB\\Back\\Investments.Test
                     dotnet coverage collect dotnet test --output .\\TestResults\\coverage.xml --output-format xml
                 """
 
