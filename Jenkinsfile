@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        VS_EXTENSIONS = "C:\\development\\Visual_Studio\\vstest.console.exe"
+        VS_EXTENSIONS = "C:\\development\\Visual_Studio\\vstest.console.exe.lnk"
     }
 
     stages {
