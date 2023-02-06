@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        VS_EXTENSIONS = "C:\\development\\Visual_Studio\\vstest.console.exe.lnk"
+        VS_EXTENSIONS = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe"
     }
 
     stages {
@@ -11,7 +11,7 @@ pipeline {
                 // echo "TEste sem aspas"
                 // echo VS_EXTENSIONS
 
-                bat "coverlet %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --target ${VS_EXTENSIONS} --targetargs %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml"
+                powershell "coverlet %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --target ${VS_EXTENSIONS} --targetargs %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml"
                 
             }
         }
