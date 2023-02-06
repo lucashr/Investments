@@ -8,13 +8,13 @@ pipeline {
     }
 
     stages {
-        // stage('Test') {
-        //     steps { 
+        stage('Test') {
+            steps { 
 
-        //         bat "coverlet ${DLL_PATH_PROJECT} --target ${VS_EXTENSIONS} --targetargs ${DLL_PATH_PROJECT} --format opencover -o ${COVERAGE_PATH}"
+                bat "coverlet ${DLL_PATH_PROJECT} --target ${VS_EXTENSIONS} --targetargs ${DLL_PATH_PROJECT} --format opencover -o ${COVERAGE_PATH}"
                 
-        //     }
-        // }
+            }
+        }
         stage('Code Analysis') {
             steps {
                 bat "dotnet sonarscanner begin /k:DeployBack /d:sonar.login=f4f2f069bc50fc86e24ecdc8343f0fd7b0239da4 /d:sonar.cs.opencover.reportsPaths=${COVERAGE_PATH}coverage.cobertura.xml"
