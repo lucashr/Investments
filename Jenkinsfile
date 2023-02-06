@@ -12,7 +12,7 @@ pipeline {
                 // echo "TEste sem aspas"
                 // echo VS_EXTENSIONS
 
-                bat "coverlet ${DLL_PATH_PROJECT} --target ${VS_EXTENSIONS} --targetargs ${_PATH_PROJECT_DLL} --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml"
+                bat "coverlet ${DLL_PATH_PROJECT} --target ${VS_EXTENSIONS} --targetargs ${DLL_PATH_PROJECT} --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml"
                 
             }
         }
