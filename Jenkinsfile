@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        XXXXX = "VARIAVEL LOCAL JENKINS! ${VS_EXTENSIONS}"
+        XXXXX = "VARIAVEL LOCAL JENKINS! ${%VS_EXTENSIONS%}"
     }
 
     stages {
