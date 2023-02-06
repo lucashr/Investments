@@ -75,27 +75,6 @@
           }
         },
         {
-          "ruleId": "CA2211",
-          "level": "note",
-          "message": "Non-constant fields should not be visible",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.VariablesManager/ConectionsWebSocket.cs",
-                "region": {
-                  "startLine": 9,
-                  "startColumn": 63,
-                  "endLine": 9,
-                  "endColumn": 70
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
           "ruleId": "CA1822",
           "level": "note",
           "message": "Member 'GetSocketById' does not access instance data and can be marked as static",
@@ -129,6 +108,27 @@
                   "startColumn": 23,
                   "endLine": 24,
                   "endColumn": 28
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA2211",
+          "level": "note",
+          "message": "Non-constant fields should not be visible",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/lucas/Desktop/Repositorios/Meus_repositorios/Investments/WEB/Back/src/Investments.VariablesManager/ConectionsWebSocket.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 63,
+                  "endLine": 9,
+                  "endColumn": 70
                 }
               }
             }

@@ -16,4 +16,6 @@ C:\Users\lucas\.nuget\packages\xunit.runner.visualstudio\2.4.5\build\netcoreapp3
 C:\Users\lucas\.nuget\packages\xunit.runner.visualstudio\2.4.5\build\netcoreapp3.1\xunit.runner.reporters.netcoreapp10.dll
 C:\Users\lucas\.nuget\packages\xunit.runner.visualstudio\2.4.5\build\netcoreapp3.1\xunit.runner.utility.netcoreapp10.dll
 C:\Users\lucas\Desktop\Repositorios\Meus_repositorios\Investments\WEB\Back\Investments.Tests\appsettings.Development.json
-C:\Users\lucas\Desktop\Repositorios\Meus_repositorios\Investments\WEB\Back\Investments.Tests\TestResults\coverage.xml
+C:\Users\lucas\Desktop\Repositorios\Meus_repositorios\Investments\WEB\Back\Investments.Tests\TestResults\905b003b-7c4d-4456-819b-6401151ccdc6\coverage.cobertura.xml
+C:\Users\lucas\Desktop\Repositorios\Meus_repositorios\Investments\WEB\Back\Investments.Tests\TestResults\905b003b-7c4d-4456-819b-6401151ccdc6\coveragereport\SonarQube.xml
+C:\Users\lucas\Desktop\Repositorios\Meus_repositorios\Investments\WEB\Back\Investments.Tests\TestResults\SonarQube.xml
