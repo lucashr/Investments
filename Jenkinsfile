@@ -8,7 +8,8 @@ pipeline {
                         VS_EXTENSIONS = echo '%VS_EXTENSIONS%'
                     }
                 }
-
+                echo 'VARIAVEL TESTE'
+                echo '%VS_EXTENSIONS%'
                 // bat 'dotnet-coverage collect -f xml -o .\\TestResults\\coverage.xml dotnet test'
                 //--no-build --collect:"XPlat Code Coverage"
                 // bat 'dotnet test --filter "DisplayName~WebScrapingFundsAndYeldsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
