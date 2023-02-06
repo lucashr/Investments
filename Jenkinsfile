@@ -4,13 +4,13 @@ pipeline {
     environment {
         VS_EXTENSIONS = 'VARIAVEL LOCAL JENKINS!'
     }
-    
+
     stages {
         stage('Test') {
             steps { 
                 
                 echo 'VARIAVEL TESTE'
-                // echo '%VS_EXTENSIONS%'
+                echo '%VS_EXTENSIONS%'
 
                 // bat 'coverlet %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --target %env.VS_EXTENSIONS%\\TestWindow\\vstest.console.exe --targetargs %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml'
                 
