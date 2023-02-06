@@ -1,13 +1,14 @@
 pipeline {
-    agent {
-        label '!windows'
+    agent any
+
+    environment {
+        VS_EXTENSIONS = 'VARIAVEL LOCAL JENKINS!'
     }
+    
     stages {
         stage('Test') {
             steps { 
-                environment {
-                    VS_EXTENSIONS = 'VARIAVEL LOCAL JENKINS!'
-                }
+                
                 echo 'VARIAVEL TESTE'
                 // echo '%VS_EXTENSIONS%'
 
