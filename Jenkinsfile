@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        XXXXX = "VARIAVEL LOCAL JENKINS! ${VS_EXTENSIONS}"
+        VS_EXTENSIONS = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe"
     }
 
     stages {
@@ -10,8 +10,7 @@ pipeline {
             steps { 
                 
                 echo 'VARIAVEL TESTE'
-                echo "Valor variavel ${XXXXX}"
-                bat "echo %VS_EXTENSIONS%"
+                echo "Visual atudio Test ${VS_EXTENSIONS}"
 
                 // bat 'coverlet %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --target %env.VS_EXTENSIONS%\\TestWindow\\vstest.console.exe --targetargs %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml'
                 
