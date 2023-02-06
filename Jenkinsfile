@@ -10,18 +10,8 @@ pipeline {
                 // }
                 echo 'VARIAVEL TESTE'
                 bat 'echo %WORKSPACE%'
-                // bat 'dotnet-coverage collect -f xml -o .\\TestResults\\coverage.xml dotnet test'
-                //--no-build --collect:"XPlat Code Coverage"
-                // bat 'dotnet test --filter "DisplayName~WebScrapingFundsAndYeldsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
-                // bat 'dotnet test --filter "DisplayName~RankOfTheBestFundsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
-                // bat 'dotnet test --filter "DisplayName~FundYeldsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
-                // bat 'dotnet test --filter "DisplayName~FundsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
-                // bat 'dotnet test --no-build --collect:"XPlat Code Coverage" --filter "DisplayName~DetailedFundServiceTest" C:\\Users\\lucas\\AppData\\Local\\Jenkins\\.jenkins\\workspace\\DeployBack\\WEB\\Back\\Investments.Test'
-                // bat 'dotnet build-server shutdown'
-                // C:\Users\lucas\AppData\Local\Jenkins\.jenkins\workspace\DeployBack\WEB\Back\Investments.Test
-                
-                //C:\\Users\\lucas\\Desktop\\Repositorios\\Meus_repositorios\\Investments\\WEB\\Back\\Investments.Tests
-                bat 'coverlet %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --target %env.VS_EXTENSIONS%\\TestWindow\\vstest.console.exe --targetargs %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml'
+
+                // bat 'coverlet %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --target %env.VS_EXTENSIONS%\\TestWindow\\vstest.console.exe --targetargs %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml'
                 
             }
         }
@@ -37,11 +27,11 @@ pipeline {
 
                 */
                 
-                bat 'dotnet sonarscanner begin /k:"DeployBack" /d:sonar.login="f4f2f069bc50fc86e24ecdc8343f0fd7b0239da4" /d:sonar.cs.opencover.reportsPaths=%WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml'
-                bat 'dotnet build %WORKSPACE%\\WEB\\Back\\Investments.Test'
-                // bat 'dotnet build C:\\Users\\lucas\\Desktop\\Repositorios\\Meus_repositorios\\Investments\\WEB\\Back\\Investments.Tests'
-                // bat 'dotnet-coverage collect dotnet test -f xml -o .\\TestResults\\coverage.xml'
-                bat 'dotnet sonarscanner end /d:sonar.login="f4f2f069bc50fc86e24ecdc8343f0fd7b0239da4"'
+                // bat 'dotnet sonarscanner begin /k:"DeployBack" /d:sonar.login="f4f2f069bc50fc86e24ecdc8343f0fd7b0239da4" /d:sonar.cs.opencover.reportsPaths=%WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml'
+                // bat 'dotnet build %WORKSPACE%\\WEB\\Back\\Investments.Test'
+                // // bat 'dotnet build C:\\Users\\lucas\\Desktop\\Repositorios\\Meus_repositorios\\Investments\\WEB\\Back\\Investments.Tests'
+                // // bat 'dotnet-coverage collect dotnet test -f xml -o .\\TestResults\\coverage.xml'
+                // bat 'dotnet sonarscanner end /d:sonar.login="f4f2f069bc50fc86e24ecdc8343f0fd7b0239da4"'
             }
 
             
