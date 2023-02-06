@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Test') {
             steps { 
-                stage("Env Variables") {
+                name("Env Variables") {
                     environment {
                         VS_EXTENSIONS = echo '%VS_EXTENSIONS%'
                     }
