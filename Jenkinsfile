@@ -3,9 +3,12 @@ pipeline {
     stages {
         stage('Test') {
             steps { 
-                environment {
-                    VS_EXTENSIONS = echo '%VS_EXTENSIONS%'
+                stage("Env Variables") {
+                    environment {
+                        VS_EXTENSIONS = echo '%VS_EXTENSIONS%'
+                    }
                 }
+
                 // bat 'dotnet-coverage collect -f xml -o .\\TestResults\\coverage.xml dotnet test'
                 //--no-build --collect:"XPlat Code Coverage"
                 // bat 'dotnet test --filter "DisplayName~WebScrapingFundsAndYeldsServiceTest" %WORKSPACE%\\WEB\\Back\\Investments.Test'
@@ -17,7 +20,7 @@ pipeline {
                 // C:\Users\lucas\AppData\Local\Jenkins\.jenkins\workspace\DeployBack\WEB\Back\Investments.Test
                 
                 //C:\\Users\\lucas\\Desktop\\Repositorios\\Meus_repositorios\\Investments\\WEB\\Back\\Investments.Tests
-                bat 'coverlet %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --target %VS_EXTENSIONS%\\TestWindow\\vstest.console.exe --targetargs %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml'
+                bat 'coverlet %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --target %env.VS_EXTENSIONS%\\TestWindow\\vstest.console.exe --targetargs %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml'
                 
             }
         }
