@@ -8,9 +8,8 @@ pipeline {
     stages {
         stage('Test') {
             steps { 
-                
-                echo 'VARIAVEL TESTE'
-                echo "Visual atudio Test ${VS_EXTENSIONS}"
+                echo "TEste sem aspas"
+                echo VS_EXTENSIONS
 
                 // bat 'coverlet %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --target %env.VS_EXTENSIONS%\\TestWindow\\vstest.console.exe --targetargs %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml'
                 
