@@ -8,10 +8,10 @@ pipeline {
     stages {
         stage('Test') {
             steps { 
-                echo "TEste sem aspas"
-                echo VS_EXTENSIONS
+                // echo "TEste sem aspas"
+                // echo VS_EXTENSIONS
 
-                bat 'coverlet %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --target VS_EXTENSIONS --targetargs %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml'
+                bat 'coverlet %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --target ${VS_EXTENSIONS} --targetargs %WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml'
                 
             }
         }
