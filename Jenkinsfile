@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        _PATH_PROJECT_DLL = "${WORKSPACE%}\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll"
+        DLL_PATH_PROJECT = "%WORKSPACE%\\WEB\\Back\\Investments.Tests\\bin\\Debug\\net5.0\\Investments.Tests.dll"
         VS_EXTENSIONS = "C:\\development\\Visual_Studio_Test\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe"
     }
 
@@ -12,7 +12,7 @@ pipeline {
                 // echo "TEste sem aspas"
                 // echo VS_EXTENSIONS
 
-                bat "coverlet ${_PATH_PROJECT_DLL} --target ${VS_EXTENSIONS} --targetargs ${_PATH_PROJECT_DLL} --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml"
+                bat "coverlet ${DLL_PATH_PROJECT} --target ${VS_EXTENSIONS} --targetargs ${_PATH_PROJECT_DLL} --format opencover -o %WORKSPACE%\\WEB\\Back\\Investments.Tests\\TestResults\\coverage.cobertura.xml"
                 
             }
         }
