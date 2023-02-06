@@ -3,11 +3,11 @@ pipeline {
     stages {
         stage('Test') {
             steps { 
-                name("Env Variables") {
-                    environment {
-                        VS_EXTENSIONS = echo '%VS_EXTENSIONS%'
-                    }
-                }
+                // name("Env Variables") {
+                //     environment {
+                //         VS_EXTENSIONS = echo '%VS_EXTENSIONS%'
+                //     }
+                // }
                 echo 'VARIAVEL TESTE'
                 echo '%VS_EXTENSIONS%'
                 // bat 'dotnet-coverage collect -f xml -o .\\TestResults\\coverage.xml dotnet test'
