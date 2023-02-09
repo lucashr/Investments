@@ -64,7 +64,7 @@ namespace Investments.Tests.Test
 
             // await fundsService.AddFundsAsync(detailedFunds);
 
-            var fund = await fundsService.UpdateFundByCodeAsync(oldFundCode, newFundCode);
+            Funds fund = await fundsService.UpdateFundByCodeAsync(oldFundCode, newFundCode);
 
             Assert.Equal("TESTE", fund.FundCode);
 
