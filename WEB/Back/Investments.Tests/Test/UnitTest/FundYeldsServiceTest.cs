@@ -26,8 +26,8 @@ namespace Investments.Tests.Test
         public async static Task SeedDB()
         {
 
-            dynamic detailedFunds = DummyTest.FundsYeld().ElementAt(0).ElementAt(0);
-            await fundsYieldService.AddFundsYieldsAsync(detailedFunds);
+            dynamic fundsYeld = DummyTest.FundsYeld().ElementAt(0).ElementAt(0);
+            await fundsYieldService.AddFundsYieldsAsync(fundsYeld);
 
         }
 
@@ -53,7 +53,7 @@ namespace Investments.Tests.Test
             Setup();
             await SeedDB();
 
-            await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
+            // await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
 
             var resutl = await fundsYieldService.GetAllFundsYeldAsync();
 
@@ -69,7 +69,7 @@ namespace Investments.Tests.Test
             Setup();
             await SeedDB();
 
-            var resutl = await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
+            // var resutl = await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
 
             var yelds = await fundsYieldService.GetFundYeldByCodeAsync("AAZQ11");
             

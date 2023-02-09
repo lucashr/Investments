@@ -50,8 +50,6 @@ namespace Investments.Tests.Test
             
             Setup();
 
-            await detailedFundService.AddDetailedFundsAsync(detailedFunds);
-
             FundsService fundsService = new FundsService(iGeneralPersist.Object, fundsPersist.Object, iMapper.Object);
 
             await fundsService.AddFundsAsync(detailedFunds);
