@@ -133,7 +133,6 @@ namespace Investments.Persistence
                 }
 
                 AddRange<Funds>(funds.ToArray());
-                // await _context.AddRangeAsync(funds.ToArray());
 
                 await _context.SaveChangesAsync();
 

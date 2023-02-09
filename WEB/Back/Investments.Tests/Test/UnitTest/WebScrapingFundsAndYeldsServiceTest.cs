@@ -4,6 +4,7 @@ using Investments.Application;
 using Investments.Domain.Models;
 using Investments.Persistence;
 using Investments.Persistence.Contracts;
+using Investments.Tests.Helpers;
 using Moq;
 using Xunit;
 
@@ -53,25 +54,8 @@ namespace Investments.Tests.Test
 
         }
 
-        public static IEnumerable<object[]> DetailedFunds(){
-
-            yield return new object[]
-            {
-                new List<DetailedFunds>()
-                {
-                    new DetailedFunds() { FundCode = "AAZQ11"},
-                    new DetailedFunds() { FundCode = "ABCP11" },
-                    new DetailedFunds() { FundCode = "AFHI11" },
-                    new DetailedFunds() { FundCode = "AGRX11" },
-                    new DetailedFunds() { FundCode = "AIEC11" },
-                    new DetailedFunds() { FundCode = "ALMI11" }
-                }
-            };
-
-        }
-
         [Theory]
-        [MemberData(nameof(DetailedFunds))]
+        [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
         public async void MustGetYeldsFundsAndReturnNotNull(List<DetailedFunds> detailedFunds)
         {

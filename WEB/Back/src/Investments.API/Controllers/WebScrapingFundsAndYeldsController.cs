@@ -17,21 +17,22 @@ namespace Investments.API.Controllers
         private readonly WebScrapingSocketManager _socketManager;
         private readonly IDetailedFundService _detailedFundService;
         private readonly IFundsService _fundsService;
+        private readonly IFundsYieldService _fundsYieldService;
 
         public WebScrapingFundsAndYeldsController(IWebScrapingFundsAndYeldsService webScrapingFundsAndYelds,
                                                   IRankOfTheBestFundsService rankOfTheBestFundsService,
                                                   WebScrapingSocketManager socketManager,
                                                   IDetailedFundService detailedFundService,
-                                                  IFundsService fundsService)
+                                                  IFundsService fundsService,
+                                                  IFundsYieldService fundsYieldService)
         {
             _webScrapingFundsAndYelds = webScrapingFundsAndYelds;
             _rankOfTheBestFundsService = rankOfTheBestFundsService;
             _socketManager = socketManager;
             _detailedFundService = detailedFundService;
             _fundsService = fundsService;
+            _fundsYieldService = fundsYieldService;
         }
-
-        static dynamic result;
 
         [HttpGet("Funds")]
         public async Task<IActionResult> GetFundsAsync()
@@ -40,7 +41,8 @@ namespace Investments.API.Controllers
             {
 
                 _socketManager.GetAll();
-                result = await _webScrapingFundsAndYelds.GetFundsAsync();
+                
+                var result = await _webScrapingFundsAndYelds.GetFundsAsync();
                 bool storageWentOK = await _detailedFundService.AddDetailedFundsAsync(result);
 
 
@@ -69,8 +71,11 @@ namespace Investments.API.Controllers
             try
             {
 
-                var fundYelds = await _webScrapingFundsAndYelds.GetYeldsFundsAsync(result);
-                bool storageWentOK = await _detailedFundService.AddDetailedFundsAsync(fundYelds);
+                var detailedFunds = await _detailedFundService.GetAllDetailedFundsAsync();
+                
+                var fundYelds = await _webScrapingFundsAndYelds.GetYeldsFundsAsync(detailedFunds);
+                
+                bool storageWentOK = await _fundsYieldService.AddFundsYieldsAsync(fundYelds);
 
                 if(storageWentOK)
                 {

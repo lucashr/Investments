@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Investments.Application;
 using Investments.Domain.Models;
 using Investments.Persistence;
 using Investments.Persistence.Contracts;
+using Investments.Tests.Helpers;
 using Moq;
 using Xunit;
 
@@ -39,25 +41,9 @@ namespace Investments.Tests.Test
                                                                       fundsYieldService, mapper);
         }
 
-        public static IEnumerable<object[]> RankOfTheBestFunds(){
-
-            yield return new object[]
-            {
-                new List<RankOfTheBestFunds>()
-                {
-                    new RankOfTheBestFunds() { FundCode = "ABCD", AverageVacancy = 1, CoefficientOfVariation= 7, DividendYield = 13, DividendYieldRanking = 19, FFOYield = 25, Liquidity = 31, MultiplierRanking = 37, PriceEquityValue = 43, RankPrice = 49, Segment = "TESTE", ValueOfMarket = 55 },
-                    new RankOfTheBestFunds() { FundCode = "EFGH", AverageVacancy = 2, CoefficientOfVariation= 8, DividendYield = 14, DividendYieldRanking = 20, FFOYield = 26, Liquidity = 32, MultiplierRanking = 38, PriceEquityValue = 44, RankPrice = 50, Segment = "TESTE2", ValueOfMarket = 56 },
-                    new RankOfTheBestFunds() { FundCode = "IJKL", AverageVacancy = 3, CoefficientOfVariation= 9, DividendYield = 15, DividendYieldRanking = 21, FFOYield = 27, Liquidity = 33, MultiplierRanking = 39, PriceEquityValue = 45, RankPrice = 51, Segment = "TESTE3", ValueOfMarket = 57 },
-                    new RankOfTheBestFunds() { FundCode = "MNOP", AverageVacancy = 4, CoefficientOfVariation= 10, DividendYield = 16, DividendYieldRanking = 22, FFOYield = 28, Liquidity = 34, MultiplierRanking = 40, PriceEquityValue = 46, RankPrice = 52, Segment = "TESTE4", ValueOfMarket = 58 },
-                    new RankOfTheBestFunds() { FundCode = "RSTU", AverageVacancy = 5, CoefficientOfVariation= 11, DividendYield = 17, DividendYieldRanking = 23, FFOYield = 29, Liquidity = 35, MultiplierRanking = 41, PriceEquityValue = 47, RankPrice = 53, Segment = "TESTE5", ValueOfMarket = 59 },
-                    new RankOfTheBestFunds() { FundCode = "VXYZ", AverageVacancy = 6, CoefficientOfVariation= 12, DividendYield = 18, DividendYieldRanking = 24, FFOYield = 30, Liquidity = 36, MultiplierRanking = 42, PriceEquityValue = 48, RankPrice = 54, Segment = "TESTE6", ValueOfMarket = 60 }
-                }
-
-            };
-        }
 
         [Theory]
-        [MemberData(nameof(RankOfTheBestFunds))]
+        [MemberData(nameof(DummyTest.RankOfTheBestFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
         public async void MustStoreAndReturnTrue(List<RankOfTheBestFunds> rankOfTheBestFunds)
         {
@@ -71,7 +57,7 @@ namespace Investments.Tests.Test
         }
 
         [Theory]
-        [MemberData(nameof(RankOfTheBestFunds))]
+        [MemberData(nameof(DummyTest.RankOfTheBestFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
         public async void MustCalculateAndReturnNotNull(List<RankOfTheBestFunds> rankOfTheBestFunds)
         {
@@ -86,13 +72,25 @@ namespace Investments.Tests.Test
 
         }
 
+        public void SeedDB()
+        {
+
+            dynamic funds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
+            detailedFundService.AddDetailedFundsAsync(funds);
+
+            dynamic yelds = DummyTest.FundsYeld().ElementAt(0).ElementAt(0);
+            fundsYieldService.AddFundsYieldsAsync(yelds);
+
+        }
+
         [Theory]
-        [MemberData(nameof(RankOfTheBestFunds))]
+        [MemberData(nameof(DummyTest.RankOfTheBestFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
         public async void MustReturnRankOfTheBestFunds(List<RankOfTheBestFunds> rankOfTheBestFunds)
         {
             
             Setup();
+            SeedDB();
 
             await rankOfTheBestFundsService.AddRankOfTheBestFundsAsync(rankOfTheBestFunds);
 

@@ -8,11 +8,12 @@ using Investments.Persistence.Contracts;
 using Moq;
 using Xunit;
 using System.Linq;
+using Investments.Tests.Helpers;
 
 namespace Investments.Tests.Test
 {
 
-    public class DetailedFundServiceTest
+    public static class DetailedFundServiceTest
     {
         
         static DetailedFundPersist detailedFundPersist = null;
@@ -21,7 +22,7 @@ namespace Investments.Tests.Test
         static Mock<IMapper> iMapper = null;
         static Mock<FundsPersist> fundsPersist = null;
 
-        public void Setup()
+        public static void Setup()
         {
 
             detailedFundPersist = new DetailedFundPersist(ConfigureTest._context);
@@ -32,28 +33,10 @@ namespace Investments.Tests.Test
 
         }
 
-        public static IEnumerable<object[]> DetailedFunds(){
-
-            yield return new object[]
-            {
-                new List<DetailedFunds>()
-                {
-                    new DetailedFunds() { FundCode = "ABCD", Liquidity = 1000000, DividendYield = 1 },
-                    new DetailedFunds() { FundCode = "EFGH", Liquidity = 1000000, DividendYield = 2 },
-                    new DetailedFunds() { FundCode = "IJKL", Liquidity = 1000000, DividendYield = 3 },
-                    new DetailedFunds() { FundCode = "MNOP", Liquidity = 1000000, DividendYield = 4 },
-                    new DetailedFunds() { FundCode = "RSTU", Liquidity = 1000000, DividendYield = 5 },
-                    new DetailedFunds() { FundCode = "VXYZ", Liquidity = 1000000, DividendYield = 6 }
-                },
-
-            };
-
-        }
-
         [Theory]
-        [MemberData(nameof(DetailedFunds))]
+        [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public async void MustEnterSixFunds(List<DetailedFunds> detailedFunds)
+        public static async void MustEnterTenFunds(List<DetailedFunds> detailedFunds)
         {
             
             Setup();
@@ -66,14 +49,14 @@ namespace Investments.Tests.Test
 
             var funds = await detailedFundService.GetAllDetailedFundsAsync();
 
-            Assert.True(funds.Count() == 6);
-            
+            Assert.True(funds.Count() == 10);
+
         }
 
         [Theory]
-        [MemberData(nameof(DetailedFunds))]
+        [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public async void MustReturnOneFund(List<DetailedFunds> detailedFunds)
+        public static async void MustReturnOneFund(List<DetailedFunds> detailedFunds)
         {
             
             Setup();
@@ -83,7 +66,7 @@ namespace Investments.Tests.Test
             var funds = await detailedFundService.GetDetailedFundByCodeAsync("MNOP");
             
             Assert.Equal("MNOP", funds.FundCode);
-            
+
         }
 
     }

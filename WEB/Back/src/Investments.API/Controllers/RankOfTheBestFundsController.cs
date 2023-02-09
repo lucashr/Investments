@@ -9,6 +9,7 @@ namespace Investments.API.Controllers
     [Route("api/[controller]")]
     public class RankOfTheBestFundsController : ControllerBase
     {
+        
         private readonly IRankOfTheBestFundsService _rankOfTheBestFundsService;
 
         public RankOfTheBestFundsController(IRankOfTheBestFundsService rankOfTheBestFundsService)

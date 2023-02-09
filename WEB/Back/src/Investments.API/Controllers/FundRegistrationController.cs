@@ -20,7 +20,7 @@ namespace Investments.API.Controllers
             _fundsService = fundsService;
         }
 
-        [HttpPut("FundRegistration")]
+        [HttpPost("FundRegistration")]
         public async Task<IActionResult> FundRegistration(string fundCode)
         {
 
@@ -43,23 +43,27 @@ namespace Investments.API.Controllers
             
         }
 
-        [HttpPut("FundsRegistration")]
-        public async Task<IActionResult> FundsRegistration(List<string> fundCode)
+        [HttpPost("FundsRegistration")]
+        public async Task<IActionResult> FundsRegistration(List<string> fundCodes)
         {
 
             try
             {
+
                 var detailedFunds = new List<DetailedFunds>();
-                detailedFunds.AddRange((IEnumerable<DetailedFunds>)fundCode);
+
+                foreach (string fund in fundCodes)
+                {
+                    detailedFunds.Add(new DetailedFunds(){FundCode = fund});
+                }
 
                 var funds = await _fundsService.AddFundsAsync(detailedFunds);
 
                 if(funds)
-                {
-                    return Ok("Fundo já cadastrado na base de dados");
-                }
+                    return Ok("Operação efetuada com sucesso!");
 
-                return Ok(funds);
+                return Ok("Falha ao tentar executar operação!");
+                
             }
             catch (System.Exception ex)
             {

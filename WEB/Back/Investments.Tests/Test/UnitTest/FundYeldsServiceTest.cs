@@ -6,6 +6,7 @@ using Investments.Persistence;
 using System.Collections.Generic;
 using Investments.Domain.Models;
 using System;
+using Investments.Tests.Helpers;
 
 namespace Investments.Tests.Test
 {
@@ -21,25 +22,8 @@ namespace Investments.Tests.Test
             fundsYieldService = new FundsYieldService(fundYeldsPersist.Object);
         }
 
-        public static IEnumerable<object[]> FundsYeld(){
-
-            yield return new object[]
-            {
-                new List<FundsYeld>()
-                {
-                    new FundsYeld() { FundCode = "ABCD", DatePayment = DateTime.Now.AddDays(20), LastComputedDate = DateTime.Now, Value = 1.90, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "EFGH", DatePayment = DateTime.Now.AddDays(20), LastComputedDate = DateTime.Now, Value = 0.80, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "IJKL", DatePayment = DateTime.Now.AddDays(20), LastComputedDate = DateTime.Now, Value = 0.50, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "MNOP", DatePayment = DateTime.Now.AddDays(20), LastComputedDate = DateTime.Now, Value = 0.77, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "RSTU", DatePayment = DateTime.Now.AddDays(20), LastComputedDate = DateTime.Now, Value = 1.50, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "VXYZ", DatePayment = DateTime.Now.AddDays(20), LastComputedDate = DateTime.Now, Value = 1.00, Type = "DIVIDENDO" }
-                }
-
-            };
-        }
-
         [Theory]
-        [MemberData(nameof(FundsYeld))]
+        [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         [ConfigureTest]
         public async void MustEnterSixFundsYeldsAndReturnTrue(List<FundsYeld> fundsYelds)
         {
@@ -52,7 +36,7 @@ namespace Investments.Tests.Test
         }
 
         [Theory]
-        [MemberData(nameof(FundsYeld))]
+        [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         [ConfigureTest]
         public async void MustReturnSixFundsYelds(List<FundsYeld> fundsYelds)
         {
@@ -63,11 +47,11 @@ namespace Investments.Tests.Test
 
             var resutl = await fundsYieldService.GetAllFundsYeldAsync();
 
-            Assert.True(resutl.Count() == 6);
+            Assert.True(resutl.Count() == 30);
         }
 
         [Theory]
-        [MemberData(nameof(FundsYeld))]
+        [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         [ConfigureTest]
         public async void MustReturnFundYeldByCode(List<FundsYeld> fundsYelds)
         {
@@ -76,9 +60,9 @@ namespace Investments.Tests.Test
 
             var resutl = await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
 
-            var yelds = await fundsYieldService.GetFundYeldByCodeAsync("EFGH");
+            var yelds = await fundsYieldService.GetFundYeldByCodeAsync("AAZQ11");
             
-            Assert.Equal("EFGH", yelds.Select(x=>x.FundCode).FirstOrDefault());
+            Assert.Equal("AAZQ11", yelds.Select(x=>x.FundCode).FirstOrDefault());
             Assert.True(yelds.Count() > 0);
 
         }

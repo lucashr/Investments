@@ -5,6 +5,7 @@ using Investments.Application;
 using Investments.Domain.Models;
 using Investments.Persistence;
 using Investments.Persistence.Contracts;
+using Investments.Tests.Helpers;
 using Moq;
 using Xunit;
 
@@ -26,25 +27,8 @@ namespace Investments.Tests.Test
             fundsService = new FundsService(iGeneralPersist.Object, fundsPersist.Object, iMapper.Object);
         }
         
-        public static IEnumerable<object[]> DetailedFunds(){
-
-            yield return new object[]
-            {
-                new List<DetailedFunds>()
-                {
-                    new DetailedFunds() { FundCode = "ABCD"},
-                    new DetailedFunds() { FundCode = "EFGH" },
-                    new DetailedFunds() { FundCode = "IJKL" },
-                    new DetailedFunds() { FundCode = "MNOP" },
-                    new DetailedFunds() { FundCode = "RSTU" },
-                    new DetailedFunds() { FundCode = "VXYZ" }
-                }
-            };
-
-        }
-
         [Theory]
-        [MemberData(nameof(DetailedFunds))]
+        [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
         public async void MustEnterSixFunds(List<DetailedFunds> detailedFunds)
         {
@@ -65,7 +49,7 @@ namespace Investments.Tests.Test
             
             Setup();
 
-            dynamic detailedFunds = DetailedFunds().ElementAt(0).ElementAt(0);
+            dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
             await fundsService.AddFundsAsync(detailedFunds);
 
@@ -83,7 +67,7 @@ namespace Investments.Tests.Test
 
             Setup();
 
-            dynamic detailedFunds = DetailedFunds().ElementAt(0).ElementAt(0);
+            dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
             await fundsService.AddFundsAsync(detailedFunds);
 
@@ -100,7 +84,7 @@ namespace Investments.Tests.Test
 
             Setup();
 
-            dynamic detailedFunds = DetailedFunds().ElementAt(0).ElementAt(0);
+            dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
             await fundsService.AddFundsAsync(detailedFunds);
 
@@ -110,9 +94,9 @@ namespace Investments.Tests.Test
         }
 
         [Theory]
-        [MemberData(nameof(DetailedFunds))]
+        [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public async void MustReturnAllFunds(List<DetailedFunds> detailedFunds)
+        public async void MustReturnAllFunds(List<DetailedFunds> detailedFunds, string teste)
         {
 
             Setup();
@@ -132,7 +116,7 @@ namespace Investments.Tests.Test
 
             Setup();
 
-            dynamic detailedFunds = DetailedFunds().ElementAt(0).ElementAt(0);
+            dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
             await fundsService.AddFundsAsync(detailedFunds);
 

@@ -47,7 +47,7 @@ namespace Investments.API.Controllers
             {
                 var funds = await _fundsYeldService.GetAllFundsYeldAsync();
 
-                return Ok(funds.Where(x=> x.FundCode.Contains("HC")));
+                return Ok(funds);
             }
             catch (System.Exception ex)
             {

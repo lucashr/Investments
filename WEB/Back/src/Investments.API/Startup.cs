@@ -16,6 +16,8 @@ using Investments.VariablesManager;
 using System.Linq;
 using System.Runtime.Loader;
 using System.Reflection;
+using Investments.Application.helpers;
+using AutoMapper;
 
 namespace Investments.API
 {
@@ -49,8 +51,17 @@ namespace Investments.API
 
             if(AppDomain.CurrentDomain.BaseDirectory.ToLower().Contains(".tests"))
             {
-                var assembly = typeof(Program).GetTypeInfo().Assembly;
-                services.AddAutoMapper(assembly);
+                // var assembly = typeof(Program).GetTypeInfo().Assembly;
+                // services.AddAutoMapper(assembly);
+
+                var mappingConfig = new MapperConfiguration(mc =>
+                {
+                    mc.AddProfile(new InvestmentsProfile());
+                });
+
+                IMapper mapper = mappingConfig.CreateMapper();
+
+                services.AddSingleton(mapper);
             }
             else
             {

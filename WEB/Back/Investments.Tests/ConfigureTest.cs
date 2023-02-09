@@ -46,7 +46,7 @@ namespace Investments.Tests
             .UseSqlite(_configuration.GetConnectionString("Default"))
             .EnableSensitiveDataLogging().Options;
 
-            InvestmentsContext context = new InvestmentsContext(options);
+            var context = new InvestmentsContext(options);
             context.Database.EnsureCreated();
 
             return context;

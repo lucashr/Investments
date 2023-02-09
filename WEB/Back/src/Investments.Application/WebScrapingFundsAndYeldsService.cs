@@ -147,7 +147,7 @@ namespace Investments.Application
             var fundsYeldsTmp = new List<FundsYeld>();
             var totalFundYeldsDb = new List<FundsYeld>();
             
-            dynamic lastDateDB = null;
+            // dynamic lastDateDB = null;
             dynamic rows;
             dynamic columns;
             
@@ -221,14 +221,14 @@ namespace Investments.Application
                         Console.Write(driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text + " | ");
                     }
 
-                    var result = await _fundsYeldPersist.GetFundYeldByCodeAsync(fund.FundCode.ToUpper().Trim());
+                    // var result = await _fundsYeldPersist.GetFundYeldByCodeAsync(fund.FundCode.ToUpper().Trim());
 
-                    if(result != null)
-                    {
-                        totalFundYeldsDb = result.ToList();
+                    // if(result != null)
+                    // {
+                    //     totalFundYeldsDb = result.ToList();
 
-                        lastDateDB = result.OrderByDescending(x=> x.LastComputedDate).Take(1).Select(x=>x.LastComputedDate).FirstOrDefault(); 
-                    }
+                    //     lastDateDB = result.OrderByDescending(x=> x.LastComputedDate).Take(1).Select(x=>x.LastComputedDate).FirstOrDefault(); 
+                    // }
                     
                     for (int i = 1; i <= numberOfLines; i++)
                     {
@@ -252,13 +252,13 @@ namespace Investments.Application
                         Console.WriteLine($"{JsonConvert.SerializeObject(fY)}");
                         await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(fY));
 
-                        if(lastDateDB != null)
-                        {
-                            if(lastDateDB >= fY.LastComputedDate)
-                            {
-                                break;
-                            }
-                        }
+                        // if(lastDateDB != null)
+                        // {
+                        //     if(lastDateDB >= fY.LastComputedDate)
+                        //     {
+                        //         break;
+                        //     }
+                        // }
 
                         fundsYeldsTmp.Add(fY);
 
