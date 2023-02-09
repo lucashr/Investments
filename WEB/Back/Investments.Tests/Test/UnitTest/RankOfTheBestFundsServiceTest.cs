@@ -46,7 +46,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.RankOfTheBestFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public static async void MustStoreAndReturnTrue(List<RankOfTheBestFunds> rankOfTheBestFunds)
+        public static async Task MustStoreAndReturnTrue(List<RankOfTheBestFunds> rankOfTheBestFunds)
         {
             
             Setup();
@@ -60,7 +60,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.RankOfTheBestFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public static async void MustCalculateAndReturnNotNull(List<RankOfTheBestFunds> rankOfTheBestFunds)
+        public static async Task MustCalculateAndReturnNotNull(List<RankOfTheBestFunds> rankOfTheBestFunds)
         {
             
             Setup();
@@ -88,7 +88,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.RankOfTheBestFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public static async void MustReturnRankOfTheBestFunds(List<RankOfTheBestFunds> rankOfTheBestFunds)
+        public static async Task MustReturnRankOfTheBestFunds(List<RankOfTheBestFunds> rankOfTheBestFunds)
         {
             
             Setup();

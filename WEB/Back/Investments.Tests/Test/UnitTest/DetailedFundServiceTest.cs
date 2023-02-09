@@ -45,7 +45,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public static async void MustEnterTenFunds(List<DetailedFunds> detailedFunds)
+        public static async Task MustEnterTenFunds(List<DetailedFunds> detailedFunds)
         {
             
             Setup();
@@ -65,7 +65,7 @@ namespace Investments.Tests.Test
         [Theory]
         [InlineData("ABCP11")]
         [ConfigureTest]
-        public static async void MustReturnOneFund(string fundCode)
+        public static async Task MustReturnOneFund(string fundCode)
         {
             
             Setup();

@@ -47,7 +47,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public static async void MustReturnThirtyFundsYelds(List<FundsYeld> fundsYelds)
+        public static async Task MustReturnThirtyFundsYelds(List<FundsYeld> fundsYelds)
         {
 
             Setup();
@@ -63,7 +63,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public static async void MustReturnFundYeldByCode(List<FundsYeld> fundsYelds)
+        public static async Task MustReturnFundYeldByCode(List<FundsYeld> fundsYelds)
         {
 
             Setup();

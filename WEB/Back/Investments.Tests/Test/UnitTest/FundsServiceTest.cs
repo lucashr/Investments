@@ -40,7 +40,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public static async void MustEnterTenFunds(List<DetailedFunds> detailedFunds)
+        public static async Task MustEnterTenFunds(List<DetailedFunds> detailedFunds)
         {
             
             Setup();
@@ -54,7 +54,7 @@ namespace Investments.Tests.Test
         [Theory]
         [InlineData("AIEC11", "TESTE")]
         [ConfigureTest]
-        public static async void MustUpdateFundCode(string oldFundCode, string newFundCode)
+        public static async Task MustUpdateFundCode(string oldFundCode, string newFundCode)
         {
             
             Setup();
@@ -73,7 +73,7 @@ namespace Investments.Tests.Test
         [Theory]
         [InlineData("ABCDE")]
         [ConfigureTest]
-        public static async void MustVerifyIfFundExistsAndCreateNewFund(string fundCode)
+        public static async Task MustVerifyIfFundExistsAndCreateNewFund(string fundCode)
         {
 
             Setup();
@@ -91,7 +91,7 @@ namespace Investments.Tests.Test
         [Theory]
         [InlineData("AFOF11")]
         [ConfigureTest]
-        public static async void MustReturnOneFund(string fundCode)
+        public static async Task MustReturnOneFund(string fundCode)
         {
 
             Setup();
@@ -109,7 +109,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public static async void MustReturnAllFunds(List<DetailedFunds> detailedFunds, string teste)
+        public static async Task MustReturnAllFunds(List<DetailedFunds> detailedFunds, string teste)
         {
 
             Setup();
@@ -125,7 +125,7 @@ namespace Investments.Tests.Test
         [Theory]
         [InlineData("AFHI11")]
         [ConfigureTest]
-        public static async void MustDeleteFundEReturnTrue(string fundCode)
+        public static async Task MustDeleteFundEReturnTrue(string fundCode)
         {
 
             Setup();

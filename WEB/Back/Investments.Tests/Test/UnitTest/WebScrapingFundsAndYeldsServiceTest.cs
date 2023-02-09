@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Investments.Application;
 using Investments.Domain.Models;
 using Investments.Persistence;
@@ -37,7 +38,7 @@ namespace Investments.Tests.Test
 
         [Fact]
         [ConfigureTest]
-        public async void MustGetTenFunds()
+        public async Task MustGetTenFunds()
         {
 
             Setup();
@@ -57,7 +58,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public async void MustGetYeldsFundsAndReturnNotNull(List<DetailedFunds> detailedFunds)
+        public async Task MustGetYeldsFundsAndReturnNotNull(List<DetailedFunds> detailedFunds)
         {
 
             Setup();
