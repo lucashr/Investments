@@ -60,9 +60,9 @@ namespace Investments.Tests.Test
             Setup();
             await SeedDB();
 
-            dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
+            // dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
-            await fundsService.AddFundsAsync(detailedFunds);
+            // await fundsService.AddFundsAsync(detailedFunds);
 
             var fund = await fundsService.UpdateFundByCodeAsync(oldFundCode, newFundCode);
 
@@ -79,9 +79,9 @@ namespace Investments.Tests.Test
             Setup();
             await SeedDB();
 
-            dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
+            // dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
-            await fundsService.AddFundsAsync(detailedFunds);
+            // await fundsService.AddFundsAsync(detailedFunds);
 
             var fund = await fundsService.AddFundAsync(fundCode);
 
@@ -97,25 +97,24 @@ namespace Investments.Tests.Test
             Setup();
             await SeedDB();
 
-            dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
+            // dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
-            await fundsService.AddFundsAsync(detailedFunds);
+            // await fundsService.AddFundsAsync(detailedFunds);
 
             var fund = await fundsService.GetFundByCodeAsync(fundCode);
 
             Assert.Equal("AFOF11", fund.FundCode);
         }
 
-        [Theory]
-        [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
+        [Fact]
         [ConfigureTest]
-        public static async Task MustReturnAllFunds(List<DetailedFunds> detailedFunds, string teste)
+        public static async Task MustReturnAllFunds()
         {
 
             Setup();
             await SeedDB();
 
-            var result = await fundsService.AddFundsAsync(detailedFunds);
+            // var result = await fundsService.AddFundsAsync(detailedFunds);
 
             var fund = await fundsService.GetAllFundsAsync();
 
@@ -131,9 +130,9 @@ namespace Investments.Tests.Test
             Setup();
             await SeedDB();
 
-            dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
+            // dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
-            await fundsService.AddFundsAsync(detailedFunds);
+            // await fundsService.AddFundsAsync(detailedFunds);
 
             var result = await fundsService.DeleteFundByCodeAsync(fundCode);
 

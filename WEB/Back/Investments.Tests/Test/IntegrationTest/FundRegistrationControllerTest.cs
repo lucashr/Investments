@@ -108,17 +108,17 @@ namespace Investments.Tests.Test.IntegrationTest
             client.DefaultRequestHeaders.Accept.Add( 
                     new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json-patch+json"));
             
-            dynamic fundCodes = DummyTest.FundCodes().ElementAt(0).ElementAt(0);
+            // dynamic fundCodes = DummyTest.FundCodes().ElementAt(0).ElementAt(0);
 
-            var jsonContent = JsonConvert.SerializeObject(fundCodes); 
-            var contentString  = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json-patch+json");
+            // var jsonContent = JsonConvert.SerializeObject(fundCodes); 
+            // var contentString  = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json-patch+json");
             
-            string url = $"api/FundRegistration/FundsRegistration?fundCodes={jsonContent}";
+            // string url = $"api/FundRegistration/FundsRegistration?fundCodes={jsonContent}";
 
-            var response = await client.PostAsync(url, contentString);
-            url = $"api/FundRegistration/DeleteFundByCode/{fundCode}";
+            // var response = await client.PostAsync(url, contentString);
+            string url = $"api/FundRegistration/DeleteFundByCode/{fundCode}";
 
-            response = await client.DeleteAsync(url);
+            var response = await client.DeleteAsync(url);
 
             string result = await response.Content.ReadAsStringAsync();
 

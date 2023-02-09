@@ -71,10 +71,6 @@ namespace Investments.Tests.Test
             Setup();
             await SeedDB();
 
-            dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
-
-            await detailedFundService.AddDetailedFundsAsync(detailedFunds);
-            
             var funds = await detailedFundService.GetDetailedFundByCodeAsync(fundCode);
             
             Assert.Equal(fundCode, funds.FundCode);
