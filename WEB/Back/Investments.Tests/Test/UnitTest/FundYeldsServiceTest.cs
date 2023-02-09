@@ -22,6 +22,14 @@ namespace Investments.Tests.Test
             fundsYieldService = new FundsYieldService(fundYeldsPersist.Object);
         }
 
+        public async static void SeedDB()
+        {
+
+            dynamic detailedFunds = DummyTest.FundsYeld().ElementAt(0).ElementAt(0);
+            await fundsYieldService.AddFundsYieldsAsync(detailedFunds);
+
+        }
+
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         [ConfigureTest]
@@ -38,10 +46,11 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public static async void MustReturnSixFundsYelds(List<FundsYeld> fundsYelds)
+        public static async void MustReturnThirtyFundsYelds(List<FundsYeld> fundsYelds)
         {
 
             Setup();
+            SeedDB();
 
             await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
 
@@ -57,6 +66,7 @@ namespace Investments.Tests.Test
         {
 
             Setup();
+            SeedDB();
 
             var resutl = await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
 

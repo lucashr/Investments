@@ -32,6 +32,7 @@ namespace Investments.Tests.Test
 
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
             await fundsService.AddFundsAsync(detailedFunds);
+            DetailedFundServiceTest.MustEnterTenFunds(detailedFunds);
 
         }
         
@@ -42,8 +43,7 @@ namespace Investments.Tests.Test
         {
             
             Setup();
-            SeedDB();
-
+            
             var result = await fundsService.AddFundsAsync(detailedFunds);
 
             Assert.True(result);

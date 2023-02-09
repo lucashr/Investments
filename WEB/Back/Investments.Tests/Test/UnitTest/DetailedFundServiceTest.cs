@@ -33,6 +33,14 @@ namespace Investments.Tests.Test
 
         }
 
+        public static void SeedDB()
+        {
+
+            dynamic funds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
+            detailedFundService.AddDetailedFundsAsync(funds);
+
+        }
+
         [Theory]
         [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
@@ -60,6 +68,8 @@ namespace Investments.Tests.Test
         {
             
             Setup();
+            SeedDB();
+
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
             await detailedFundService.AddDetailedFundsAsync(detailedFunds);
