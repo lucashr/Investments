@@ -26,6 +26,14 @@ namespace Investments.Tests.Test
             iMapper = new Mock<IMapper>();
             fundsService = new FundsService(iGeneralPersist.Object, fundsPersist.Object, iMapper.Object);
         }
+
+        public async static void SeedDB()
+        {
+
+            dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
+            await fundsService.AddFundsAsync(detailedFunds);
+
+        }
         
         [Theory]
         [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
@@ -34,6 +42,7 @@ namespace Investments.Tests.Test
         {
             
             Setup();
+            SeedDB();
 
             var result = await fundsService.AddFundsAsync(detailedFunds);
 
@@ -48,6 +57,7 @@ namespace Investments.Tests.Test
         {
             
             Setup();
+            SeedDB();
 
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
@@ -66,6 +76,7 @@ namespace Investments.Tests.Test
         {
 
             Setup();
+            SeedDB();
 
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
@@ -83,6 +94,7 @@ namespace Investments.Tests.Test
         {
 
             Setup();
+            SeedDB();
 
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
@@ -100,6 +112,7 @@ namespace Investments.Tests.Test
         {
 
             Setup();
+            SeedDB();
 
             var result = await fundsService.AddFundsAsync(detailedFunds);
 
@@ -115,6 +128,7 @@ namespace Investments.Tests.Test
         {
 
             Setup();
+            SeedDB();
 
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
