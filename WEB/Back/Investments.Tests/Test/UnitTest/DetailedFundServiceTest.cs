@@ -54,18 +54,19 @@ namespace Investments.Tests.Test
         }
 
         [Theory]
-        [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
+        [InlineData("ABCP11")]
         [ConfigureTest]
-        public static async void MustReturnOneFund(List<DetailedFunds> detailedFunds)
+        public static async void MustReturnOneFund(string fundCode)
         {
             
             Setup();
+            dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
             await detailedFundService.AddDetailedFundsAsync(detailedFunds);
             
-            var funds = await detailedFundService.GetDetailedFundByCodeAsync("MNOP");
+            var funds = await detailedFundService.GetDetailedFundByCodeAsync(fundCode);
             
-            Assert.Equal("MNOP", funds.FundCode);
+            Assert.Equal(fundCode, funds.FundCode);
 
         }
 

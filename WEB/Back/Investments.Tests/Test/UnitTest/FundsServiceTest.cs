@@ -42,7 +42,7 @@ namespace Investments.Tests.Test
         }
 
         [Theory]
-        [InlineData("ABCD", "TESTE")]
+        [InlineData("AIEC11", "TESTE")]
         [ConfigureTest]
         public async void MustUpdateFundCode(string oldFundCode, string newFundCode)
         {
@@ -60,7 +60,7 @@ namespace Investments.Tests.Test
         }
 
         [Theory]
-        [InlineData("BBBBB")]
+        [InlineData("ABCDE")]
         [ConfigureTest]
         public async void MustVerifyIfFundExistsAndCreateNewFund(string fundCode)
         {
@@ -73,11 +73,11 @@ namespace Investments.Tests.Test
 
             var fund = await fundsService.AddFundAsync(fundCode);
 
-            Assert.Equal("BBBBB", fund.FundCode);
+            Assert.Equal("ABCDE", fund.FundCode);
         }
 
         [Theory]
-        [InlineData("VXYZ")]
+        [InlineData("AFOF11")]
         [ConfigureTest]
         public async void MustReturnOneFund(string fundCode)
         {
@@ -90,7 +90,7 @@ namespace Investments.Tests.Test
 
             var fund = await fundsService.GetFundByCodeAsync(fundCode);
 
-            Assert.Equal("VXYZ", fund.FundCode);
+            Assert.Equal("AFOF11", fund.FundCode);
         }
 
         [Theory]
@@ -105,11 +105,11 @@ namespace Investments.Tests.Test
 
             var fund = await fundsService.GetAllFundsAsync();
 
-            Assert.True(fund.Count() == 6);
+            Assert.True(fund.Count() == 10);
         }
 
         [Theory]
-        [InlineData("RSTU")]
+        [InlineData("AFHI11")]
         [ConfigureTest]
         public async void MustDeleteFundEReturnTrue(string fundCode)
         {

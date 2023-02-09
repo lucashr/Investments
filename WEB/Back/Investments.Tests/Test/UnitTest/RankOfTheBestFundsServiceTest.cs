@@ -63,6 +63,7 @@ namespace Investments.Tests.Test
         {
             
             Setup();
+            SeedDB();
 
             await rankOfTheBestFundsService.AddRankOfTheBestFundsAsync(rankOfTheBestFunds);
 
