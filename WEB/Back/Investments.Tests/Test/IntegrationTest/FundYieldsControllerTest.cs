@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using Investments.Domain.Models;
 using Investments.Tests.Helpers;
@@ -26,10 +27,21 @@ namespace Investments.Tests.Test.IntegrationTest
             MaxAutomaticRedirections = 7,
         };
 
+        public void SeedDB()
+        {
+            
+            dynamic fundsYeld = DummyTest.FundsYeld().ElementAt(0).ElementAt(0);
+            FundYeldsServiceTest.MustEnterThirtyFundsYeldsAndReturnTrue(fundsYeld);
+
+        }
+
         [Theory]
+        [ConfigureTest]
         [InlineData("AGRX11")]
         public async void MustGetFundYeldByCode(string fundCode)
         {
+
+            SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
             
@@ -51,8 +63,11 @@ namespace Investments.Tests.Test.IntegrationTest
         }
 
         [Fact]
+        [ConfigureTest]
         public async void MustReturnAllFundsYelds()
         {
+
+            SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
             

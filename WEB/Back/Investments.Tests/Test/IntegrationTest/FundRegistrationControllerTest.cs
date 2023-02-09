@@ -28,6 +28,14 @@ namespace Investments.Tests.Test.IntegrationTest
             MaxAutomaticRedirections = 7,
         };
 
+        public void SeedDB()
+        {
+            
+            dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
+            FundsServiceTest.MustEnterTenFunds(detailedFunds);
+
+        }
+
         //Deveria retornar algum erro informando que a API não existe!
         // [Theory]
         // [InlineData("BBBB")]
@@ -60,6 +68,7 @@ namespace Investments.Tests.Test.IntegrationTest
         // }        
 
         [Theory]
+        [ConfigureTest]
         [MemberData(nameof(DummyTest.FundCodes), MemberType = typeof(DummyTest))]
         public async void MustInsertAndReturnMessageOK(List<string> fundCodes)
         {
@@ -85,9 +94,12 @@ namespace Investments.Tests.Test.IntegrationTest
         }
 
         [Theory]
+        [ConfigureTest]
         [InlineData("AFCR11")]
         public async void MustDeleteAndReturnTrue(string fundCode)
         {
+
+            SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
             
@@ -115,9 +127,12 @@ namespace Investments.Tests.Test.IntegrationTest
         }
 
         [Theory]
+        [ConfigureTest]
         [InlineData("AEFI11", "EDCBA")]
         public async void MustUpdateAndReturnModifiedFund(string oldFundCode, string newFundCode)
         {
+
+            SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
             
@@ -141,9 +156,12 @@ namespace Investments.Tests.Test.IntegrationTest
         }
 
         [Theory]
+        [ConfigureTest]
         [InlineData("ABCP11")]
         public async void MustGetFundByCode(string fundCode)
         {
+
+            SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
             
@@ -163,9 +181,12 @@ namespace Investments.Tests.Test.IntegrationTest
         }
 
         [Fact]
+        [ConfigureTest]
         public async void MustReturnOneListFunds()
         {
 
+            SeedDB();
+            
             HttpClient client = _factory.CreateClient(clientOptions);
             
             string url = $"api/FundRegistration/AllFunds";

@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Investments.Tests.Test
 {
-    public class RankOfTheBestFundsServiceTest
+    public static class RankOfTheBestFundsServiceTest
     {
 
         static RankOfTheBestFundsService rankOfTheBestFundsService = null;
@@ -21,7 +21,7 @@ namespace Investments.Tests.Test
         static Mock<FundYeldsPersist> fundYeldsPersist = null;
         static FundsYieldService fundsYieldService = null;
 
-        public void Setup()
+        public static void Setup()
         {   
 
             rankOfTheBestFundsPersist = new Mock<RankOfTheBestFundsPersist>(ConfigureTest._context);
@@ -45,7 +45,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.RankOfTheBestFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public async void MustStoreAndReturnTrue(List<RankOfTheBestFunds> rankOfTheBestFunds)
+        public static async void MustStoreAndReturnTrue(List<RankOfTheBestFunds> rankOfTheBestFunds)
         {
             
             Setup();
@@ -59,7 +59,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.RankOfTheBestFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public async void MustCalculateAndReturnNotNull(List<RankOfTheBestFunds> rankOfTheBestFunds)
+        public static async void MustCalculateAndReturnNotNull(List<RankOfTheBestFunds> rankOfTheBestFunds)
         {
             
             Setup();
@@ -73,7 +73,7 @@ namespace Investments.Tests.Test
 
         }
 
-        public void SeedDB()
+        public static void SeedDB()
         {
 
             dynamic funds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
@@ -87,7 +87,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.RankOfTheBestFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public async void MustReturnRankOfTheBestFunds(List<RankOfTheBestFunds> rankOfTheBestFunds)
+        public static async void MustReturnRankOfTheBestFunds(List<RankOfTheBestFunds> rankOfTheBestFunds)
         {
             
             Setup();

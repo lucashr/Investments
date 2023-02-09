@@ -10,13 +10,13 @@ using Investments.Tests.Helpers;
 
 namespace Investments.Tests.Test
 {
-    public class FundYeldsServiceTest
+    public static class FundYeldsServiceTest
     {
 
         static Mock<FundYeldsPersist> fundYeldsPersist = null;
         static FundsYieldService fundsYieldService = null;
 
-        public void Setup()
+        public static void Setup()
         {
             fundYeldsPersist = new Mock<FundYeldsPersist>(ConfigureTest._context);
             fundsYieldService = new FundsYieldService(fundYeldsPersist.Object);
@@ -25,7 +25,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public async void MustEnterSixFundsYeldsAndReturnTrue(List<FundsYeld> fundsYelds)
+        public static async void MustEnterThirtyFundsYeldsAndReturnTrue(List<FundsYeld> fundsYelds)
         {
 
             Setup();
@@ -38,7 +38,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public async void MustReturnSixFundsYelds(List<FundsYeld> fundsYelds)
+        public static async void MustReturnSixFundsYelds(List<FundsYeld> fundsYelds)
         {
 
             Setup();
@@ -53,7 +53,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public async void MustReturnFundYeldByCode(List<FundsYeld> fundsYelds)
+        public static async void MustReturnFundYeldByCode(List<FundsYeld> fundsYelds)
         {
 
             Setup();

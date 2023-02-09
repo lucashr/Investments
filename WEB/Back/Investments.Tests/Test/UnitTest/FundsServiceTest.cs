@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Investments.Tests.Test
 {
-    public class FundsServiceTest
+    public static class FundsServiceTest
     {
 
         static Mock<FundsPersist> fundsPersist = null;
@@ -19,7 +19,7 @@ namespace Investments.Tests.Test
         static Mock<IMapper> iMapper = null;
         static FundsService fundsService = null;
 
-        public void Setup()
+        public static void Setup()
         {
             fundsPersist = new Mock<FundsPersist>(ConfigureTest._context);
             iGeneralPersist = new Mock<GeneralPersist>(ConfigureTest._context);
@@ -30,7 +30,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public async void MustEnterSixFunds(List<DetailedFunds> detailedFunds)
+        public static async void MustEnterTenFunds(List<DetailedFunds> detailedFunds)
         {
             
             Setup();
@@ -44,7 +44,7 @@ namespace Investments.Tests.Test
         [Theory]
         [InlineData("AIEC11", "TESTE")]
         [ConfigureTest]
-        public async void MustUpdateFundCode(string oldFundCode, string newFundCode)
+        public static async void MustUpdateFundCode(string oldFundCode, string newFundCode)
         {
             
             Setup();
@@ -62,7 +62,7 @@ namespace Investments.Tests.Test
         [Theory]
         [InlineData("ABCDE")]
         [ConfigureTest]
-        public async void MustVerifyIfFundExistsAndCreateNewFund(string fundCode)
+        public static async void MustVerifyIfFundExistsAndCreateNewFund(string fundCode)
         {
 
             Setup();
@@ -79,7 +79,7 @@ namespace Investments.Tests.Test
         [Theory]
         [InlineData("AFOF11")]
         [ConfigureTest]
-        public async void MustReturnOneFund(string fundCode)
+        public static async void MustReturnOneFund(string fundCode)
         {
 
             Setup();
@@ -96,7 +96,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public async void MustReturnAllFunds(List<DetailedFunds> detailedFunds, string teste)
+        public static async void MustReturnAllFunds(List<DetailedFunds> detailedFunds, string teste)
         {
 
             Setup();
@@ -111,7 +111,7 @@ namespace Investments.Tests.Test
         [Theory]
         [InlineData("AFHI11")]
         [ConfigureTest]
-        public async void MustDeleteFundEReturnTrue(string fundCode)
+        public static async void MustDeleteFundEReturnTrue(string fundCode)
         {
 
             Setup();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Investments.Domain.Models;
+using Investments.Tests.Helpers;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -27,11 +28,21 @@ namespace Investments.Tests.Test.IntegrationTest
             MaxAutomaticRedirections = 7,
         };
 
+        public void SeedDB()
+        {
+            
+            RankOfTheBestFundsServiceTest.Setup();
+            RankOfTheBestFundsServiceTest.SeedDB();
+
+        }
 
         [Theory]
+        [ConfigureTest]
         [InlineData(5)]
         public async void MustReturnRank5Funds(int? totalFundsInRank = null)
         {
+
+            SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
             

@@ -92,8 +92,6 @@ namespace Investments.Tests.Test.IntegrationTest
 
         }
 
-        
-
         [Theory]
         [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
         public async void MustEnterFourDetailedFundsAndReturnTrue(List<DetailedFunds> newfunds)
