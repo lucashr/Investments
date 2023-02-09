@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Investments.Application;
 using Investments.Domain.Models;
@@ -27,12 +28,12 @@ namespace Investments.Tests.Test
             fundsService = new FundsService(iGeneralPersist.Object, fundsPersist.Object, iMapper.Object);
         }
 
-        public async static void SeedDB()
+        public async static Task SeedDB()
         {
 
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
             await fundsService.AddFundsAsync(detailedFunds);
-            DetailedFundServiceTest.MustEnterTenFunds(detailedFunds);
+            await DetailedFundServiceTest.MustEnterTenFunds(detailedFunds);
 
         }
         
@@ -43,7 +44,7 @@ namespace Investments.Tests.Test
         {
             
             Setup();
-            
+
             var result = await fundsService.AddFundsAsync(detailedFunds);
 
             Assert.True(result);
@@ -57,7 +58,7 @@ namespace Investments.Tests.Test
         {
             
             Setup();
-            SeedDB();
+            await SeedDB();
 
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
@@ -76,7 +77,7 @@ namespace Investments.Tests.Test
         {
 
             Setup();
-            SeedDB();
+            await SeedDB();
 
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
@@ -94,7 +95,7 @@ namespace Investments.Tests.Test
         {
 
             Setup();
-            SeedDB();
+            await SeedDB();
 
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
@@ -112,7 +113,7 @@ namespace Investments.Tests.Test
         {
 
             Setup();
-            SeedDB();
+            await SeedDB();
 
             var result = await fundsService.AddFundsAsync(detailedFunds);
 
@@ -128,7 +129,7 @@ namespace Investments.Tests.Test
         {
 
             Setup();
-            SeedDB();
+            await SeedDB();
 
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 

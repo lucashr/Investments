@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Investments.Application;
 using Investments.Domain.Models;
@@ -63,7 +64,7 @@ namespace Investments.Tests.Test
         {
             
             Setup();
-            SeedDB();
+            await SeedDB();
 
             await rankOfTheBestFundsService.AddRankOfTheBestFundsAsync(rankOfTheBestFunds);
 
@@ -73,14 +74,14 @@ namespace Investments.Tests.Test
 
         }
 
-        public static void SeedDB()
+        public async static Task SeedDB()
         {
 
             dynamic funds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
-            detailedFundService.AddDetailedFundsAsync(funds);
+            await detailedFundService.AddDetailedFundsAsync(funds);
 
             dynamic yelds = DummyTest.FundsYeld().ElementAt(0).ElementAt(0);
-            fundsYieldService.AddFundsYieldsAsync(yelds);
+            await fundsYieldService.AddFundsYieldsAsync(yelds);
 
         }
 
@@ -91,7 +92,7 @@ namespace Investments.Tests.Test
         {
             
             Setup();
-            SeedDB();
+            await SeedDB();
 
             await rankOfTheBestFundsService.AddRankOfTheBestFundsAsync(rankOfTheBestFunds);
 

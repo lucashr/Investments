@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Investments.Domain.Models;
 using Investments.Tests.Helpers;
 using Newtonsoft.Json;
@@ -27,11 +28,11 @@ namespace Investments.Tests.Test.IntegrationTest
             MaxAutomaticRedirections = 7,
         };
 
-        public void SeedDB()
+        public async Task SeedDB()
         {
             
             dynamic fundsYeld = DummyTest.FundsYeld().ElementAt(0).ElementAt(0);
-            FundYeldsServiceTest.MustEnterThirtyFundsYeldsAndReturnTrue(fundsYeld);
+            await FundYeldsServiceTest.MustEnterThirtyFundsYeldsAndReturnTrue(fundsYeld);
 
         }
 
@@ -41,7 +42,7 @@ namespace Investments.Tests.Test.IntegrationTest
         public async void MustGetFundYeldByCode(string fundCode)
         {
 
-            SeedDB();
+            await SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
             
@@ -67,7 +68,7 @@ namespace Investments.Tests.Test.IntegrationTest
         public async void MustReturnAllFundsYelds()
         {
 
-            SeedDB();
+            await SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
             

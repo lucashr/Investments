@@ -9,6 +9,7 @@ using Moq;
 using Xunit;
 using System.Linq;
 using Investments.Tests.Helpers;
+using System.Threading.Tasks;
 
 namespace Investments.Tests.Test
 {
@@ -33,11 +34,11 @@ namespace Investments.Tests.Test
 
         }
 
-        public static void SeedDB()
+        public async static Task SeedDB()
         {
 
             dynamic funds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
-            detailedFundService.AddDetailedFundsAsync(funds);
+            await detailedFundService.AddDetailedFundsAsync(funds);
 
         }
 
@@ -68,7 +69,7 @@ namespace Investments.Tests.Test
         {
             
             Setup();
-            SeedDB();
+            await SeedDB();
 
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 

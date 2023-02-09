@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Investments.Domain.Models;
 using Investments.Tests.Helpers;
 using Newtonsoft.Json;
@@ -28,11 +29,11 @@ namespace Investments.Tests.Test.IntegrationTest
             MaxAutomaticRedirections = 7,
         };
 
-        public void SeedDB()
+        public async Task SeedDB()
         {
             
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
-            FundsServiceTest.MustEnterTenFunds(detailedFunds);
+            await FundsServiceTest.MustEnterTenFunds(detailedFunds);
 
         }
 
@@ -99,7 +100,7 @@ namespace Investments.Tests.Test.IntegrationTest
         public async void MustDeleteAndReturnTrue(string fundCode)
         {
 
-            SeedDB();
+            await SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
             
@@ -132,7 +133,7 @@ namespace Investments.Tests.Test.IntegrationTest
         public async void MustUpdateAndReturnModifiedFund(string oldFundCode, string newFundCode)
         {
 
-            SeedDB();
+            await SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
             
@@ -161,7 +162,7 @@ namespace Investments.Tests.Test.IntegrationTest
         public async void MustGetFundByCode(string fundCode)
         {
 
-            SeedDB();
+            await SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
             
@@ -185,8 +186,8 @@ namespace Investments.Tests.Test.IntegrationTest
         public async void MustReturnOneListFunds()
         {
 
-            SeedDB();
-            
+            await SeedDB();
+
             HttpClient client = _factory.CreateClient(clientOptions);
             
             string url = $"api/FundRegistration/AllFunds";

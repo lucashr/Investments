@@ -28,11 +28,11 @@ namespace Investments.Tests.Test.IntegrationTest
             MaxAutomaticRedirections = 7,
         };
 
-        public void SeedDB()
+        public async Task SeedDB()
         {
-            
-            RankOfTheBestFundsServiceTest.Setup();
-            RankOfTheBestFundsServiceTest.SeedDB();
+
+            dynamic rankFunds = DummyTest.RankOfTheBestFunds().ElementAt(0).ElementAt(0); 
+            await RankOfTheBestFundsServiceTest.MustStoreAndReturnTrue(rankFunds);
 
         }
 
@@ -42,7 +42,7 @@ namespace Investments.Tests.Test.IntegrationTest
         public async void MustReturnRank5Funds(int? totalFundsInRank = null)
         {
 
-            SeedDB();
+            await SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
             

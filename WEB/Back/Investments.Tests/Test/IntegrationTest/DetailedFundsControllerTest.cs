@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Investments.Domain.Models;
 using Investments.Tests.Helpers;
 using Newtonsoft.Json;
@@ -28,11 +29,11 @@ namespace Investments.Tests.Test.IntegrationTest
         };
 
 
-        public void SeedDB()
+        public async Task SeedDB()
         {
             
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
-            DetailedFundServiceTest.MustEnterTenFunds(detailedFunds);
+            await DetailedFundServiceTest.MustEnterTenFunds(detailedFunds);
 
         }
 
@@ -41,7 +42,7 @@ namespace Investments.Tests.Test.IntegrationTest
         public async void MustReturnAllDetailedFunds ()
         {
             
-            SeedDB();
+            await SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
 
@@ -70,7 +71,7 @@ namespace Investments.Tests.Test.IntegrationTest
         public async void MustReturnDetailedFundByCode (string fundCode)
         {
 
-            SeedDB();
+            await SeedDB();
 
             HttpClient client = _factory.CreateClient(clientOptions);
 

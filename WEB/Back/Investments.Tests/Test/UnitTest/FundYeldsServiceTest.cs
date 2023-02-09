@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Investments.Domain.Models;
 using System;
 using Investments.Tests.Helpers;
+using System.Threading.Tasks;
 
 namespace Investments.Tests.Test
 {
@@ -22,7 +23,7 @@ namespace Investments.Tests.Test
             fundsYieldService = new FundsYieldService(fundYeldsPersist.Object);
         }
 
-        public async static void SeedDB()
+        public async static Task SeedDB()
         {
 
             dynamic detailedFunds = DummyTest.FundsYeld().ElementAt(0).ElementAt(0);
@@ -33,7 +34,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         [ConfigureTest]
-        public static async void MustEnterThirtyFundsYeldsAndReturnTrue(List<FundsYeld> fundsYelds)
+        public static async Task MustEnterThirtyFundsYeldsAndReturnTrue(List<FundsYeld> fundsYelds)
         {
 
             Setup();
@@ -50,7 +51,7 @@ namespace Investments.Tests.Test
         {
 
             Setup();
-            SeedDB();
+            await SeedDB();
 
             await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
 
@@ -66,7 +67,7 @@ namespace Investments.Tests.Test
         {
 
             Setup();
-            SeedDB();
+            await SeedDB();
 
             var resutl = await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
 
