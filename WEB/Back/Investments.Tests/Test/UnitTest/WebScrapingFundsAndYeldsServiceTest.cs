@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 using Investments.Application;
 using Investments.Domain.Models;
 using Investments.Persistence;
+using Investments.Persistence.Contexts;
 using Investments.Persistence.Contracts;
 using Investments.Tests.Helpers;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
@@ -23,24 +25,45 @@ namespace Investments.Tests.Test
         static Mock<IGeneralPersist> iGeneralPersist = null;
         static Mock<FundsPersist> fundsPersist = null;
         static Mock<IWebScrapingFundsAndYeldsPersist> iWebScrapingFundsAndYeldsPersist = null;
+        static InvestmentsContext ctx = null;
 
-        public void Setup()
+        public static async Task<bool> CreateContext()
         {
-            detailedFundPersist = new DetailedFundPersist(ConfigureTest._context);
+
+            var ContextOptions = new DbContextOptionsBuilder<InvestmentsContext>()
+                                .UseSqlite($"Data Source=Test_WebScrapingFundsAndYeldsServiceTest.db")
+                                .EnableSensitiveDataLogging().Options;
+            
+            ctx = new InvestmentsContext(ContextOptions);
+
+            ctx.Database.EnsureDeleted();
+            ctx.Database.EnsureCreated();
+
+            return await Task.FromResult(true);
+
+        }
+
+        public static void Setup()
+        {
+            
+            // var ctx = await ConfigureTest.ConfigureDatabase();
+            detailedFundPersist = new DetailedFundPersist(ctx);
             detailedFundService = new DetailedFundService(detailedFundPersist);
             Mock<IFundsYeldPersist> fundsYeldPersist = new Mock<IFundsYeldPersist>();
             iGeneralPersist = new Mock<IGeneralPersist>();
             iWebScrapingFundsAndYeldsPersist = new Mock<IWebScrapingFundsAndYeldsPersist>();
-            fundsPersist = new Mock<FundsPersist>(ConfigureTest._context);
-            fundYeldsPersist = new Mock<FundYeldsPersist>(ConfigureTest._context);
+            fundsPersist = new Mock<FundsPersist>(ctx);
+            fundYeldsPersist = new Mock<FundYeldsPersist>(ctx);
             fundsYieldService = new FundsYieldService(fundYeldsPersist.Object);
+
         }
 
         [Fact]
-        [ConfigureTest]
+        // [ConfigureTest]
         public async Task MustGetTenFunds()
         {
 
+            await CreateContext();
             Setup();
 
             var detailedFunds = new List<DetailedFunds>();
@@ -51,16 +74,17 @@ namespace Investments.Tests.Test
                 detailedFunds = (List<DetailedFunds>)await webScraping.GetFundsAsync();
             }
 
-            Assert.NotNull(detailedFunds.Count() == 10);
+            Assert.Equal(10, detailedFunds.Count());
 
         }
 
         [Theory]
         [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
-        [ConfigureTest]
+        // [ConfigureTest]
         public async Task MustGetYeldsFundsAndReturnNotNull(List<DetailedFunds> detailedFunds)
         {
 
+            await CreateContext();
             Setup();
 
             var yelds = new List<FundsYeld>();

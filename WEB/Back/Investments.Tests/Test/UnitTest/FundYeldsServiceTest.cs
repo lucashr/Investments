@@ -8,6 +8,9 @@ using Investments.Domain.Models;
 using System;
 using Investments.Tests.Helpers;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Investments.Persistence.Contexts;
+using System.Threading;
 
 namespace Investments.Tests.Test
 {
@@ -16,11 +19,31 @@ namespace Investments.Tests.Test
 
         static Mock<FundYeldsPersist> fundYeldsPersist = null;
         static FundsYieldService fundsYieldService = null;
+        static InvestmentsContext ctx = null;
+
+        public static async Task<bool> CreateContext()
+        {
+
+            var ContextOptions = new DbContextOptionsBuilder<InvestmentsContext>()
+                                .UseSqlite($"Data Source=Test_FundYeldsServiceTest.db")
+                                .EnableSensitiveDataLogging().Options;
+            
+            ctx = new InvestmentsContext(ContextOptions);
+
+            ctx.Database.EnsureDeleted();
+            ctx.Database.EnsureCreated();
+
+            return await Task.FromResult(true);
+
+        }
 
         public static void Setup()
         {
-            fundYeldsPersist = new Mock<FundYeldsPersist>(ConfigureTest._context);
+
+            // var ctx = await ConfigureTest.ConfigureDatabase();
+            fundYeldsPersist = new Mock<FundYeldsPersist>(ctx);
             fundsYieldService = new FundsYieldService(fundYeldsPersist.Object);
+
         }
 
         public async static Task SeedDB()
@@ -33,10 +56,11 @@ namespace Investments.Tests.Test
 
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
-        [ConfigureTest]
+        // [ConfigureTest]
         public static async Task MustEnterThirtyFundsYeldsAndReturnTrue(List<FundsYeld> fundsYelds)
         {
 
+            await CreateContext();
             Setup();
 
             var resutl = await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
@@ -46,30 +70,30 @@ namespace Investments.Tests.Test
 
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
-        [ConfigureTest]
+        // [ConfigureTest]
         public static async Task MustReturnThirtyFundsYelds(List<FundsYeld> fundsYelds)
         {
 
+            await CreateContext();
             Setup();
             await SeedDB();
 
             // await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
 
-            var resutl = await fundsYieldService.GetAllFundsYeldAsync();
+            var result = await fundsYieldService.GetAllFundsYeldAsync();
 
-            Assert.True(resutl.Count() == 30);
+            Assert.Equal(30, result.Count());
         }
 
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
-        [ConfigureTest]
+        // [ConfigureTest]
         public static async Task MustReturnFundYeldByCode(List<FundsYeld> fundsYelds)
         {
 
+            await CreateContext();
             Setup();
             await SeedDB();
-
-            // var resutl = await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
 
             var yelds = await fundsYieldService.GetFundYeldByCodeAsync("AAZQ11");
             

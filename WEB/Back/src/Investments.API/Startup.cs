@@ -18,6 +18,11 @@ using System.Runtime.Loader;
 using System.Reflection;
 using Investments.Application.helpers;
 using AutoMapper;
+using Investments.Domain.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Investments.API
 {
@@ -37,13 +42,42 @@ namespace Investments.API
             services.AddDbContext<InvestmentsContext>(
                 context => context.UseSqlite(Configuration.GetConnectionString("Default"))
             );
+
+            services.AddIdentityCore<User>(options =>
+            {   
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 4;
+            })
+            .AddRoles<Role>()
+            .AddRoleManager<RoleManager<Role>>()
+            .AddSignInManager<SignInManager<User>>()
+            .AddRoleValidator<RoleValidator<Role>>()
+            .AddEntityFrameworkStores<InvestmentsContext>()
+            .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"])),
+                            ValidateIssuer = false,
+                            ValidateAudience = false
+                        };
+                    });
+
             
             services.AddControllers()
                     .AddJsonOptions(options => 
                         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
-                        )
+                    )
                     .AddJsonOptions(options => 
-                        options.JsonSerializerOptions.WriteIndented = true)
+                        options.JsonSerializerOptions.WriteIndented = true
+                    )
                     .AddNewtonsoftJson(options => 
                         options.SerializerSettings.ReferenceLoopHandling =
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -74,13 +108,16 @@ namespace Investments.API
             services.AddScoped<IRankOfTheBestFundsService, RankOfTheBestFundsService>();
             services.AddScoped<IStocksService, StocksService>();
             services.AddScoped<IWebScrapingFundsAndYeldsService, WebScrapingFundsAndYeldsService>();
-            
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ITokenService, TokenService>();
+
             services.AddScoped<IDetailedFundPersist, DetailedFundPersist>();
             services.AddScoped<IFundsPersist, FundsPersist>();
             services.AddScoped<IGeneralPersist, GeneralPersist>();
             services.AddScoped<IFundsYeldPersist, FundYeldsPersist>();
             services.AddScoped<IRankOfTheBestFundsPersist, RankOfTheBestFundsPersist>();
             services.AddScoped<IWebScrapingFundsAndYeldsPersist, WebScrapingFundsAndYeldsPersist>();
+            services.AddScoped<IUserPersist, UserPersist>();
             
             services.AddSingleton<WebScrapingSocketManager>();
             

@@ -25,6 +25,7 @@ namespace Investments.VariablesManager
         {
             return ConectionsWebSocket.sockets.FirstOrDefault(p => p.Value == socket).Key;
         }
+        
         public string AddSocket(WebSocket socket)
         {
             var id = CreateConnectionId();

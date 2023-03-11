@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Investments.Application;
 using Investments.Domain.Models;
 using Investments.Persistence;
-using Investments.Persistence.Contracts;
+using Investments.Persistence.Contexts;
 using Investments.Tests.Helpers;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
@@ -19,13 +21,33 @@ namespace Investments.Tests.Test
         static Mock<GeneralPersist> iGeneralPersist = null;
         static Mock<IMapper> iMapper = null;
         static FundsService fundsService = null;
+        static InvestmentsContext ctx = null;
 
+        public static async Task<bool> CreateContext()
+        {
+
+            var ContextOptions = new DbContextOptionsBuilder<InvestmentsContext>()
+                                .UseSqlite($"Data Source=Test_FundsServiceTest.db")
+                                .EnableSensitiveDataLogging().Options;
+            
+            ctx = new InvestmentsContext(ContextOptions);
+
+            ctx.Database.EnsureDeleted();
+            ctx.Database.EnsureCreated();
+
+            return await Task.FromResult(true);
+
+        }
+        
         public static void Setup()
         {
-            fundsPersist = new Mock<FundsPersist>(ConfigureTest._context);
-            iGeneralPersist = new Mock<GeneralPersist>(ConfigureTest._context);
+
+            // var ctx = await ConfigureTest.ConfigureDatabase();
+            fundsPersist = new Mock<FundsPersist>(ctx);
+            iGeneralPersist = new Mock<GeneralPersist>(ctx);
             iMapper = new Mock<IMapper>();
             fundsService = new FundsService(iGeneralPersist.Object, fundsPersist.Object, iMapper.Object);
+            
         }
 
         public async static Task SeedDB()
@@ -33,16 +55,16 @@ namespace Investments.Tests.Test
 
             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
             await fundsService.AddFundsAsync(detailedFunds);
-            await DetailedFundServiceTest.MustEnterTenFunds(detailedFunds);
 
         }
         
         [Theory]
         [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
-        [ConfigureTest]
+        // [ConfigureTest]
         public static async Task MustEnterTenFunds(List<DetailedFunds> detailedFunds)
         {
             
+            await CreateContext();
             Setup();
 
             var result = await fundsService.AddFundsAsync(detailedFunds);
@@ -53,16 +75,13 @@ namespace Investments.Tests.Test
 
         [Theory]
         [InlineData("AIEC11", "TESTE")]
-        [ConfigureTest]
+        // [ConfigureTest]
         public static async Task MustUpdateFundCode(string oldFundCode, string newFundCode)
         {
             
+            await CreateContext();
             Setup();
             await SeedDB();
-
-            // dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
-
-            // await fundsService.AddFundsAsync(detailedFunds);
 
             Funds fund = await fundsService.UpdateFundByCodeAsync(oldFundCode, newFundCode);
 
@@ -71,35 +90,29 @@ namespace Investments.Tests.Test
         }
 
         [Theory]
-        [InlineData("ABCDE")]
-        [ConfigureTest]
+        [InlineData("ZZZZ")]
+        // [ConfigureTest]
         public static async Task MustVerifyIfFundExistsAndCreateNewFund(string fundCode)
         {
 
+            await CreateContext();
             Setup();
             await SeedDB();
 
-            // dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
-
-            // await fundsService.AddFundsAsync(detailedFunds);
-
             var fund = await fundsService.AddFundAsync(fundCode);
 
-            Assert.Equal("ABCDE", fund.FundCode);
+            Assert.Equal("ZZZZ", fund.FundCode);
         }
 
         [Theory]
         [InlineData("AFOF11")]
-        [ConfigureTest]
+        // [ConfigureTest]
         public static async Task MustReturnOneFund(string fundCode)
         {
 
+            await CreateContext();
             Setup();
             await SeedDB();
-
-            // dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
-
-            // await fundsService.AddFundsAsync(detailedFunds);
 
             var fund = await fundsService.GetFundByCodeAsync(fundCode);
 
@@ -107,14 +120,13 @@ namespace Investments.Tests.Test
         }
 
         [Fact]
-        [ConfigureTest]
+        // [ConfigureTest]
         public static async Task MustReturnAllFunds()
         {
 
+            await CreateContext();
             Setup();
             await SeedDB();
-
-            // var result = await fundsService.AddFundsAsync(detailedFunds);
 
             var fund = await fundsService.GetAllFundsAsync();
 
@@ -123,16 +135,13 @@ namespace Investments.Tests.Test
 
         [Theory]
         [InlineData("AFHI11")]
-        [ConfigureTest]
+        // [ConfigureTest]
         public static async Task MustDeleteFundEReturnTrue(string fundCode)
         {
 
+            await CreateContext();
             Setup();
             await SeedDB();
-
-            // dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
-
-            // await fundsService.AddFundsAsync(detailedFunds);
 
             var result = await fundsService.DeleteFundByCodeAsync(fundCode);
 

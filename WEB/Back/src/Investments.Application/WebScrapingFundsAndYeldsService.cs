@@ -61,8 +61,6 @@ namespace Investments.Application
                 
                 wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='tabelaResultado']/tbody/tr")));
 
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(driver.PageSource));
-                
                 var rows = driver.FindElements(By.XPath("//*[@id='tabelaResultado']/tbody/tr"));
                 
                 #if DEBUG
