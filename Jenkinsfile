@@ -11,6 +11,7 @@ pipeline {
         stage('Build') {
             steps { 
 
+                bat "dotnet build %WORKSPACE%\\WEB\\Back\\src"
                 bat "dotnet build %WORKSPACE%\\WEB\\Back\\Investments.Tests"
                 
             }
