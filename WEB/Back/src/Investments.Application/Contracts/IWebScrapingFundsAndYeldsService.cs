@@ -8,11 +8,10 @@ namespace Investments.Application.Contracts
 {
     public interface IWebScrapingFundsAndYeldsService
     {
-        // Task<bool> AddDetailedFundsAsync(IEnumerable<DetailedFunds> detailedFunds);
-        // Task<bool> AddFundsYieldsAsync(IEnumerable<FundsYeld> fundsYelds);
-        // Task<bool> AddFundsAsync(IEnumerable<DetailedFunds> detailedFunds);
         Task<IEnumerable<DetailedFunds>> GetFundsAsync();
+        Task<IEnumerable<DetailedFunds>> DriverGetFundsAsync();
         Task<IEnumerable<FundsYeld>> GetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds);
+        Task<IEnumerable<FundsYeld>> DriverGetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds);
         
     }
 }

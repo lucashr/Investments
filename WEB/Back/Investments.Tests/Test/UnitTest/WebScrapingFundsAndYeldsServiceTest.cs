@@ -1,13 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Investments.Application;
 using Investments.Domain.Models;
-using Investments.Persistence;
-using Investments.Persistence.Contexts;
 using Investments.Persistence.Contracts;
 using Investments.Tests.Helpers;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
@@ -16,45 +15,50 @@ namespace Investments.Tests.Test
     public class WebScrapingFundsAndYeldsServiceTest
     {
 
-        static RankOfTheBestFundsService rankOfTheBestFundsService = null;
-        static DetailedFundPersist detailedFundPersist = null;
-        static DetailedFundService detailedFundService = null;
-        static FundsYieldService fundsYieldService = null;
-        static Mock<RankOfTheBestFundsPersist> rankOfTheBestFundsPersist = null;
-        static Mock<FundYeldsPersist> fundYeldsPersist = null;
-        static Mock<IGeneralPersist> iGeneralPersist = null;
-        static Mock<FundsPersist> fundsPersist = null;
-        static Mock<IWebScrapingFundsAndYeldsPersist> iWebScrapingFundsAndYeldsPersist = null;
-        static InvestmentsContext ctx = null;
+        static Mock<IGeneralPersist> generalPersist = null;
+        static Mock<FundsYieldService> fundsYieldService = null;
+        static Mock<IFundsYeldPersist> mockFundsYeldPersist = null;
+        static List<FundsYeld> dummyFundsYieldService = null;
+        static List<DetailedFunds> memoryDetailedFunds = null;
+        static List<FundsYeld> memoryFundsYeld = null;
 
-        public static async Task<bool> CreateContext()
-        {
-
-            var ContextOptions = new DbContextOptionsBuilder<InvestmentsContext>()
-                                .UseSqlite($"Data Source=Test_WebScrapingFundsAndYeldsServiceTest.db")
-                                .EnableSensitiveDataLogging().Options;
-            
-            ctx = new InvestmentsContext(ContextOptions);
-
-            ctx.Database.EnsureDeleted();
-            ctx.Database.EnsureCreated();
-
-            return await Task.FromResult(true);
-
-        }
-
-        public static void Setup()
+        public void Setup()
         {
             
-            // var ctx = await ConfigureTest.ConfigureDatabase();
-            detailedFundPersist = new DetailedFundPersist(ctx);
-            detailedFundService = new DetailedFundService(detailedFundPersist);
-            Mock<IFundsYeldPersist> fundsYeldPersist = new Mock<IFundsYeldPersist>();
-            iGeneralPersist = new Mock<IGeneralPersist>();
-            iWebScrapingFundsAndYeldsPersist = new Mock<IWebScrapingFundsAndYeldsPersist>();
-            fundsPersist = new Mock<FundsPersist>(ctx);
-            fundYeldsPersist = new Mock<FundYeldsPersist>(ctx);
-            fundsYieldService = new FundsYieldService(fundYeldsPersist.Object);
+            generalPersist = new Mock<IGeneralPersist>();
+            mockFundsYeldPersist = new Mock<IFundsYeldPersist>();
+            memoryDetailedFunds = new List<DetailedFunds>();
+            memoryFundsYeld = new List<FundsYeld>();
+
+            mockFundsYeldPersist.Setup(x => x.AddFundsYieldsAsync(It.IsAny<IEnumerable<FundsYeld>>())).Returns(Task.FromResult(true));
+            
+            mockFundsYeldPersist.Setup(x => x.GetAllFundsYeldAsync()).Returns(() => {
+                        return Task.FromResult((IEnumerable<FundsYeld>)dummyFundsYieldService);
+            });
+
+            mockFundsYeldPersist.Setup(x => x.GetFundYeldByCodeAsync(It.IsAny<string>())).Returns((string fundCode) => {
+                var result = dummyFundsYieldService.Where(x => x.FundCode == fundCode);
+                return Task.FromResult(result);
+            });
+
+            generalPersist = new Mock<IGeneralPersist>();
+
+            generalPersist.Setup(x => x.AddRange<DetailedFunds>(It.IsAny<DetailedFunds[]>())).Callback((DetailedFunds[] detailedFunds) => {
+                memoryDetailedFunds.AddRange(detailedFunds);
+                Console.WriteLine($"Add::Add OK");
+            });
+
+            generalPersist.Setup(x => x.AddRange<FundsYeld>(It.IsAny<FundsYeld[]>())).Callback((FundsYeld[] fundsYelds) => {
+                memoryFundsYeld.AddRange(fundsYelds);
+                Console.WriteLine($"Add::Add OK");
+            });
+
+            generalPersist.Setup(x => x.SaveChangesAsync()).Returns(() => {
+                Console.WriteLine($"SaveChangesAsync::SaveChangesAsync OK");
+                return Task.FromResult(true);
+            });
+
+            fundsYieldService = new Mock<FundsYieldService>(mockFundsYeldPersist.Object);
 
         }
 
@@ -63,18 +67,16 @@ namespace Investments.Tests.Test
         public async Task MustGetTenFunds()
         {
 
-            await CreateContext();
             Setup();
 
             var detailedFunds = new List<DetailedFunds>();
 
-            using(WebScrapingFundsAndYeldsService webScraping = new WebScrapingFundsAndYeldsService(iGeneralPersist.Object , fundsPersist.Object,
-                                                                                                    fundYeldsPersist.Object, iWebScrapingFundsAndYeldsPersist.Object))
+            using(WebScrapingFundsAndYeldsService webScraping = new WebScrapingFundsAndYeldsService(generalPersist.Object))
             {
                 detailedFunds = (List<DetailedFunds>)await webScraping.GetFundsAsync();
             }
 
-            Assert.Equal(10, detailedFunds.Count());
+            detailedFunds.Should().HaveCount(10);
 
         }
 
@@ -84,18 +86,16 @@ namespace Investments.Tests.Test
         public async Task MustGetYeldsFundsAndReturnNotNull(List<DetailedFunds> detailedFunds)
         {
 
-            await CreateContext();
             Setup();
 
             var yelds = new List<FundsYeld>();
 
-            using(WebScrapingFundsAndYeldsService webScraping = new WebScrapingFundsAndYeldsService(iGeneralPersist.Object , fundsPersist.Object,
-                                                                                                    fundYeldsPersist.Object, iWebScrapingFundsAndYeldsPersist.Object))
+            using(WebScrapingFundsAndYeldsService webScraping = new WebScrapingFundsAndYeldsService(generalPersist.Object))
             {
                 yelds = (List<FundsYeld>)await webScraping.GetYeldsFundsAsync(detailedFunds);
             }
 
-            Assert.NotNull(yelds);
+            yelds.Should().HaveCountGreaterThan(0);
 
         }
 

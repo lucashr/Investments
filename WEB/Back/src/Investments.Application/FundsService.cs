@@ -87,7 +87,7 @@ namespace Investments.Application
                 
                 if(fund == null) throw new Exception("Fundo não encontrado par deleção");
 
-                _generalPersist.DetachLocal<Funds>(x=>x.Id == fund.Id);
+                // _generalPersist.DetachLocal<Funds>(x=>x.Id == fund.Id);
 
                 _generalPersist.Delete<Funds>(fund);
 
@@ -110,7 +110,7 @@ namespace Investments.Application
 
                 fund.FundCode = newFundCode;
 
-                _generalPersist.DetachLocal<Funds>(x=>x.Id == fund.Id);
+                // _generalPersist.DetachLocal<Funds>(x=>x.Id == fund.Id);
                 
                 _generalPersist.Update<Funds>(fund);
 

@@ -1,90 +1,134 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Net.Http;
-// using System.Threading.Tasks;
-// using Investments.Domain.Models;
-// using Investments.Tests.Helpers;
-// using Newtonsoft.Json;
-// using Xunit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Reflection;
+using System.Threading.Tasks;
+using Investments.Domain.Models;
+using Investments.Persistence.Contexts;
+using Investments.Tests.Helpers;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Xunit;
+using Xunit.Abstractions;
 
-// namespace Investments.Tests.Test.IntegrationTest
-// {
-//     public class WebScrapingFundsAndYeldsControllerTest : IClassFixture<CustomWebApplicationFactory<Investments.API.Startup>>
-//     {
+namespace Investments.Tests.Test.IntegrationTest
+{
+    public class WebScrapingFundsAndYeldsControllerTest
+    {
 
-//         private static CustomWebApplicationFactory<Investments.API.Startup> _factory;
+        private static CustomWebApplicationFactory<Investments.API.Startup> _factory;
+        private static DbContextOptionsBuilder<InvestmentsContext> optionsBuilder = null;
+        private static InvestmentsContext ctx = null;
+        private static string dbName = null;
 
-//         public WebScrapingFundsAndYeldsControllerTest(CustomWebApplicationFactory<Investments.API.Startup> factory)
-//         {
-//             _factory = factory;
-//         }
+        public WebScrapingFundsAndYeldsControllerTest(ITestOutputHelper output)
+        {
+            var type = output.GetType();
+            var testMember = type.GetField("test", BindingFlags.Instance | BindingFlags.NonPublic);
+            var test = (ITest)testMember.GetValue(output);
+            dbName = test.TestCase.TestMethod.Method.Name;
+        }
 
-//         static dynamic clientOptions = new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryClientOptions()
-//         {
-//             HandleCookies = false,
-//             BaseAddress = new Uri("https://localhost:5001"),
-//             AllowAutoRedirect = true,
-//             MaxAutomaticRedirections = 7,
-//         };
+        public static async Task CreateContext()
+        {
 
-//         [Fact]
-//         public async void MustCaptureTenfunds()
-//         {
+            optionsBuilder = new();
+            optionsBuilder.UseInMemoryDatabase(dbName);
 
-//             HttpClient client = _factory.CreateClient(clientOptions);
+            ctx = new InvestmentsContext(optionsBuilder.Options);
+            ctx.Database.EnsureCreated();
+
+            await Task.CompletedTask;
+
+        }
+
+        public async Task Setup()
+        {
             
-//             client.DefaultRequestHeaders.Accept.Clear();
-//             client.DefaultRequestHeaders.Accept.Add( 
-//                     new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            await CreateContext();
+
+        }
+
+
+        static dynamic clientOptions = new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryClientOptions()
+        {
+            HandleCookies = false,
+            BaseAddress = new Uri("https://localhost:5001"),
+            AllowAutoRedirect = true,
+            MaxAutomaticRedirections = 7,
+        };
+
+        public async Task SeedDB()
+        {
             
-//             string url = $"api/WebScrapingFundsAndYelds/Funds";
+            var detailedFunds = (List<DetailedFunds>)DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
-//             var response = await client.GetAsync(url);
+            using (InvestmentsContext ctx = new(optionsBuilder.Options))
+            {
+                await ctx.AddRangeAsync(detailedFunds.ToArray());
+                ctx.SaveChanges();
+            }
 
-//             string result = await response.Content.ReadAsStringAsync();
+        }
 
-//             List<DetailedFunds> fundsYeld = JsonConvert.DeserializeObject<List<DetailedFunds>>(result);
 
-//             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
-//                 System.Net.HttpStatusCode.OK);
+        [Fact]
+        public async void MustCaptureTenfunds()
+        {
 
-//         }
+            await Setup();
 
-//         public async Task SeedDB()
-//         {
+            _factory = new CustomWebApplicationFactory<Investments.API.Startup>(dbName);
+
+            HttpClient client = _factory.CreateClient(clientOptions);
             
-//             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
-//             await DetailedFundServiceTest.MustEnterTenFunds(detailedFunds);
-
-//         }
-
-//         [Fact]
-//         [ConfigureTest]
-//         public async void MustCaptureFundsYields()
-//         {
-
-//             await SeedDB();
-
-//             HttpClient client = _factory.CreateClient(clientOptions);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add( 
+                    new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             
-//             client.DefaultRequestHeaders.Accept.Clear();
-//             client.DefaultRequestHeaders.Accept.Add( 
-//                     new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            string url = $"api/WebScrapingFundsAndYelds/Funds";
+
+            var response = await client.GetAsync(url);
+
+            string result = await response.Content.ReadAsStringAsync();
+
+            List<DetailedFunds> fundsYeld = JsonConvert.DeserializeObject<List<DetailedFunds>>(result);
+
+            Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
+                System.Net.HttpStatusCode.OK);
+
+        }
+
+        [Fact]
+        // [ConfigureTest]
+        public async void MustCaptureFundsYields()
+        {
+
+            await Setup();
+            await SeedDB();
+
+            _factory = new CustomWebApplicationFactory<Investments.API.Startup>(dbName);
+
+            HttpClient client = _factory.CreateClient(clientOptions);
             
-//             string url = $"api/WebScrapingFundsAndYelds/Yelds";
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add( 
+                    new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            
+            string url = $"api/WebScrapingFundsAndYelds/Yelds";
 
-//             var response = await client.GetAsync(url);
+            var response = await client.GetAsync(url);
 
-//             string result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync();
 
-//             List<FundsYeld> fundsYeld = JsonConvert.DeserializeObject<List<FundsYeld>>(result);
+            List<FundsYeld> fundsYeld = JsonConvert.DeserializeObject<List<FundsYeld>>(result);
 
-//             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
-//                 System.Net.HttpStatusCode.OK);
+            Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
+                System.Net.HttpStatusCode.OK);
 
-//         }
+        }
 
         
-//     }
-// }
+    }
+}

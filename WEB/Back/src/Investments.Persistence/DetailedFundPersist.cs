@@ -56,7 +56,8 @@ namespace Investments.Persistence
         {
             try
             {
-                _context.Database.ExecuteSqlRaw("DELETE FROM [DetailedFunds]");
+                // _context.Database.ExecuteSqlRaw("DELETE FROM [DetailedFunds]");
+                _context.Database.EnsureDeleted();
                 _context.AddRange(detailedFunds);
                 await _context.SaveChangesAsync();
 
@@ -74,7 +75,7 @@ namespace Investments.Persistence
             try
             {
 
-                _context.Database.ExecuteSqlRaw("DELETE FROM [FundsYeld]");
+                _context.Database.EnsureDeleted();
                 _context.AddRange(fundsYelds);
                 await _context.SaveChangesAsync();
 

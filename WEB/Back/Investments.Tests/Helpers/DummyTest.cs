@@ -48,6 +48,28 @@ namespace Investments.Tests.Helpers
             };
         }
 
+        public static IEnumerable<object[]> Funds(){
+
+            yield return new object[]
+            {
+                new List<Funds>()
+                {
+                   new Funds() { Id = 1, FundCode = "AAZQ11"},
+                   new Funds() { Id = 2, FundCode ="ABCP11" },
+                   new Funds() { Id = 3, FundCode ="AEFI11" },
+                   new Funds() { Id = 4, FundCode ="AFCR11" },
+                   new Funds() { Id = 5, FundCode ="AFHI11" },
+                   new Funds() { Id = 6, FundCode ="AFOF11" },
+                   new Funds() { Id = 7, FundCode ="AGCX11" },
+                   new Funds() { Id = 8, FundCode ="AGRX11" },
+                   new Funds() { Id = 9, FundCode ="AIEC11" },
+                   new Funds() { Id = 10, FundCode ="ALMI11" }
+                },
+
+            };
+
+        }
+
         public static IEnumerable<object[]> FundCodes(){
 
             yield return new object[]

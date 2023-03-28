@@ -140,8 +140,6 @@ namespace Investments.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Investments.API v1"));
             }
-
-             
  
             app.UseHttpsRedirection();
 
@@ -152,9 +150,6 @@ namespace Investments.API
             app.UseCors(x => x.AllowAnyHeader()
                               .AllowAnyMethod()
                               .AllowAnyOrigin());
-
-            // var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-            // var serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
 
             app.UseStaticFiles();
             app.UseWebSockets();

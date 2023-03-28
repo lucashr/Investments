@@ -1,126 +1,183 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Net.Http;
-// using System.Threading.Tasks;
-// using Investments.Domain.Models;
-// using Investments.Tests.Helpers;
-// using Newtonsoft.Json;
-// using Xunit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Reflection;
+using System.Threading.Tasks;
+using AutoMapper;
+using FluentAssertions;
+using Investments.Application;
+using Investments.Domain.Models;
+using Investments.Persistence;
+using Investments.Persistence.Contexts;
+using Investments.Persistence.Contracts;
+using Investments.Tests.Helpers;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Moq;
+using Newtonsoft.Json;
+using Xunit;
+using Xunit.Abstractions;
 
-// namespace Investments.Tests.Test.IntegrationTest
-// {
-//     public class DetailedFundsControllerTest : IClassFixture<CustomWebApplicationFactory<Investments.API.Startup>>
-//     {
+namespace Investments.Tests.Test.IntegrationTest
+{
+    public class DetailedFundsControllerTest
+    {
 
-//         private static CustomWebApplicationFactory<Investments.API.Startup> _factory;
+        private static CustomWebApplicationFactory<Investments.API.Startup> _factory;
+        private static DetailedFundPersist detailedFundPersist = null;
+        private static DetailedFundService detailedFundService = null;
+        private static Mock<IGeneralPersist> iGeneralPersist = null;
+        private static Mock<IMapper> iMapper = null;
+        private static Mock<FundsPersist> fundsPersist = null;
+        private static InvestmentsContext ctx = null;
+        private static DbContextOptionsBuilder<InvestmentsContext> optionsBuilder = null;
+        private static string dbName = null;
 
-//         public DetailedFundsControllerTest(CustomWebApplicationFactory<Investments.API.Startup> factory)
-//         {
-//             _factory = factory;
-//         }
+        static WebApplicationFactoryClientOptions clientOptions = new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryClientOptions()
+        {
+            HandleCookies = false,
+            BaseAddress = new Uri("https://localhost:5001"),
+            AllowAutoRedirect = true,
+            MaxAutomaticRedirections = 7,
+        };
 
-//         static dynamic clientOptions = new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryClientOptions()
-//         {
-//             HandleCookies = false,
-//             BaseAddress = new Uri("https://localhost:5001"),
-//             AllowAutoRedirect = true,
-//             MaxAutomaticRedirections = 7,
-//         };
+        public DetailedFundsControllerTest(ITestOutputHelper output)
+        {
+            var type = output.GetType();
+            var testMember = type.GetField("test", BindingFlags.Instance | BindingFlags.NonPublic);
+            var test = (ITest)testMember.GetValue(output);
+            dbName = test.TestCase.TestMethod.Method.Name;
+        }
 
+        public static async Task CreateContext()
+        {
 
-//         public async Task SeedDB()
-//         {
+            optionsBuilder = new();
+            optionsBuilder.UseInMemoryDatabase(dbName);
+
+            ctx = new InvestmentsContext(optionsBuilder.Options);
+
+            await Task.CompletedTask;
+        }
+
+        public static async Task Setup()
+        {
             
-//             dynamic detailedFunds = DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
-//             await DetailedFundServiceTest.MustEnterTenFunds(detailedFunds);
+            await CreateContext();
 
-//         }
+            detailedFundPersist = new DetailedFundPersist(ctx);
+            detailedFundService = new DetailedFundService(detailedFundPersist);
+            iGeneralPersist = new Mock<IGeneralPersist>();
+            iMapper = new Mock<IMapper>();
+            fundsPersist = new Mock<FundsPersist>(ctx);
 
-//         [Fact]
-//         [ConfigureTest]
-//         public async void MustReturnAllDetailedFunds ()
-//         {
-            
-//             await SeedDB();
+        }
 
-//             HttpClient client = _factory.CreateClient(clientOptions);
+        public async Task SeedDB()
+        {
 
-//             client.DefaultRequestHeaders.Accept.Clear();
-//             client.DefaultRequestHeaders.Accept.Add(
-//                 new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
-//             );
+            var funds = (List<DetailedFunds>)DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
 
-//             string url = $"api/DetailedFunds/AllFunds";
+            using (InvestmentsContext ctx = new(optionsBuilder.Options))
+            {
+                await ctx.AddRangeAsync(funds.ToArray());
+                ctx.SaveChanges();
+            }
 
-//             var response = await client.GetAsync(url);
+        }
 
-//             string result = await response.Content.ReadAsStringAsync();
+        [Fact]
+        // [ConfigureTes t]
+        public async void MustReturnAllDetailedFunds ()
+        {
 
-//             List<DetailedFunds> funds = JsonConvert.DeserializeObject<List<DetailedFunds>>(result);
+            await Setup();
+            await SeedDB();
 
-//             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
-//                 System.Net.HttpStatusCode.OK);
+            _factory = new CustomWebApplicationFactory<Investments.API.Startup>(dbName);
 
+            HttpClient client = _factory.CreateClient(clientOptions);
 
-//         }
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
+            );
 
-//         [Theory]
-//         [InlineData("AAZQ11")]
-//         [ConfigureTest]
-//         public async void MustReturnDetailedFundByCode (string fundCode)
-//         {
+            string url = $"api/DetailedFunds/AllFunds";
 
-//             await SeedDB();
+            var response = await client.GetAsync(url);
 
-//             HttpClient client = _factory.CreateClient(clientOptions);
+            string result = await response.Content.ReadAsStringAsync();
 
-//             client.DefaultRequestHeaders.Accept.Clear();
-//             client.DefaultRequestHeaders.Accept.Add(
-//                 new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
-//             );
+            List<DetailedFunds> funds = JsonConvert.DeserializeObject<List<DetailedFunds>>(result);
 
-//             string url = $"api/DetailedFunds/{fundCode}";
+            funds.Should().HaveCountGreaterThan(0);
 
-//             var response = await client.GetAsync(url);
+        }
 
-//             string result = await response.Content.ReadAsStringAsync();
+        [Theory]
+        [InlineData("AAZQ11")]
+        // [ConfigureTest]
+        public async void MustReturnDetailedFundByCode (string fundCode)
+        {
 
-//             DetailedFunds fund = JsonConvert.DeserializeObject<DetailedFunds>(result);
+            await Setup();
+            await SeedDB();
 
-//             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
-//                 System.Net.HttpStatusCode.OK);
+            _factory = new CustomWebApplicationFactory<Investments.API.Startup>(dbName);
 
-//         }
+            HttpClient client = _factory.CreateClient(clientOptions);
 
-//         [Theory]
-//         [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
-//         public async void MustEnterFourDetailedFundsAndReturnTrue(List<DetailedFunds> newfunds)
-//         {
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
+            );
 
-//             HttpClient client = _factory.CreateClient(clientOptions);
+            string url = $"api/DetailedFunds/{fundCode}";
 
-//             client.DefaultRequestHeaders.Accept.Clear();
-//             client.DefaultRequestHeaders.Accept.Add(
-//                 new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json-patch+json")
-//             );
+            var response = await client.GetAsync(url);
 
-//             var jsonContent = JsonConvert.SerializeObject(newfunds); 
-//             var contentString  = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json-patch+json");
+            string result = await response.Content.ReadAsStringAsync();
 
-//             string url = $"api/DetailedFunds/Registration";
+            DetailedFunds fund = JsonConvert.DeserializeObject<DetailedFunds>(result);
 
-//             var response = await client.PostAsync(url, contentString);
+            fund.FundCode.Should().Be(fundCode);
 
-//             string result = await response.Content.ReadAsStringAsync();
+        }
 
-//             var resultDb = JsonConvert.DeserializeObject<bool>(result);
+        [Theory]
+        [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
+        public async void MustEnterFourDetailedFundsAndReturnTrue(List<DetailedFunds> newfunds)
+        {
 
-//             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
-//                 System.Net.HttpStatusCode.OK);
+            await Setup();
+            await SeedDB();
 
-//         }
+            _factory = new CustomWebApplicationFactory<Investments.API.Startup>(dbName);
 
-//     }
+            HttpClient client = _factory.CreateClient(clientOptions);
 
-// }
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json-patch+json")
+            );
+
+            var jsonContent = JsonConvert.SerializeObject(newfunds); 
+            var contentString  = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json-patch+json");
+
+            string url = $"api/DetailedFunds/Registration";
+
+            var response = await client.PostAsync(url, contentString);
+
+            string result = await response.Content.ReadAsStringAsync();
+
+            var resultDb = JsonConvert.DeserializeObject<bool>(result);
+
+            resultDb.Should().Be(true);
+
+        }
+
+    }
+
+}

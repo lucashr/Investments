@@ -2,103 +2,84 @@ using System.Linq;
 using Moq;
 using Xunit;
 using Investments.Application;
-using Investments.Persistence;
 using System.Collections.Generic;
 using Investments.Domain.Models;
-using System;
 using Investments.Tests.Helpers;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Investments.Persistence.Contexts;
-using System.Threading;
+using Investments.Persistence.Contracts;
+using FluentAssertions;
 
 namespace Investments.Tests.Test
 {
-    public static class FundYeldsServiceTest
+    public class FundYeldsServiceTest
     {
 
-        static Mock<FundYeldsPersist> fundYeldsPersist = null;
         static FundsYieldService fundsYieldService = null;
-        static InvestmentsContext ctx = null;
+        static Mock<IFundsYeldPersist> mockPersist = null;
+        static List<FundsYeld> dummyFundsYield = null;
 
-        public static async Task<bool> CreateContext()
+        public void Setup()
         {
-
-            var ContextOptions = new DbContextOptionsBuilder<InvestmentsContext>()
-                                .UseSqlite($"Data Source=Test_FundYeldsServiceTest.db")
-                                .EnableSensitiveDataLogging().Options;
             
-            ctx = new InvestmentsContext(ContextOptions);
+            mockPersist = new Mock<IFundsYeldPersist>();
+            dummyFundsYield = new List<FundsYeld>();
+            dummyFundsYield = ((List<FundsYeld>)DummyTest.FundsYeld().ElementAt(0).ElementAt(0));
 
-            ctx.Database.EnsureDeleted();
-            ctx.Database.EnsureCreated();
+            mockPersist.Setup(x => x.AddFundsYieldsAsync(It.IsAny<IEnumerable<FundsYeld>>())).Returns(Task.FromResult(true));
+            
+            mockPersist.Setup(x => x.GetAllFundsYeldAsync()).Returns(() => {
+                        return Task.FromResult((IEnumerable<FundsYeld>)dummyFundsYield);
+            });
 
-            return await Task.FromResult(true);
-
-        }
-
-        public static void Setup()
-        {
-
-            // var ctx = await ConfigureTest.ConfigureDatabase();
-            fundYeldsPersist = new Mock<FundYeldsPersist>(ctx);
-            fundsYieldService = new FundsYieldService(fundYeldsPersist.Object);
-
-        }
-
-        public async static Task SeedDB()
-        {
-
-            dynamic fundsYeld = DummyTest.FundsYeld().ElementAt(0).ElementAt(0);
-            await fundsYieldService.AddFundsYieldsAsync(fundsYeld);
+            mockPersist.Setup(x => x.GetFundYeldByCodeAsync(It.IsAny<string>())).Returns((string fundCode) => {
+                var result = dummyFundsYield.Where(x => x.FundCode == fundCode);
+                return Task.FromResult(result);
+            });
+            
+            fundsYieldService = new FundsYieldService(mockPersist.Object);
 
         }
 
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         // [ConfigureTest]
-        public static async Task MustEnterThirtyFundsYeldsAndReturnTrue(List<FundsYeld> fundsYelds)
+        public async Task MustEnterThirtyFundsYeldsAndReturnTrue(List<FundsYeld> fundsYelds)
         {
 
-            await CreateContext();
             Setup();
 
-            var resutl = await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
+            var resut = await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
 
-            Assert.True(resutl);
+            resut.Should().Be(true, "Must be True");
+
         }
 
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         // [ConfigureTest]
-        public static async Task MustReturnThirtyFundsYelds(List<FundsYeld> fundsYelds)
+        public async Task MustReturnThirtyFundsYelds(List<FundsYeld> fundsYelds)
         {
 
-            await CreateContext();
             Setup();
-            await SeedDB();
-
-            // await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
 
             var result = await fundsYieldService.GetAllFundsYeldAsync();
 
-            Assert.Equal(30, result.Count());
+            result.Should().HaveCount(30, "Must be 30");
+
         }
 
         [Theory]
         [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
         // [ConfigureTest]
-        public static async Task MustReturnFundYeldByCode(List<FundsYeld> fundsYelds)
+        public async Task MustReturnFundYeldByCode(List<FundsYeld> fundsYelds)
         {
 
-            await CreateContext();
             Setup();
-            await SeedDB();
 
             var yelds = await fundsYieldService.GetFundYeldByCodeAsync("AAZQ11");
             
-            Assert.Equal("AAZQ11", yelds.Select(x=>x.FundCode).FirstOrDefault());
-            Assert.True(yelds.Count() > 0);
+            yelds.ElementAt(0).FundCode.Should().Be("AAZQ11", "Must be AAZQ11");
+            yelds.Should().HaveCountGreaterThan(0, "Must be greater than 0");
 
         }
 

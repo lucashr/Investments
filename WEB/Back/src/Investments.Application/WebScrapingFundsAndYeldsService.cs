@@ -20,17 +20,15 @@ namespace Investments.Application
         IGeneralPersist _generalPersist;
         IFundsPersist _fundsPersist;
         IFundsYeldPersist _fundsYeldPersist;
-        IWebScrapingFundsAndYeldsPersist _webScrapingFundsAndYeldsPersist;
 
-        public WebScrapingFundsAndYeldsService(IGeneralPersist generalPersist, 
-                                               IFundsPersist fundsPersist,
-                                               IFundsYeldPersist fundsYeldPersist,
-                                               IWebScrapingFundsAndYeldsPersist webScrapingFundsAndYeldsPersist)
+        const string WEBPAGE_FUNDS = "https://www.fundamentus.com.br/fii_resultado.php";
+        const string WEBPAGE_YELDS = "https://www.fundamentus.com.br/fii_proventos.php?papel";
+
+        public WebScrapingFundsAndYeldsService(IGeneralPersist generalPersist)
         {
             _generalPersist = generalPersist;
-            _fundsPersist = fundsPersist;
-            _fundsYeldPersist = fundsYeldPersist;
-            _webScrapingFundsAndYeldsPersist = webScrapingFundsAndYeldsPersist;
+            // _fundsPersist = fundsPersist;
+            // _fundsYeldPersist = fundsYeldPersist;
 
             ConfigDriver();
         }
@@ -38,9 +36,74 @@ namespace Investments.Application
         public async Task<IEnumerable<DetailedFunds>> GetFundsAsync()
         {
 
+            var result = await DriverGetFundsAsync();
+
+            _generalPersist.AddRange<DetailedFunds>(result.ToArray());
+
+            var bIsOk = await _generalPersist.SaveChangesAsync();
+
+            if(bIsOk == false)
+            {
+                new Exception("GetFundsAsync::Error SaveChangesAsync");
+            }
+
+            return result;
+
+        }
+
+        public async Task<IEnumerable<FundsYeld>> GetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
+        {
+            
+            var result = await DriverGetYeldsFundsAsync(detailedFunds);
+
+            _generalPersist.AddRange<FundsYeld>(result.ToArray());
+            
+            var bIsOk = await _generalPersist.SaveChangesAsync();
+
+            if(bIsOk == false)
+            {
+                throw new Exception("GetYeldsFundsAsync::Error SaveChangesAsync");
+            }
+
+            return result;
+             
+        }
+
+        public void GoToPage(string linkPage)
+        {
+            try
+            {
+                driver.Navigate().GoToUrl(linkPage);
+            }
+            catch (System.Exception)
+            {
+                GoToPage(linkPage);
+            }
+        }
+
+        public void ConfigDriver()
+        {
+            var options = new ChromeOptions();
+            options.AddArguments("headless");
+
+            driver = new ChromeDriver(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), options);
+
+            driver.Manage().Window.Maximize();
+            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
+        }
+
+        public void Dispose()
+        {
+            driver.Quit();
+        }
+
+        public async Task<IEnumerable<DetailedFunds>> DriverGetFundsAsync()
+        {
+
             await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Started: Capture of FIIs"));
             
-            GoToPage("https://www.fundamentus.com.br/fii_resultado.php");
+            GoToPage(WEBPAGE_FUNDS);
 
             List<string> orderColumnTableOfFunds = new List<string>
             {
@@ -135,12 +198,11 @@ namespace Investments.Application
                 await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Error: Capture of FIIs"));
                 return await Task.FromResult<IEnumerable<DetailedFunds>>(detailedFunds);
             }
-
         }
 
-        public async Task<IEnumerable<FundsYeld>> GetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
+        public async Task<IEnumerable<FundsYeld>> DriverGetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
         {
-            
+
             var fundsYelds = new List<FundsYeld>();
             var fundsYeldsTmp = new List<FundsYeld>();
             var totalFundYeldsDb = new List<FundsYeld>();
@@ -167,7 +229,7 @@ namespace Investments.Application
                 foreach (var fund in detailedFunds)
                 {
 
-                    GoToPage($"https://www.fundamentus.com.br/fii_proventos.php?papel={fund.FundCode}");
+                    GoToPage($"{WEBPAGE_YELDS}={fund.FundCode}");
 
                     try
                     {
@@ -303,36 +365,6 @@ namespace Investments.Application
                 await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Error: Capture of yelds"));
                 return await Task.FromResult<IEnumerable<FundsYeld>>(fundsYelds);
             }
-             
-        }
-
-        public void GoToPage(string linkPage)
-        {
-            try
-            {
-                driver.Navigate().GoToUrl(linkPage);
-            }
-            catch (System.Exception)
-            {
-                GoToPage(linkPage);
-            }
-        }
-
-        public void ConfigDriver()
-        {
-            var options = new ChromeOptions();
-            options.AddArguments("headless");
-
-            driver = new ChromeDriver(
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), options);
-
-            driver.Manage().Window.Maximize();
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
-        }
-
-        public void Dispose()
-        {
-            driver.Quit();
         }
     }
 }

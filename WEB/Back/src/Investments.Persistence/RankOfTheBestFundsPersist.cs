@@ -22,7 +22,7 @@ namespace Investments.Persistence
         {
             try
             {
-                _context.Database.ExecuteSqlRaw("DELETE FROM [RankFunds]");
+                _context.Database.EnsureDeleted();
 
                 await _context.AddRangeAsync(rankOfTheBestFunds);
                 await _context.SaveChangesAsync();

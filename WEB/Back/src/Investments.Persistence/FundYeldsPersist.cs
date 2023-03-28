@@ -58,7 +58,7 @@ namespace Investments.Persistence
             try
             {
 
-                _context.Database.ExecuteSqlRaw("DELETE FROM [FundsYeld]");
+                _context.Database.EnsureDeleted();
                 _context.AddRange(fundsYelds);
                 await _context.SaveChangesAsync();
 

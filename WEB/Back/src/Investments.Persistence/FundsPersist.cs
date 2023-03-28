@@ -123,8 +123,7 @@ namespace Investments.Persistence
 
             try
             {
-
-                _context.Database.ExecuteSqlRaw("DELETE FROM [Funds]");
+                _context.Database.EnsureDeleted();
 
                 foreach (var fund in detailedFunds)
                 {
