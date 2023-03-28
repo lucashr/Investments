@@ -19,7 +19,7 @@ pipeline {
         stage('Test') {
             steps { 
 
-                bat "coverlet ${DLL_PATH_PROJECT} --target ${VS_EXTENSIONS} --targetargs ${DLL_PATH_PROJECT} --format opencover -o ${COVERAGE_PATH}"
+                bat "coverlet ${DLL_PATH_PROJECT} --target ${VS_EXTENSIONS} --targetargs ${DLL_PATH_PROJECT} --format opencover -o coverage.cobertura.xml"
                 
             }
         }
