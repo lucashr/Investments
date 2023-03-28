@@ -8,16 +8,14 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
-            steps { 
+        // stage('Build') {
+        //     steps { 
                 
-                bat "dotnet clean %WORKSPACE%\\WEB\\Back\\src"
-                bat "dotnet clean %WORKSPACE%\\WEB\\Back\\Investments.Tests"
-                bat "dotnet build %WORKSPACE%\\WEB\\Back\\src"
-                bat "dotnet build %WORKSPACE%\\WEB\\Back\\Investments.Tests"
+        //         bat "dotnet build %WORKSPACE%\\WEB\\Back\\src"
+        //         bat "dotnet build %WORKSPACE%\\WEB\\Back\\Investments.Tests"
                 
-            }
-        }
+        //     }
+        // }
         stage('Test') {
             steps { 
 
