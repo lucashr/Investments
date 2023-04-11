@@ -17,18 +17,19 @@ namespace Investments.Application
     public class WebScrapingFundsAndYeldsService : IWebScrapingFundsAndYeldsService, IDisposable
     {
         IWebDriver driver;
-        IGeneralPersist _generalPersist;
+        IDetailedFundPersist _detailedFundPersist;
         IFundsPersist _fundsPersist;
         IFundsYeldPersist _fundsYeldPersist;
 
         const string WEBPAGE_FUNDS = "https://www.fundamentus.com.br/fii_resultado.php";
         const string WEBPAGE_YELDS = "https://www.fundamentus.com.br/fii_proventos.php?papel";
 
-        public WebScrapingFundsAndYeldsService(IGeneralPersist generalPersist)
+        public WebScrapingFundsAndYeldsService(IDetailedFundPersist detailedFundPersist,
+                                               IFundsYeldPersist fundsYeldPersist)
         {
-            _generalPersist = generalPersist;
+            _detailedFundPersist = detailedFundPersist;
+            _fundsYeldPersist = fundsYeldPersist;
             // _fundsPersist = fundsPersist;
-            // _fundsYeldPersist = fundsYeldPersist;
 
             ConfigDriver();
         }
@@ -38,9 +39,7 @@ namespace Investments.Application
 
             var result = await DriverGetFundsAsync();
 
-            _generalPersist.AddRange<DetailedFunds>(result.ToArray());
-
-            var bIsOk = await _generalPersist.SaveChangesAsync();
+            var bIsOk = await _detailedFundPersist.AddDetailedFundsAsync(result);
 
             if(bIsOk == false)
             {
@@ -56,10 +55,8 @@ namespace Investments.Application
             
             var result = await DriverGetYeldsFundsAsync(detailedFunds);
 
-            _generalPersist.AddRange<FundsYeld>(result.ToArray());
+            var bIsOk = await _fundsYeldPersist.AddFundsYieldsAsync(result.ToList());
             
-            var bIsOk = await _generalPersist.SaveChangesAsync();
-
             if(bIsOk == false)
             {
                 throw new Exception("GetYeldsFundsAsync::Error SaveChangesAsync");
@@ -126,11 +123,11 @@ namespace Investments.Application
 
                 var rows = driver.FindElements(By.XPath("//*[@id='tabelaResultado']/tbody/tr"));
                 
-                #if DEBUG
-                    int numberOfLines = 10;
-                #else
+                // #if DEBUG
+                //     int numberOfLines = 10;
+                // #else
                     int numberOfLines = rows.Count;
-                #endif
+                // #endif
                 
                 Console.WriteLine($"Total de linhas {numberOfLines}");
                 
@@ -331,21 +328,21 @@ namespace Investments.Application
                     return await Task.FromResult<IEnumerable<FundsYeld>>(fundsYelds);
                 }
 
-                if(totalFundYeldsDb.Count > 0)
-                {
-                    fundsYeldsTmp = fundsYeldsTmp.OrderByDescending(x=>x.LastComputedDate).ToList();
+                // if(totalFundYeldsDb.Count > 0)
+                // {
+                //     fundsYeldsTmp = fundsYeldsTmp.OrderByDescending(x=>x.LastComputedDate).ToList();
                 
-                    int totalItemsNew = fundsYeldsTmp.Count();
-                    int totalItemsDb = totalFundYeldsDb.Count();
-                    int totalItems = totalItemsNew + totalItemsDb;
+                //     int totalItemsNew = fundsYeldsTmp.Count();
+                //     int totalItemsDb = totalFundYeldsDb.Count();
+                //     int totalItems = totalItemsNew + totalItemsDb;
 
-                    if(totalItems > 12)
-                    {
-                        int totalItemsToRemove = totalItems - 12;
-                        var removeItems = totalFundYeldsDb.OrderBy(x => x.LastComputedDate).Take(totalItemsToRemove);
-                        _generalPersist.DeleteRange<FundsYeld>(removeItems.ToArray());
-                    }
-                }
+                //     if(totalItems > 12)
+                //     {
+                //         int totalItemsToRemove = totalItems - 12;
+                //         var removeItems = totalFundYeldsDb.OrderBy(x => x.LastComputedDate).Take(totalItemsToRemove);
+                //         _generalPersist.DeleteRange<FundsYeld>(removeItems.ToArray());
+                //     }
+                // }
 
                 fundsYelds.AddRange(fundsYeldsTmp);
                 

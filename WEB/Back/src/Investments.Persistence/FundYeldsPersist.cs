@@ -57,8 +57,9 @@ namespace Investments.Persistence
         {
             try
             {
-
-                _context.Database.EnsureDeleted();
+                _context.FundsYeld.RemoveRange(_context.FundsYeld);
+                await _context.SaveChangesAsync();
+                _context.FundsYeld.RemoveRange(_context.FundsYeld.ToList());
                 _context.AddRange(fundsYelds);
                 await _context.SaveChangesAsync();
 

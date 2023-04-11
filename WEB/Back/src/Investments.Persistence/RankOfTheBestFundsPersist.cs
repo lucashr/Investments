@@ -22,7 +22,8 @@ namespace Investments.Persistence
         {
             try
             {
-                _context.Database.EnsureDeleted();
+                _context.RankFunds.RemoveRange(_context.RankFunds.ToList());
+                await _context.SaveChangesAsync();
 
                 await _context.AddRangeAsync(rankOfTheBestFunds);
                 await _context.SaveChangesAsync();

@@ -41,18 +41,17 @@ namespace Investments.API.Controllers
             {
 
                 _socketManager.GetAll();
-                
                 var result = await _webScrapingFundsAndYelds.GetFundsAsync();
-                bool storageWentOK = await _detailedFundService.AddDetailedFundsAsync(result);
+                // bool storageWentOK = await _detailedFundService.AddDetailedFundsAsync(result);
 
 
-                if(storageWentOK)
+                if(result.Count() > 0)
                 {
                     return Ok(result);
                 }
                 else
                 {
-                    return Ok(storageWentOK);
+                    return Ok(result);
                 }
                 
             }
@@ -71,13 +70,15 @@ namespace Investments.API.Controllers
             try
             {
 
+                _socketManager.GetAll();
+
                 var detailedFunds = await _detailedFundService.GetAllDetailedFundsAsync();
                 
                 var fundYelds = await _webScrapingFundsAndYelds.GetYeldsFundsAsync(detailedFunds);
                 
-                bool storageWentOK = await _fundsYieldService.AddFundsYieldsAsync(fundYelds);
+                // bool storageWentOK = await _fundsYieldService.AddFundsYieldsAsync(fundYelds);
 
-                if(storageWentOK)
+                if(fundYelds.Count() > 0)
                 {
                     var rankingOfTheBestFunds = await _rankOfTheBestFundsService.GetCalculationRankOfTheBestFundsAsync();
                     await _rankOfTheBestFundsService.AddRankOfTheBestFundsAsync(rankingOfTheBestFunds);
@@ -85,7 +86,7 @@ namespace Investments.API.Controllers
                 }
                 else
                 {
-                    return Ok(storageWentOK);
+                    return Ok(fundYelds);
                 }
                 
             }
