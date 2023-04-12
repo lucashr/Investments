@@ -18,17 +18,30 @@ namespace Investments.Tests.Test
         static Mock<IGeneralPersist> generalPersist = null;
         static Mock<FundsYieldService> fundsYieldService = null;
         static Mock<IFundsYeldPersist> mockFundsYeldPersist = null;
+        static Mock<IDetailedFundPersist> detailedFundPersist = null;
         static List<FundsYeld> dummyFundsYieldService = null;
         static List<DetailedFunds> memoryDetailedFunds = null;
         static List<FundsYeld> memoryFundsYeld = null;
+        static IEnumerable<DetailedFunds> dummyDetailedFunds = null;
 
         public void Setup()
         {
             
             generalPersist = new Mock<IGeneralPersist>();
             mockFundsYeldPersist = new Mock<IFundsYeldPersist>();
+            detailedFundPersist = new Mock<IDetailedFundPersist>();
             memoryDetailedFunds = new List<DetailedFunds>();
             memoryFundsYeld = new List<FundsYeld>();
+            dummyDetailedFunds = (IEnumerable<DetailedFunds>)DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
+
+            detailedFundPersist.Setup(x => x.AddDetailedFundsAsync(It.IsAny<IEnumerable<DetailedFunds>>())).Returns(Task.FromResult(true));
+
+            detailedFundPersist.Setup(x => x.GetAllDetailedFundsAsync()).Returns(Task.FromResult(dummyDetailedFunds));
+            
+            detailedFundPersist.Setup(x => x.GetDetailedFundByCodeAsync(It.IsAny<string>())).Returns((string fundCode) => {
+                var fund = dummyDetailedFunds.Where(x => x.FundCode == fundCode).FirstOrDefault();
+                return Task.FromResult(fund);
+            });
 
             mockFundsYeldPersist.Setup(x => x.AddFundsYieldsAsync(It.IsAny<IEnumerable<FundsYeld>>())).Returns(Task.FromResult(true));
             
@@ -71,7 +84,7 @@ namespace Investments.Tests.Test
 
             var detailedFunds = new List<DetailedFunds>();
 
-            using(WebScrapingFundsAndYeldsService webScraping = new WebScrapingFundsAndYeldsService(generalPersist.Object))
+            using(WebScrapingFundsAndYeldsService webScraping = new WebScrapingFundsAndYeldsService(detailedFundPersist.Object, mockFundsYeldPersist.Object))
             {
                 detailedFunds = (List<DetailedFunds>)await webScraping.GetFundsAsync();
             }
@@ -90,7 +103,7 @@ namespace Investments.Tests.Test
 
             var yelds = new List<FundsYeld>();
 
-            using(WebScrapingFundsAndYeldsService webScraping = new WebScrapingFundsAndYeldsService(generalPersist.Object))
+            using(WebScrapingFundsAndYeldsService webScraping = new WebScrapingFundsAndYeldsService(detailedFundPersist.Object, mockFundsYeldPersist.Object))
             {
                 yelds = (List<FundsYeld>)await webScraping.GetYeldsFundsAsync(detailedFunds);
             }
