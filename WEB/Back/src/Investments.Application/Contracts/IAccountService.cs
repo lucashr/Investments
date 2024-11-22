@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Investments.Application.Contracts
 {
-    public interface IAccountService
+public interface IAccountService
     {
         Task<bool> UserExists(string userName);
         Task<UserUpdateDto> GetUserByUserNameAsync(string userName);

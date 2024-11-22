@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Investments.Application.Contracts;
 using Investments.VariablesManager;
@@ -18,6 +19,8 @@ namespace Investments.API.Controllers
         private readonly IDetailedFundService _detailedFundService;
         private readonly IFundsService _fundsService;
         private readonly IFundsYieldService _fundsYieldService;
+        private static CancellationTokenSource? _cancellationTokenSource;
+        private static bool _isRunning = false;
 
         public WebScrapingFundsAndYeldsController(IWebScrapingFundsAndYeldsService webScrapingFundsAndYelds,
                                                   IRankOfTheBestFundsService rankOfTheBestFundsService,
@@ -39,11 +42,13 @@ namespace Investments.API.Controllers
         {
             try
             {
+                
+                _isRunning = true;
+                _cancellationTokenSource = new CancellationTokenSource();
 
                 _socketManager.GetAll();
-                var result = await _webScrapingFundsAndYelds.GetFundsAsync();
-                // bool storageWentOK = await _detailedFundService.AddDetailedFundsAsync(result);
 
+                var result = await _webScrapingFundsAndYelds.GetFundsAsync(_cancellationTokenSource);
 
                 if(result.Count() > 0)
                 {
@@ -53,6 +58,7 @@ namespace Investments.API.Controllers
                 {
                     return Ok(result);
                 }
+
                 
             }
             catch (System.Exception ex)
@@ -72,12 +78,13 @@ namespace Investments.API.Controllers
 
                 _socketManager.GetAll();
 
-                var detailedFunds = await _detailedFundService.GetAllDetailedFundsAsync();
-                
-                var fundYelds = await _webScrapingFundsAndYelds.GetYeldsFundsAsync(detailedFunds);
-                
-                // bool storageWentOK = await _fundsYieldService.AddFundsYieldsAsync(fundYelds);
+                if (_cancellationTokenSource.IsCancellationRequested)
+                    return Ok();
 
+                var detailedFunds = await _detailedFundService.GetAllDetailedFundsAsync();
+
+                var fundYelds = await _webScrapingFundsAndYelds.GetYeldsFundsAsync(detailedFunds, _cancellationTokenSource);
+                
                 if(fundYelds.Count() > 0)
                 {
                     var rankingOfTheBestFunds = await _rankOfTheBestFundsService.GetCalculationRankOfTheBestFundsAsync();
@@ -96,6 +103,19 @@ namespace Investments.API.Controllers
                     $"Erro ao tentar obter fundos. Erro: {ex.Message}");
             }
             
+        }
+
+        [HttpGet("StopWebScraping")]
+        public IActionResult Pause()
+        {
+            if (!_isRunning)
+            {
+                // return BadRequest("No process is running.");
+                return Ok("No process is running.");
+            }
+
+            _cancellationTokenSource?.Cancel();
+            return Ok("Process paused.");
         }
         
     }

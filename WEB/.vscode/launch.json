@@ -1,0 +1,39 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Back/Investments.Tests/bin/Debug/net5.0/Investments.Tests.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Back/Investments.Tests",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach"
+        },
+        {
+            "type": "firefox",
+            "request": "launch",
+            "name": "Debug Angular App in Firefox",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}",
+            "pathMappings": [
+                {
+                    "url": "webpack:///src",
+                    "path": "${workspaceFolder}/Front/investments-app/src"
+                },
+                {
+                    "url": "webpack:///",
+                    "path": "${workspaceFolder}/"
+                }
+            ],
+            "sourceMaps": true
+        }
+    ]
+}

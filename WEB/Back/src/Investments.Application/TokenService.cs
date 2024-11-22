@@ -17,7 +17,6 @@ namespace Investments.Application
 {
     public class TokenService : ITokenService
     {
-
         private readonly IConfiguration _config;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
@@ -32,10 +31,9 @@ namespace Investments.Application
             _mapper = mapper;
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
-
+        
         public async Task<string> CreateToken(UserUpdateDto userUpdateDto)
         {
-
             var user = _mapper.Map<User>(userUpdateDto);
 
             var claims = new List<Claim>
@@ -62,8 +60,6 @@ namespace Investments.Application
             var token = tokenHandler.CreateToken(tokenDescription);
 
             return tokenHandler.WriteToken(token);
-
         }
-
     }
 }

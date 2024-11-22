@@ -16,7 +16,6 @@ namespace Investments.Persistence
         public UserPersist(InvestmentsContext context) : base(context)
         {
             _context = context;
-            
         }
 
         public async Task<User> GetUserByIdAsync(int id)

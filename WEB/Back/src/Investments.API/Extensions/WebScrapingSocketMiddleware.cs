@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.WebSockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -41,12 +42,15 @@ namespace Investments.VariablesManager
 
         private async Task Receive(WebSocket socket, Action<WebSocketReceiveResult, byte[]> handleMessage)
         {
+            
             var buffer = new byte[1024 * 4];
 
             while (socket.State == WebSocketState.Open)
             {
                 var result = await socket.ReceiveAsync(buffer: new ArraySegment<byte>(buffer),
                                                        cancellationToken: CancellationToken.None);
+                
+                var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
 
                 handleMessage(result, buffer);
             }
