@@ -23,8 +23,6 @@ namespace Investments.Application
             {
                 
                 await _detailedFundPersist.AddDetailedFundsAsync(detailedFunds);
-                // _generalPersist.AddRange(detailedFunds.ToArray());
-                // await _generalPersist.SaveChangesAsync();
 
                 return true;
             }

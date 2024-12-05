@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Investments.Application.Contracts;
 using Investments.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Investments.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class FundRegistrationController : ControllerBase

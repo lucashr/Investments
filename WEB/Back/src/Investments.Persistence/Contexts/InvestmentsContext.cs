@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Investments.Domain;
 using Investments.Domain.Identity;
 using Investments.Domain.Models;
 using Investments.Persistence.Contracts;
@@ -8,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Investments.Persistence.Contexts
 {
-    public class InvestmentsContext : IdentityDbContext<User, Role, int, 
-                                                        IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>, 
-                                                        IdentityRoleClaim<int>, IdentityUserToken<int>>
+    public class InvestmentsContext : IdentityDbContext<User, Role, string, 
+                                                        IdentityUserClaim<string>, UserRole, IdentityUserLogin<string>, 
+                                                        IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         
         public InvestmentsContext()
@@ -26,6 +27,7 @@ namespace Investments.Persistence.Contexts
             public virtual DbSet<Funds> Funds { get; set; }
             public virtual DbSet<FundsYeld> FundsYeld { get; set; }
             public virtual DbSet<RankOfTheBestFunds> RankFunds { get; set; }
+            public virtual DbSet<EnderecoUsuario> EnderecoUsuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
@@ -68,6 +70,12 @@ namespace Investments.Persistence.Contexts
                 modelBuilder.Entity<RankOfTheBestFunds>(Fund => {
                     Fund.HasKey(x=> x.FundCode);
                 });
+
+                modelBuilder.Entity<User>()
+                            .HasOne(u => u.EnderecoUsuario)
+                            .WithOne(e => e.User)
+                            .HasForeignKey<EnderecoUsuario>(e => e.UserId)
+                            .OnDelete(DeleteBehavior.Cascade);
 
             }
             

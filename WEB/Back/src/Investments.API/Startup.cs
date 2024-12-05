@@ -12,7 +12,6 @@ using System.Text.Json.Serialization;
 using System;
 using Investments.Persistence.Contracts;
 using Investments.Persistence;
-using Investments.VariablesManager;
 using System.Linq;
 using System.Runtime.Loader;
 using System.Reflection;
@@ -29,6 +28,8 @@ using System.Net.WebSockets;
 using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication;
+using Investments.VariablesManager;
 
 namespace Investments.API
 {
@@ -50,13 +51,40 @@ namespace Investments.API
             );
 
             services.AddControllers()
-        .AddJsonOptions(options => 
-            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
-            )
-        .AddNewtonsoftJson(options => 
-            options.SerializerSettings.ReferenceLoopHandling =
-            Newtonsoft.Json.ReferenceLoopHandling.Ignore
-        );
+                    .AddJsonOptions(options => 
+                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
+                        )
+                    .AddNewtonsoftJson(options => 
+                        options.SerializerSettings.ReferenceLoopHandling =
+                        Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    );
+
+            services.AddIdentityCore<User>(options => 
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 4;
+            })
+            .AddRoles<Role>()
+            .AddRoleManager<RoleManager<Role>>()
+            .AddSignInManager<SignInManager<User>>()
+            .AddRoleValidator<RoleValidator<Role>>()
+            .AddEntityFrameworkStores<InvestmentsContext>()
+            .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options => 
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"])),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
 
             
             services.AddControllers()
@@ -75,13 +103,16 @@ namespace Investments.API
                     });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddScoped<IDetailedFundService, DetailedFundService>();
             services.AddScoped<IFundsService, FundsService>();
             services.AddScoped<IFundsYieldService, FundsYieldService>();
             services.AddScoped<IRankOfTheBestFundsService, RankOfTheBestFundsService>();
             services.AddScoped<IStocksService, StocksService>();
             services.AddScoped<IWebScrapingFundsAndYeldsService, WebScrapingFundsAndYeldsService>();
-            // services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IEnderecoUsuarioService, EnderecoUsuarioService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ITokenService, TokenService>();
 
             services.AddScoped<IDetailedFundPersist, DetailedFundPersist>();
             services.AddScoped<IFundsPersist, FundsPersist>();
@@ -90,41 +121,45 @@ namespace Investments.API
             services.AddScoped<IRankOfTheBestFundsPersist, RankOfTheBestFundsPersist>();
             services.AddScoped<IWebScrapingFundsAndYeldsPersist, WebScrapingFundsAndYeldsPersist>();
             services.AddScoped<IUserPersist, UserPersist>();
+            services.AddScoped<IEnderecoUsuarioPersist, EnderecoUsuarioPersist>();
             
             services.AddSingleton<WebScrapingSocketManager>();
+
+            services.AddDataProtection();
+            services.AddSingleton<ISystemClock, SystemClock>();
             
             services.AddCors();
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "ProEventos.API", Version = "v1" });
-                // options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                // {
-                //     Description = @"JWT Authorization header usando Bearer.
-                //                     Entre com o 'Bearer ' [espaço] então coloque seu token.
-                //                     Exemplo: 'Bearer 123456abcd'",
-                //     Name = "Authorization",
-                //     In = ParameterLocation.Header,
-                //     Type = SecuritySchemeType.ApiKey,
-                //     Scheme = "Bearer"
-                // });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Investments.API", Version = "v1" });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Authorization header usando Bearer.
+                                    Entre com o 'Bearer ' [espaço] então coloque seu token.
+                                    Exemplo: 'Bearer 123456abcd'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
 
-                // options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                // {
-                //     {
-                //         new OpenApiSecurityScheme
-                //         {
-                //                     Reference = new OpenApiReference
-                //                     {
-                //                         Type = ReferenceType.SecurityScheme,
-                //                         Id = "Bearer"
-                //                     },
-                //                     Scheme = "oauth2",
-                //                     Name = "Bearer",
-                //                     In = ParameterLocation.Header
-                //                 },
-                //                 new List<string>()
-                //             }
-                //         });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type = ReferenceType.SecurityScheme,
+                                        Id = "Bearer"
+                                    },
+                                    Scheme = "oauth2",
+                                    Name = "Bearer",
+                                    In = ParameterLocation.Header
+                                },
+                                new List<string>()
+                            }
+                        });
                     });
         }
 
@@ -143,28 +178,17 @@ namespace Investments.API
 
             app.UseRouting();
 
-            app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseCors(options => options.AllowAnyHeader()
+                                          .AllowAnyMethod()
+                                          .AllowAnyOrigin());
 
             // Middleware para WebSockets
             app.UseWebSockets();
 
-            // app.UseEndpoints(endpoints =>
-            // {
-            //     endpoints.Map("/ws", async context =>
-            //     {
-            //         if (context.WebSockets.IsWebSocketRequest)
-            //         {
-            //             var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-            //             await WebSocketHandler.HandleWebSocketAsync(webSocket);
-            //         }
-            //         else
-            //         {
-            //             context.Response.StatusCode = 400;
-            //         }
-            //     });
-            // });
-
-            app.UseMiddleware<VariablesManager.WebScrapingSocketMiddleware>();
+            app.UseMiddleware<WebScrapingSocketMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

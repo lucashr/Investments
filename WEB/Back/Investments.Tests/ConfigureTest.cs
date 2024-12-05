@@ -7,11 +7,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Investments.Persistence.Contexts;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Configuration;
-using Xunit;
 using Xunit.Sdk;
 
 namespace Investments.Tests
@@ -26,18 +22,8 @@ namespace Investments.Tests
 
         public override void Before(MethodInfo methodUnderTest)
         {
-            // lock (thisLock)
-            // {
-            //     // if(!_contexts.Keys.Contains(_dbName))
-
-                _classNameTest =  methodUnderTest.DeclaringType.AssemblyQualifiedName.Split(',')[0];
-                _classNameTest = _classNameTest.Split('.')[_classNameTest.Split('.').Count() - 1];
-
-            //     ConfigureDatabase();
-                
-            //     // else
-            //     //     _context = _contexts.Where(x => x.Key == _dbName).Select(x => x.Value).FirstOrDefault();
-            // }
+            _classNameTest =  methodUnderTest.DeclaringType.AssemblyQualifiedName.Split(',')[0];
+            _classNameTest = _classNameTest.Split('.')[_classNameTest.Split('.').Count() - 1];
         }
 
         public override void After(MethodInfo methodUnderTest)
@@ -53,21 +39,6 @@ namespace Investments.Tests
             try
             {
 
-                // if(_contexts.ContainsKey(_classNameTest))
-                // {
-                //     _contexts.Where(x=>x.Key == _classNameTest).Select(x=>x.Value).FirstOrDefault().Database.EnsureDeleted();
-                //     _contexts.Where(x=>x.Key == _classNameTest).Select(x=>x.Value).FirstOrDefault().Database.EnsureCreated();
-                //     return _contexts.Where(x=>x.Key == _classNameTest).Select(x=>x.Value).FirstOrDefault();
-                // }
-
-                // IConfigurationRoot _configuration;
-
-                // var builder = new ConfigurationBuilder()
-                // .SetBasePath(Directory.GetCurrentDirectory())
-                // .AddJsonFile("appsettings.Development.json");
-
-                // _configuration = builder.Build();
-
                 var options = new DbContextOptionsBuilder<InvestmentsContext>()
                 .UseSqlite($"Data Source=Investments{_classNameTest}.db")
                 .EnableSensitiveDataLogging().Options;
@@ -76,7 +47,6 @@ namespace Investments.Tests
 
                 _contexts.TryAdd(_classNameTest, _context);
 
-                // _context.Database.EnsureDeleted();
                 _contexts.Where(x=>x.Key == _classNameTest).Select(x=>x.Value).FirstOrDefault().Database.EnsureCreated();
 
                 return await Task.FromResult(_contexts.Where(x=>x.Key == _classNameTest).Select(x=>x.Value).FirstOrDefault());
@@ -84,37 +54,10 @@ namespace Investments.Tests
             }
             finally
             {
-                //When the task is ready, release the semaphore. It is vital to ALWAYS release the semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
-                //This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
                 semaphoreSlim.Release();
             }
 
         }
 
-        // private InvestmentsContext ConfigureDatabase()
-        // {
-
-        //     IConfigurationRoot _configuration;
-
-        //     // var options = new DbContextOptionsBuilder<InvestmentsContext>()
-        //     //                     .UseSqlite($"Data Source=Investments.db")
-        //     //                     .EnableSensitiveDataLogging()
-        //     //                     .Options;
-
-        //     var builder = new ConfigurationBuilder()
-        //       .SetBasePath(Directory.GetCurrentDirectory())
-        //       .AddJsonFile("appsettings.Development.json");
-
-        //     _configuration = builder.Build();
-
-        //     var options = new DbContextOptionsBuilder<InvestmentsContext>()
-        //     .UseSqlite(_configuration.GetConnectionString("Default"))
-        //     .EnableSensitiveDataLogging().Options;
-
-        //     var context = new InvestmentsContext(options);
-        //     context.Database.EnsureCreated();
-
-        //     return context;
-        // }
     }
 }

@@ -1,0 +1,8 @@
+Adicionando migrations
+dotnet ef migrations add AssociacaoEnderecoUsuario -p .\Investments.Persistence\ -s .\Investments.API
+
+-p: projeto target (tem o contexto [classlib])
+-s: projeto referência (dotnet core ou framework)
+
+Atualizando base de dados
+dotnet ef database update -s .\Investments.API\

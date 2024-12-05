@@ -10,7 +10,7 @@ using Investments.Tests.Helpers;
 using Moq;
 using Xunit;
 
-namespace Investments.Tests.Test
+namespace Investments.Tests.Test.Application
 {
     public class RankOfTheBestFundsServiceTest
     {

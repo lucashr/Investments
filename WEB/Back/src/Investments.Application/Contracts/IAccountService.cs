@@ -14,5 +14,7 @@ public interface IAccountService
         Task<SignInResult> CheckUserPasswordAsync(UserUpdateDto userUpdateDto, string password);
         Task<UserDto> CreateAccountAsync(UserDto userDto);
         Task<UserUpdateDto> UpdateAccount(UserUpdateDto userUpdateDto);
+        Task<bool> UpdateUserRoleAsync(string userId, string newRole);
+        
     }
 }

@@ -3,9 +3,10 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Investments.VariablesManager;
 using Microsoft.AspNetCore.Http;
 
-namespace Investments.VariablesManager
+namespace Investments.API
 {
     public class WebScrapingSocketMiddleware
     {

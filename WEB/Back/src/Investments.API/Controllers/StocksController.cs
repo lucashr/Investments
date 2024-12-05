@@ -1,9 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Investments.Application.Contracts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Investments.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class StocksController : ControllerBase

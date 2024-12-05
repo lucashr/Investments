@@ -19,7 +19,7 @@ using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Investments.Tests.Test.IntegrationTest
+namespace Investments.Tests.Tests.API.IntegrationTest
 {
     public class DetailedFundsControllerTest
     {

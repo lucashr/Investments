@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Investments.Application;
@@ -23,7 +24,8 @@ namespace Investments.Tests.Test
         static List<DetailedFunds> memoryDetailedFunds = null;
         static List<FundsYeld> memoryFundsYeld = null;
         static IEnumerable<DetailedFunds> dummyDetailedFunds = null;
-
+        
+        [Fact]
         public void Setup()
         {
             
@@ -83,10 +85,11 @@ namespace Investments.Tests.Test
             Setup();
 
             var detailedFunds = new List<DetailedFunds>();
+            var ct = new CancellationTokenSource();
 
             using(WebScrapingFundsAndYeldsService webScraping = new WebScrapingFundsAndYeldsService(detailedFundPersist.Object, mockFundsYeldPersist.Object))
             {
-                detailedFunds = (List<DetailedFunds>)await webScraping.GetFundsAsync();
+                detailedFunds = (List<DetailedFunds>)await webScraping.GetFundsAsync(ct);
             }
 
             detailedFunds.Should().HaveCount(10);
@@ -102,10 +105,11 @@ namespace Investments.Tests.Test
             Setup();
 
             var yelds = new List<FundsYeld>();
+            var ct = new CancellationTokenSource();
 
             using(WebScrapingFundsAndYeldsService webScraping = new WebScrapingFundsAndYeldsService(detailedFundPersist.Object, mockFundsYeldPersist.Object))
             {
-                yelds = (List<FundsYeld>)await webScraping.GetYeldsFundsAsync(detailedFunds);
+                yelds = (List<FundsYeld>)await webScraping.GetYeldsFundsAsync(detailedFunds, ct);
             }
 
             yelds.Should().HaveCountGreaterThan(0);

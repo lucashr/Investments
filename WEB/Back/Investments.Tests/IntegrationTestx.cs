@@ -14,41 +14,41 @@ namespace Investments.Tests
     public class IntegrationTestx
     {
 
-        protected readonly HttpClient TestClient;
+        // protected readonly HttpClient TestClient;
         
-        protected IntegrationTestx()
-        {
+        // protected IntegrationTestx()
+        // {
             
-            var appFactory = new WebApplicationFactory<Startup>()
-                .WithWebHostBuilder(builder =>
-                    {
+        //     var appFactory = new WebApplicationFactory<Startup>()
+        //         .WithWebHostBuilder(builder =>
+        //             {
                         
-                        builder.ConfigureServices(services =>
-                        {
-                            var descriptor = services.SingleOrDefault(
-                            d => d.ServiceType ==
-                                typeof(DbContextOptions<InvestmentsContext>));
+        //                 builder.ConfigureServices(services =>
+        //                 {
+        //                     var descriptor = services.SingleOrDefault(
+        //                     d => d.ServiceType ==
+        //                         typeof(DbContextOptions<InvestmentsContext>));
 
-                            if (descriptor != null)
-                            {
-                                services.Remove(descriptor);
-                            }
+        //                     if (descriptor != null)
+        //                     {
+        //                         services.Remove(descriptor);
+        //                     }
 
-                            services.AddDbContext<InvestmentsContext>(options => { options.UseInMemoryDatabase("Investments"); });
-                        });
-                    });
+        //                     services.AddDbContext<InvestmentsContext>(options => { options.UseInMemoryDatabase("Investments"); });
+        //                 });
+        //             });
 
-            var clientOptions = new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryClientOptions()
-            {
-                HandleCookies = false,
-                BaseAddress = new Uri("https://localhost:5001"),
-                AllowAutoRedirect = true,
-                MaxAutomaticRedirections = 7,
-            };
+        //     var clientOptions = new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryClientOptions()
+        //     {
+        //         HandleCookies = false,
+        //         BaseAddress = new Uri("https://localhost:5001"),
+        //         AllowAutoRedirect = true,
+        //         MaxAutomaticRedirections = 7,
+        //     };
             
-            TestClient = appFactory.CreateClient(clientOptions);
+        //     TestClient = appFactory.CreateClient(clientOptions);
             
-        }
+        // }
 
     }
 }

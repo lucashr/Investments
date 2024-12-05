@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
 using Investments.Application.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Investments.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class RankOfTheBestFundsController : ControllerBase
