@@ -52,7 +52,8 @@ namespace Investments.API.Controllers
         public async Task<IActionResult> Register([FromBody] UserDto model)
         {
 
-            var usrDto = new UserDto{
+            var usrDto = new UserDto
+            {
                 Id = Guid.NewGuid().ToString(),
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -68,33 +69,34 @@ namespace Investments.API.Controllers
             };
 
             var result = await _accountService.CreateAccountAsync(usrDto);
-            
-            if(result.UserName.IsNullOrEmpty())
+
+            if (string.IsNullOrEmpty(result.UserName))
                 return BadRequest("Falha ao tentar criar uma conta!");
 
-            var address = new EnderecoUsuario {
-                    Id = usrDto.Id,
-                    UserId = usrDto.Id,
-                    ZipCode = model.ZipCode,
-                    City = model.City,
-                    Address = model.Address,
-                    District = model.District,
-                    State = model.State
-                };
+            var address = new EnderecoUsuario
+            {
+                Id = usrDto.Id,
+                UserId = usrDto.Id,
+                ZipCode = model.ZipCode,
+                City = model.City,
+                Address = model.Address,
+                District = model.District,
+                State = model.State
+            };
 
             bool bSaveAddressOk = await _enderecoUsuarioService.SaveAddressUser(address);
 
-            if(bSaveAddressOk == false)
+            if (bSaveAddressOk == false)
                 return BadRequest("Erro ao tentar salvar o endereço do usuário!");
 
             var user = await _accountService.GetUserByUserNameAsync(usrDto.UserName);
 
-            return Ok(new 
-                    {
-                        username = user.UserName,
-                        firstName = user.FirstName,
-                        token = _tokenService.CreateToken(user).Result
-                    }
+            return Ok(new
+            {
+                username = user.UserName,
+                firstName = user.FirstName,
+                token = _tokenService.CreateToken(user).Result
+            }
             );
 
         }
