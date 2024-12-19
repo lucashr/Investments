@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Investments.Application.Contracts;
 using Investments.Application.Dtos;
 using Investments.Domain;
+using Investments.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -57,45 +58,44 @@ namespace Investments.API.Controllers
                 LastName = model.LastName,
                 Email = model.Email,
                 Password = model.Password,
-                Username = model.Username,
-                cep = model.cep,
-                city = model.city,
-                address = model.address,
-                district = model.district,
-                state = model.state
+                UserName = model.UserName,
+                ZipCode = model.ZipCode,
+                City = model.City,
+                Address = model.Address,
+                District = model.District,
+                State = model.State,
+                Function = model.Function
             };
 
             var result = await _accountService.CreateAccountAsync(usrDto);
             
-            if(result.Username.IsNullOrEmpty())
+            if(result.UserName.IsNullOrEmpty())
                 return BadRequest("Falha ao tentar criar uma conta!");
 
-            var address = new EnderecoUsuario{
-                    Id = Guid.NewGuid().ToString(),
+            var address = new EnderecoUsuario {
+                    Id = usrDto.Id,
                     UserId = usrDto.Id,
-                    cep = model.cep,
-                    city = model.city,
-                    address = model.address,
-                    district = model.district,
-                    state = model.state
+                    ZipCode = model.ZipCode,
+                    City = model.City,
+                    Address = model.Address,
+                    District = model.District,
+                    State = model.State
                 };
-
-            address.User = new(){
-                Id = usrDto.Id,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                UserName = model.Username,
-                Email = model.Email,
-                Function = Domain.Enum.Function.Admin,
-                EnderecoUsuario = address
-            };
 
             bool bSaveAddressOk = await _enderecoUsuarioService.SaveAddressUser(address);
 
-            if(bSaveAddressOk)
-                return Ok();
-            else
+            if(bSaveAddressOk == false)
                 return BadRequest("Erro ao tentar salvar o endereço do usuário!");
+
+            var user = await _accountService.GetUserByUserNameAsync(usrDto.UserName);
+
+            return Ok(new 
+                    {
+                        username = user.UserName,
+                        firstName = user.FirstName,
+                        token = _tokenService.CreateToken(user).Result
+                    }
+            );
 
         }
 
@@ -104,7 +104,7 @@ namespace Investments.API.Controllers
         {
             try
             {
-                var user = await _accountService.GetUserByUserNameAsync(userLogin.Username);
+                var user = await _accountService.GetUserByUserNameAsync(userLogin.UserName);
 
                 if(user == null) return Unauthorized("Usuário ou senha está inválido!");
 
@@ -114,8 +114,8 @@ namespace Investments.API.Controllers
 
                 return Ok(new 
                     {
-                        username = user.Username,
-                        PrimeiroNome = user.FirstName,
+                        username = user.UserName,
+                        firstName = user.FirstName,
                         token = _tokenService.CreateToken(user).Result
                     }
                 );

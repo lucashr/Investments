@@ -39,7 +39,7 @@ namespace Investments.Application
             try
             {
                 var user = await _userManager.Users
-                                             .SingleOrDefaultAsync(user => user.UserName == userUpdateDto.Username.ToLower());
+                                             .SingleOrDefaultAsync(user => user.UserName == userUpdateDto.UserName.ToLower());
 
                 return await _signInManager.CheckPasswordSignInAsync(user, password, false);
 
@@ -101,7 +101,7 @@ namespace Investments.Application
             try
             {
 
-                var user = await _userPersist.GetUserByUserNameAsync(userUpdateDto.Username);
+                var user = await _userPersist.GetUserByUserNameAsync(userUpdateDto.UserName);
 
                 if(user == null) return null;
 

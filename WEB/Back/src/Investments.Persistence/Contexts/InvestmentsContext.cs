@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Investments.Domain;
 using Investments.Domain.Identity;
@@ -71,11 +72,48 @@ namespace Investments.Persistence.Contexts
                     Fund.HasKey(x=> x.FundCode);
                 });
 
-                modelBuilder.Entity<User>()
-                            .HasOne(u => u.EnderecoUsuario)
-                            .WithOne(e => e.User)
-                            .HasForeignKey<EnderecoUsuario>(e => e.UserId)
-                            .OnDelete(DeleteBehavior.Cascade);
+                base.OnModelCreating(modelBuilder);
+                    modelBuilder.Entity<User>(o => {
+                        o.HasOne(u => u.EnderecoUsuario)
+                        .WithOne(e => e.User)
+                        .HasForeignKey<EnderecoUsuario>(e => e.UserId)
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+
+                string adminRoleId = Guid.NewGuid().ToString("D");
+                string userRoleId = Guid.NewGuid().ToString("D");
+                string adminUserId = Guid.NewGuid().ToString("D");
+
+                // Inserir roles
+                modelBuilder.Entity<Role>().HasData(
+                    new Role { Id = adminRoleId, Name = "Admin", NormalizedName = "ADMIN" },
+                    new Role { Id = userRoleId, Name = "User", NormalizedName = "USER" }
+                );
+
+                // Inserir usuário com senha pré-hash
+                var adminUser = new User
+                {
+                    Id = adminUserId,
+                    UserName = "admin",
+                    NormalizedUserName = "ADMIN",
+                    Email = "admin@example.com",
+                    NormalizedEmail = "ADMIN@EXAMPLE.COM",
+                    EmailConfirmed = true,
+                    PasswordHash = new PasswordHasher<User>().HashPassword(null, "admin"),
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                    ConcurrencyStamp = Guid.NewGuid().ToString("D")
+                };
+
+                modelBuilder.Entity<User>().HasData(adminUser);
+
+                var userRole = new UserRole
+                {
+                    UserId = adminUserId,
+                    RoleId = adminRoleId
+                };
+
+                modelBuilder.Entity<UserRole>().HasData(userRole);
 
             }
             

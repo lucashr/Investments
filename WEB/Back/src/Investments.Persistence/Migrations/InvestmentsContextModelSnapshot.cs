@@ -24,7 +24,16 @@ namespace Investments.Persistence.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("City")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("District")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -57,6 +66,9 @@ namespace Investments.Persistence.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("State")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
@@ -66,37 +78,7 @@ namespace Investments.Persistence.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("address")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("address_name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("address_type")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("cep")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("city")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("city_ibge")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ddd")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("district")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("lat")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("lng")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("state")
+                    b.Property<string>("ZipCode")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -131,6 +113,22 @@ namespace Investments.Persistence.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "4fff4722-69c5-4b85-b761-dd87f76d1370",
+                            ConcurrencyStamp = "e3edb1d5-2091-4dcf-8f49-7d09b670ad25",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "04813cd6-acb3-408b-b46d-03275a398167",
+                            ConcurrencyStamp = "e9532b66-78cb-4f1a-82e8-d603c26ebad3",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Investments.Domain.Identity.User", b =>
@@ -204,6 +202,25 @@ namespace Investments.Persistence.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "2abeca0f-4a03-423c-82c2-9b6ef8a544b1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "ad260718-b2b9-4e07-8777-9f46705a6237",
+                            Email = "admin@example.com",
+                            EmailConfirmed = true,
+                            Function = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@EXAMPLE.COM",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJf45oPp274jlHfqK8JUvlKZNs39p+1UX2Xrr0zRuesiBqalfdFPt8A5Y4aCthZZGQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "b049e11e-1ee2-4025-865f-37d18ef0278c",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Investments.Domain.Identity.UserRole", b =>
@@ -229,6 +246,13 @@ namespace Investments.Persistence.Migrations
                     b.HasIndex("UserId1");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "2abeca0f-4a03-423c-82c2-9b6ef8a544b1",
+                            RoleId = "4fff4722-69c5-4b85-b761-dd87f76d1370"
+                        });
                 });
 
             modelBuilder.Entity("Investments.Domain.Models.DetailedFunds", b =>

@@ -25,11 +25,11 @@ namespace Investments.Tests.Test.Cep.awesomeapi.UnitTest
 
             // Assert
             result.Item1.Should().NotBeNull();
-            result.Item1.cep.Should().Be("05513300");
-            result.Item1.address.Should().Be("Avenida Professor Francisco Morato");
-            result.Item1.state.Should().Be("SP");
-            result.Item1.district.Should().Be("Butantã");
-            result.Item1.city.Should().Be("São Paulo");
+            result.Item1.ZipCode.Should().Be("05513300");
+            result.Item1.Address.Should().Be("Avenida Professor Francisco Morato");
+            result.Item1.State.Should().Be("SP");
+            result.Item1.District.Should().Be("Butantã");
+            result.Item1.City.Should().Be("São Paulo");
 
         }
 

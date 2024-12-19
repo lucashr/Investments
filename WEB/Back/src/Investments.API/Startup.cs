@@ -50,6 +50,11 @@ namespace Investments.API
                 context => context.UseSqlite(Configuration.GetConnectionString("Default"))
             );
 
+            services.AddDbContext<InvestmentsContext>(options =>{
+                options.EnableSensitiveDataLogging();
+                options.UseSqlite(Configuration.GetConnectionString("Default"));
+            });
+
             services.AddControllers()
                     .AddJsonOptions(options => 
                         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
@@ -65,7 +70,7 @@ namespace Investments.API
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 4;
+                options.Password.RequiredLength = 0;
             })
             .AddRoles<Role>()
             .AddRoleManager<RoleManager<Role>>()

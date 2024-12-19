@@ -11,7 +11,6 @@ namespace Investments.Domain.Identity
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Username { get; set; }
         public Function Function { get; set; }
         public IEnumerable<UserRole> UserRoles { get; set; }
         public EnderecoUsuario EnderecoUsuario { get; set; }
