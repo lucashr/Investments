@@ -31,6 +31,7 @@ namespace Investments.API.Controllers
         }
 
         [HttpPost("update-user")]
+        [Authorize(policy: "Admin")]
         public async Task<IActionResult> UpdateUser([Required]string username, [Required]string role)
         {
             

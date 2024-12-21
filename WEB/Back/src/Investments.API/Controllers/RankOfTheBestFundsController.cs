@@ -20,6 +20,7 @@ namespace Investments.API.Controllers
         }
 
         [HttpGet("ListBestFunds/{totalFundsInRank}")]
+        [Authorize(policy: "Admin")]
         public async Task<IActionResult> ListBestFunds(int? totalFundsInRank = null)
         {
 

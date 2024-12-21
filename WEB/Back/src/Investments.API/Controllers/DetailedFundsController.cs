@@ -20,7 +20,6 @@ namespace Investments.API.Controllers
             _detailedFundService = detailedFundService;
         }
         
-        [AllowAnonymous]
         [HttpGet("AllFunds")]
         public async Task<IActionResult> GetAllFunds()
         {

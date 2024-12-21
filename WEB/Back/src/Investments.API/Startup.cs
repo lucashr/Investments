@@ -90,7 +90,20 @@ namespace Investments.API
                     ValidateAudience = false
                 };
             });
+            
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy =>
+                {
+                    policy.RequireRole("Admin");
+                });
 
+                options.AddPolicy("AdminOrUser", policy =>
+                policy.RequireAssertion(context =>
+                    context.User.IsInRole("Admin") || context.User.IsInRole("User")
+                ));
+
+            });
             
             services.AddControllers()
                     .AddJsonOptions(options => 
@@ -133,7 +146,17 @@ namespace Investments.API
             services.AddDataProtection();
             services.AddSingleton<ISystemClock, SystemClock>();
             
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200") // Substitua pelo endereço do seu frontend
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+            
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Investments.API", Version = "v1" });
@@ -171,7 +194,6 @@ namespace Investments.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -183,18 +205,34 @@ namespace Investments.API
 
             app.UseRouting();
 
+            // Configurar CORS
+            app.UseCors(options =>
+            {
+                if (env.IsDevelopment())
+                {
+                    // Permitir tudo em desenvolvimento
+                    options.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin();
+                }
+                else
+                {
+                    // Restringir origens confiáveis em produção
+                    options.WithOrigins("http://localhost:4200") // Substitua pelas URLs confiáveis
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                }
+            });
+
+            // Middleware de autenticação e autorização
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseCors(options => options.AllowAnyHeader()
-                                          .AllowAnyMethod()
-                                          .AllowAnyOrigin());
-
             // Middleware para WebSockets
             app.UseWebSockets();
-
             app.UseMiddleware<WebScrapingSocketMiddleware>();
 
+            // Mapear endpoints
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

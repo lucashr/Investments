@@ -40,6 +40,7 @@ namespace Investments.API.Controllers
         }
 
         [HttpGet("Funds")]
+        [Authorize(policy: "AdminOrUser")]
         public async Task<IActionResult> GetFundsAsync()
         {
             try
@@ -72,6 +73,7 @@ namespace Investments.API.Controllers
         }
 
         [HttpGet("Yelds")]
+        [Authorize(policy: "Admin")]
         public async Task<IActionResult> GetYeldsFundsAsync()
         {
 
@@ -108,6 +110,7 @@ namespace Investments.API.Controllers
         }
 
         [HttpGet("StopWebScraping")]
+        [Authorize(policy: "Admin")]
         public IActionResult Pause()
         {
             if (!_isRunning)
