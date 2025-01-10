@@ -8,6 +8,7 @@ namespace Investments.Domain.Models
 {
     public class DetailedFunds
     {
+        public string Id { get; set; }
         public string FundCode { get; set; }
         public string Segment { get; set; }
         public double Quotation { get; set; }

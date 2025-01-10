@@ -53,7 +53,8 @@ namespace Investments.Persistence.Migrations
                 name: "DetailedFunds",
                 columns: table => new
                 {
-                    FundCode = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    FundCode = table.Column<string>(type: "TEXT", nullable: true),
                     Segment = table.Column<string>(type: "TEXT", nullable: true),
                     Quotation = table.Column<double>(type: "REAL", nullable: false),
                     FFOYield = table.Column<double>(type: "REAL", nullable: false),
@@ -69,7 +70,39 @@ namespace Investments.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DetailedFunds", x => x.FundCode);
+                    table.PrimaryKey("PK_DetailedFunds", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DetailedStocks",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    FundCode = table.Column<string>(type: "TEXT", nullable: true),
+                    Quotation = table.Column<double>(type: "REAL", nullable: false),
+                    PL = table.Column<double>(type: "REAL", nullable: false),
+                    PVP = table.Column<double>(type: "REAL", nullable: false),
+                    PSR = table.Column<double>(type: "REAL", nullable: false),
+                    DivYield = table.Column<double>(type: "REAL", nullable: false),
+                    PriceOverAsset = table.Column<double>(type: "REAL", nullable: false),
+                    PriceOnWorkingCapital = table.Column<double>(type: "REAL", nullable: false),
+                    PEBIT = table.Column<double>(type: "REAL", nullable: false),
+                    PriceOverNetCurrentAssets = table.Column<double>(type: "REAL", nullable: false),
+                    EVEBIT = table.Column<double>(type: "REAL", nullable: false),
+                    EVEBITDA = table.Column<double>(type: "REAL", nullable: false),
+                    EbitMargin = table.Column<double>(type: "REAL", nullable: false),
+                    LiquidityMargin = table.Column<double>(type: "REAL", nullable: false),
+                    LiquidityCurrent = table.Column<double>(type: "REAL", nullable: false),
+                    ROIC = table.Column<double>(type: "REAL", nullable: false),
+                    ROE = table.Column<double>(type: "REAL", nullable: false),
+                    LiquidityTwoMonths = table.Column<double>(type: "REAL", nullable: false),
+                    NetWorth = table.Column<double>(type: "REAL", nullable: false),
+                    GrossEquityDebt = table.Column<double>(type: "REAL", nullable: false),
+                    RevenueGrowthFiveYears = table.Column<double>(type: "REAL", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DetailedStocks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -89,12 +122,11 @@ namespace Investments.Persistence.Migrations
                 name: "FundsYeld",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
                     FundCode = table.Column<string>(type: "TEXT", nullable: true),
-                    LastComputedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastComputedDate = table.Column<string>(type: "TEXT", nullable: true),
                     Value = table.Column<double>(type: "REAL", nullable: false),
-                    DatePayment = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DatePayment = table.Column<string>(type: "TEXT", nullable: true),
                     Type = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -106,7 +138,8 @@ namespace Investments.Persistence.Migrations
                 name: "RankFunds",
                 columns: table => new
                 {
-                    FundCode = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    FundCode = table.Column<string>(type: "TEXT", nullable: true),
                     Segment = table.Column<string>(type: "TEXT", nullable: true),
                     MultiplierRanking = table.Column<int>(type: "INTEGER", nullable: false),
                     CoefficientOfVariation = table.Column<double>(type: "REAL", nullable: false),
@@ -121,7 +154,24 @@ namespace Investments.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RankFunds", x => x.FundCode);
+                    table.PrimaryKey("PK_RankFunds", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StocksDividends",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    FundCode = table.Column<string>(type: "TEXT", nullable: true),
+                    Date = table.Column<string>(type: "TEXT", nullable: true),
+                    Value = table.Column<double>(type: "REAL", nullable: false),
+                    Type = table.Column<string>(type: "TEXT", nullable: true),
+                    DatePayment = table.Column<string>(type: "TEXT", nullable: true),
+                    ForHowManyShares = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StocksDividends", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -254,21 +304,7 @@ namespace Investments.Persistence.Migrations
                     Address = table.Column<string>(type: "TEXT", nullable: true),
                     District = table.Column<string>(type: "TEXT", nullable: true),
                     City = table.Column<string>(type: "TEXT", nullable: true),
-                    State = table.Column<string>(type: "TEXT", nullable: true),
-                    UserName = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
+                    State = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -284,22 +320,22 @@ namespace Investments.Persistence.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "4fff4722-69c5-4b85-b761-dd87f76d1370", "e3edb1d5-2091-4dcf-8f49-7d09b670ad25", "Admin", "ADMIN" });
+                values: new object[] { "1f269e67-a0b7-439b-b073-da1c5b7a31b3", "619edf3c-daa8-4832-a37e-df0123d40c76", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "04813cd6-acb3-408b-b46d-03275a398167", "e9532b66-78cb-4f1a-82e8-d603c26ebad3", "User", "USER" });
+                values: new object[] { "29fc0fb0-214f-4296-b272-1da2c4dbc331", "592e74dd-789e-4757-b941-808395395677", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "Function", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "2abeca0f-4a03-423c-82c2-9b6ef8a544b1", 0, "ad260718-b2b9-4e07-8777-9f46705a6237", "admin@example.com", true, null, 0, null, false, null, "ADMIN@EXAMPLE.COM", "ADMIN", "AQAAAAEAACcQAAAAEJf45oPp274jlHfqK8JUvlKZNs39p+1UX2Xrr0zRuesiBqalfdFPt8A5Y4aCthZZGQ==", null, false, "b049e11e-1ee2-4025-865f-37d18ef0278c", false, "admin" });
+                values: new object[] { "f567372b-4173-4ed6-a9c2-c4ae4e290613", 0, "908cb8b8-a284-4faf-aee1-73ba708decf5", "admin@example.com", true, null, 0, null, false, null, "ADMIN@EXAMPLE.COM", "ADMIN", "AQAAAAEAACcQAAAAEAhuGE2BaWievCAiLjuyBfPUWGCdn8HXLg1HhHw8yaX9KX1mTX+Twk5eLJLr1mv2Ug==", null, false, "70f25348-1af2-47bd-be0e-8996ccf861c0", false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId", "RoleId1", "UserId1" },
-                values: new object[] { "4fff4722-69c5-4b85-b761-dd87f76d1370", "2abeca0f-4a03-423c-82c2-9b6ef8a544b1", null, null });
+                values: new object[] { "1f269e67-a0b7-439b-b073-da1c5b7a31b3", "f567372b-4173-4ed6-a9c2-c4ae4e290613", null, null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -376,6 +412,9 @@ namespace Investments.Persistence.Migrations
                 name: "DetailedFunds");
 
             migrationBuilder.DropTable(
+                name: "DetailedStocks");
+
+            migrationBuilder.DropTable(
                 name: "EnderecoUsuarios");
 
             migrationBuilder.DropTable(
@@ -386,6 +425,9 @@ namespace Investments.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "RankFunds");
+
+            migrationBuilder.DropTable(
+                name: "StocksDividends");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

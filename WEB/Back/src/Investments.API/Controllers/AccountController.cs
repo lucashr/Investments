@@ -55,7 +55,7 @@ namespace Investments.API.Controllers
 
             var usrDto = new UserDto
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid().ToString("D"),
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Email = model.Email,

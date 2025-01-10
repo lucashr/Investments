@@ -137,9 +137,10 @@ namespace Investments.API
             services.AddScoped<IGeneralPersist, GeneralPersist>();
             services.AddScoped<IFundsYeldPersist, FundYeldsPersist>();
             services.AddScoped<IRankOfTheBestFundsPersist, RankOfTheBestFundsPersist>();
-            services.AddScoped<IWebScrapingFundsAndYeldsPersist, WebScrapingFundsAndYeldsPersist>();
+            // services.AddScoped<IWebScrapingFundsAndYeldsPersist, WebScrapingFundsAndYeldsPersist>();
             services.AddScoped<IUserPersist, UserPersist>();
             services.AddScoped<IEnderecoUsuarioPersist, EnderecoUsuarioPersist>();
+            services.AddScoped<IStocksYeldPersist, StocksYeldPersist>();
             
             services.AddSingleton<WebScrapingSocketManager>();
 

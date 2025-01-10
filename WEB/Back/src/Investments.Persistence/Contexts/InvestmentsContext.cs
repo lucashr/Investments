@@ -29,6 +29,8 @@ namespace Investments.Persistence.Contexts
             public virtual DbSet<FundsYeld> FundsYeld { get; set; }
             public virtual DbSet<RankOfTheBestFunds> RankFunds { get; set; }
             public virtual DbSet<EnderecoUsuario> EnderecoUsuarios { get; set; }
+            public virtual DbSet<DetailedStocks> DetailedStocks { get; set; }
+            public virtual DbSet<StocksDividends> StocksDividends { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
@@ -52,7 +54,7 @@ namespace Investments.Persistence.Contexts
                 });
 
                 modelBuilder.Entity<DetailedFunds>(
-                    funds => funds.HasKey(x => x.FundCode)
+                    funds => funds.HasKey(x => x.Id)
                 );
 
                 base.OnModelCreating(modelBuilder);
@@ -69,7 +71,8 @@ namespace Investments.Persistence.Contexts
 
                 base.OnModelCreating(modelBuilder);
                 modelBuilder.Entity<RankOfTheBestFunds>(Fund => {
-                    Fund.HasKey(x=> x.FundCode);
+                    // Fund.HasKey(x=> x.FundCode); antigo
+                    Fund.HasKey(x=> x.Id);
                 });
 
                 base.OnModelCreating(modelBuilder);

@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Investments.Domain
 {
-    public class EnderecoUsuario : IdentityUser<string>
+    public class EnderecoUsuario
     {
+        public string Id { get; set; }
         public string UserId { get; set; }
         public string ZipCode { get; set; }
         public string Address { get; set; }

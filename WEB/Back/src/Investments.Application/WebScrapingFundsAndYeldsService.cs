@@ -32,7 +32,6 @@ namespace Investments.Application
         {
             _detailedFundPersist = detailedFundPersist;
             _fundsYeldPersist = fundsYeldPersist;
-            // _fundsPersist = fundsPersist;
 
             ConfigDriver();
         }
@@ -97,8 +96,11 @@ namespace Investments.Application
 
         public void ConfigDriver()
         {
+            
             var options = new ChromeOptions();
-            options.AddArguments("headless");
+            options.AddArgument("--headless"); // Executar sem abrir a interface do navegador
+            options.AddArgument("--disable-gpu"); // Desativar GPU para evitar erros em algumas plataformas
+            options.AddArgument("--no-sandbox"); // Evitar o uso de sandbox, útil em ambientes de produção
 
             driver = new ChromeDriver(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), options);
@@ -193,6 +195,7 @@ namespace Investments.Application
 
                     var fund = new DetailedFunds()
                     {
+                        Id = Guid.NewGuid().ToString("D"),
                         FundCode = obj[1],
                         Segment = obj[2],
                         Quotation = Convert.ToDouble(obj[3]),
@@ -328,10 +331,11 @@ namespace Investments.Application
 
                         var fY = new FundsYeld()
                         {
+                            Id = Guid.NewGuid().ToString("D"),
                             FundCode = fund.FundCode,
-                            LastComputedDate = Convert.ToDateTime(obj[0]).AddDays(5),
+                            LastComputedDate = Convert.ToDateTime(obj[0]).ToString("dd/MM/yyyy"),
                             Type = obj[1],
-                            DatePayment = Convert.ToDateTime(obj[2]),
+                            DatePayment = Convert.ToDateTime(obj[2]).ToString("dd/MM/yyyy"),
                             Value = Convert.ToDouble(obj[3])
                         };
 

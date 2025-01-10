@@ -56,7 +56,6 @@ namespace Investments.Persistence
         {
             try
             {
-                // _context.Database.ExecuteSqlRaw("DELETE FROM [DetailedFunds]");
                 _context.DetailedFunds.RemoveRange(_context.DetailedFunds.ToList());
                 await _context.SaveChangesAsync();
                 _context.AddRange(detailedFunds);

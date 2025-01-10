@@ -6,3 +6,9 @@ dotnet ef migrations add AssociacaoEnderecoUsuario -p .\Investments.Persistence\
 
 Atualizando base de dados
 dotnet ef database update -s .\Investments.API\
+
+Voltar para a migration anterior
+dotnet ef database update nomeDaMigrationAnterior -p .\Investments.Persistence\ -s .\Investments.API\
+
+Deletar a ultima migration
+dotnet ef migrations remove -p .\Investments.Persistence\ -s .\Investments.API

@@ -2,8 +2,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Investments.Domain
 {
-    public class Moeda : IdentityUser<string>
+    public class Moeda
     {
+        public string Id { get; set; }
         public string code { get; set; }
         public string codein { get; set; }
         public string name { get; set; }

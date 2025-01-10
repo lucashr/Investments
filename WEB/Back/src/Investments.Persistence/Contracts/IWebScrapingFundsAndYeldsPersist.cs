@@ -4,9 +4,9 @@ using Investments.Domain.Models;
 
 namespace Investments.Persistence.Contracts
 {
-    public interface IWebScrapingFundsAndYeldsPersist
-    {
-        // Task<bool> AddDetailedFundsAsync(IEnumerable<DetailedFunds> detailedFunds);
-        // Task<bool> AddFundsYieldsAsync(IEnumerable<FundsYeld> fundsYelds);
-    }
+    // public interface IWebScrapingFundsAndYeldsPersist
+    // {
+    //     // Task<bool> AddDetailedFundsAsync(IEnumerable<DetailedFunds> detailedFunds);
+    //     // Task<bool> AddFundsYieldsAsync(IEnumerable<FundsYeld> fundsYelds);
+    // }
 }

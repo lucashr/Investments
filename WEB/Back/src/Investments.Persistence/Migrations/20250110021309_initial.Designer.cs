@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Investments.Persistence.Migrations
 {
     [DbContext(typeof(InvestmentsContext))]
-    [Migration("20241213010408_initial")]
+    [Migration("20250110021309_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,13 +18,83 @@ namespace Investments.Persistence.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.17");
 
-            modelBuilder.Entity("Investments.Domain.EnderecoUsuario", b =>
+            modelBuilder.Entity("Investments.Domain.DetailedStocks", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("DivYield")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("EVEBIT")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("EVEBITDA")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("EbitMargin")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("FundCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("GrossEquityDebt")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("LiquidityCurrent")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("LiquidityMargin")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("LiquidityTwoMonths")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("NetWorth")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PEBIT")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PL")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PSR")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PVP")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PriceOnWorkingCapital")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PriceOverAsset")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PriceOverNetCurrentAssets")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Quotation")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("ROE")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("ROIC")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("RevenueGrowthFiveYears")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DetailedStocks");
+                });
+
+            modelBuilder.Entity("Investments.Domain.EnderecoUsuario", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Address")
                         .HasColumnType("TEXT");
@@ -32,52 +102,13 @@ namespace Investments.Persistence.Migrations
                     b.Property<string>("City")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("District")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("State")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserName")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ZipCode")
@@ -119,15 +150,15 @@ namespace Investments.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4fff4722-69c5-4b85-b761-dd87f76d1370",
-                            ConcurrencyStamp = "e3edb1d5-2091-4dcf-8f49-7d09b670ad25",
+                            Id = "1f269e67-a0b7-439b-b073-da1c5b7a31b3",
+                            ConcurrencyStamp = "619edf3c-daa8-4832-a37e-df0123d40c76",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "04813cd6-acb3-408b-b46d-03275a398167",
-                            ConcurrencyStamp = "e9532b66-78cb-4f1a-82e8-d603c26ebad3",
+                            Id = "29fc0fb0-214f-4296-b272-1da2c4dbc331",
+                            ConcurrencyStamp = "592e74dd-789e-4757-b941-808395395677",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -208,18 +239,18 @@ namespace Investments.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2abeca0f-4a03-423c-82c2-9b6ef8a544b1",
+                            Id = "f567372b-4173-4ed6-a9c2-c4ae4e290613",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ad260718-b2b9-4e07-8777-9f46705a6237",
+                            ConcurrencyStamp = "908cb8b8-a284-4faf-aee1-73ba708decf5",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             Function = 0,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJf45oPp274jlHfqK8JUvlKZNs39p+1UX2Xrr0zRuesiBqalfdFPt8A5Y4aCthZZGQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAhuGE2BaWievCAiLjuyBfPUWGCdn8HXLg1HhHw8yaX9KX1mTX+Twk5eLJLr1mv2Ug==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b049e11e-1ee2-4025-865f-37d18ef0278c",
+                            SecurityStamp = "70f25348-1af2-47bd-be0e-8996ccf861c0",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -252,14 +283,14 @@ namespace Investments.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "2abeca0f-4a03-423c-82c2-9b6ef8a544b1",
-                            RoleId = "4fff4722-69c5-4b85-b761-dd87f76d1370"
+                            UserId = "f567372b-4173-4ed6-a9c2-c4ae4e290613",
+                            RoleId = "1f269e67-a0b7-439b-b073-da1c5b7a31b3"
                         });
                 });
 
             modelBuilder.Entity("Investments.Domain.Models.DetailedFunds", b =>
                 {
-                    b.Property<string>("FundCode")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<double>("AverageVacancy")
@@ -273,6 +304,9 @@ namespace Investments.Persistence.Migrations
 
                     b.Property<double>("FFOYield")
                         .HasColumnType("REAL");
+
+                    b.Property<string>("FundCode")
+                        .HasColumnType("TEXT");
 
                     b.Property<double>("Liquidity")
                         .HasColumnType("REAL");
@@ -298,7 +332,7 @@ namespace Investments.Persistence.Migrations
                     b.Property<double>("ValueOfMarket")
                         .HasColumnType("REAL");
 
-                    b.HasKey("FundCode");
+                    b.HasKey("Id");
 
                     b.ToTable("DetailedFunds");
                 });
@@ -319,17 +353,17 @@ namespace Investments.Persistence.Migrations
 
             modelBuilder.Entity("Investments.Domain.Models.FundsYeld", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DatePayment")
+                    b.Property<string>("DatePayment")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FundCode")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("LastComputedDate")
+                    b.Property<string>("LastComputedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Type")
@@ -345,7 +379,7 @@ namespace Investments.Persistence.Migrations
 
             modelBuilder.Entity("Investments.Domain.Models.RankOfTheBestFunds", b =>
                 {
-                    b.Property<string>("FundCode")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<double>("AverageVacancy")
@@ -362,6 +396,9 @@ namespace Investments.Persistence.Migrations
 
                     b.Property<double>("FFOYield")
                         .HasColumnType("REAL");
+
+                    b.Property<string>("FundCode")
+                        .HasColumnType("TEXT");
 
                     b.Property<double>("Liquidity")
                         .HasColumnType("REAL");
@@ -381,9 +418,37 @@ namespace Investments.Persistence.Migrations
                     b.Property<double>("ValueOfMarket")
                         .HasColumnType("REAL");
 
-                    b.HasKey("FundCode");
+                    b.HasKey("Id");
 
                     b.ToTable("RankFunds");
+                });
+
+            modelBuilder.Entity("Investments.Domain.StocksDividends", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DatePayment")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ForHowManyShares")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FundCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StocksDividends");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
