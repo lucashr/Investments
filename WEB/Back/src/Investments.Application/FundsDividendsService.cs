@@ -8,17 +8,17 @@ using Investments.Persistence.Contracts;
 
 namespace Investments.Application
 {
-    public class FundsYieldService : IFundsYieldService
+    public class FundsDividendsService : IFundDividendsService
     {
 
         private readonly IFundsYeldPersist _fundsYeldPersist;
 
-        public FundsYieldService(IFundsYeldPersist fundsYeldPersist)
+        public FundsDividendsService(IFundsYeldPersist fundsYeldPersist)
         {
             _fundsYeldPersist = fundsYeldPersist;
         }
 
-        public async Task<IEnumerable<FundsYeld>> GetAllFundsYeldAsync()
+        public async Task<IEnumerable<FundDividends>> GetAllFundsYeldAsync()
         {
             try
             {
@@ -33,7 +33,7 @@ namespace Investments.Application
             
         }
 
-        public async Task<IEnumerable<FundsYeld>> GetFundYeldByCodeAsync(string fundCode)
+        public async Task<IEnumerable<FundDividends>> GetFundYeldByCodeAsync(string fundCode)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Investments.Application
             }
         }
 
-        public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundsYeld> fundsYelds)
+        public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundDividends> fundsYelds)
         {
             try
             {

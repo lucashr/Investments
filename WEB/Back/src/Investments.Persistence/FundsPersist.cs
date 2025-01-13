@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Investments.Persistence
 {
-    public class FundsPersist : GeneralPersist, IFundsPersist, IDetachLocal
+    public class FundsPersist : GeneralPersist, IFundsPersist
     {
         private readonly InvestmentsContext _context;
 
@@ -53,11 +53,11 @@ namespace Investments.Persistence
             
         }
 
-        public async Task<IEnumerable<FundsYeld>> GetFundYeldByCodeAsync(string fundCode)
+        public async Task<IEnumerable<FundDividends>> GetFundYeldByCodeAsync(string fundCode)
         {
             try
             {
-                IQueryable<FundsYeld> query = _context.FundsYeld
+                IQueryable<FundDividends> query = _context.FundsYeld
                                                       .AsNoTracking()
                                                       .Where(f => f.FundCode.ToUpper() == fundCode.ToUpper().Trim());
 
@@ -71,11 +71,11 @@ namespace Investments.Persistence
             
         }
 
-        public async Task<IEnumerable<FundsYeld>> GetAllFundsYeldAsync()
+        public async Task<IEnumerable<FundDividends>> GetAllFundsYeldAsync()
         {
             try
             {
-                IQueryable<FundsYeld> query = _context.FundsYeld.AsNoTracking();
+                IQueryable<FundDividends> query = _context.FundsYeld.AsNoTracking();
 
                 return await query.ToListAsync();
             }

@@ -123,24 +123,29 @@ namespace Investments.API
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IDetailedFundService, DetailedFundService>();
+            services.AddScoped<IDetailedStockService, DetailedStockService>();
+            services.AddScoped<IRankOfTheBestStocksService, RankOfTheBestStocksService>();
+            services.AddScoped<IStocksDividendService, StocksDividendService>();
+            services.AddScoped<IStocksDividendService, StocksDividendService>();
             services.AddScoped<IFundsService, FundsService>();
-            services.AddScoped<IFundsYieldService, FundsYieldService>();
+            services.AddScoped<IFundDividendsService, FundsDividendsService>();
             services.AddScoped<IRankOfTheBestFundsService, RankOfTheBestFundsService>();
-            services.AddScoped<IStocksService, StocksService>();
-            services.AddScoped<IWebScrapingFundsAndYeldsService, WebScrapingFundsAndYeldsService>();
+            services.AddScoped<IWebScrapingFundsAndYeldsService, WebScrapingFundsAndDividendsService>();
+            services.AddScoped<IWebScrapingStocksAndDividendsService, WebScrapingStocksAndDividendsService>();
             services.AddScoped<IEnderecoUsuarioService, EnderecoUsuarioService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITokenService, TokenService>();
 
             services.AddScoped<IDetailedFundPersist, DetailedFundPersist>();
+            services.AddScoped<IDetailedStocksPersist, DetailedStocksPersist>();
             services.AddScoped<IFundsPersist, FundsPersist>();
             services.AddScoped<IGeneralPersist, GeneralPersist>();
-            services.AddScoped<IFundsYeldPersist, FundYeldsPersist>();
+            services.AddScoped<IFundsYeldPersist, FundDividendsPersist>();
             services.AddScoped<IRankOfTheBestFundsPersist, RankOfTheBestFundsPersist>();
-            // services.AddScoped<IWebScrapingFundsAndYeldsPersist, WebScrapingFundsAndYeldsPersist>();
+            services.AddScoped<IRankOfTheBestStocksPersist, RankOfTheBestStocksPersist>();
             services.AddScoped<IUserPersist, UserPersist>();
             services.AddScoped<IEnderecoUsuarioPersist, EnderecoUsuarioPersist>();
-            services.AddScoped<IStocksYeldPersist, StocksYeldPersist>();
+            services.AddScoped<IStocksYeldPersist, StocksDividendsPersist>();
             
             services.AddSingleton<WebScrapingSocketManager>();
 

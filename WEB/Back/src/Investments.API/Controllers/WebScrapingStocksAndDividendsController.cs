@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Investments.Application;
 using Investments.Application.Contracts;
 using Investments.VariablesManager;
 using Microsoft.AspNetCore.Authorization;
@@ -12,36 +13,33 @@ namespace Investments.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
-    public class WebScrapingFundsAndYeldsController : ControllerBase
+    [Route("api/v1/[controller]")]
+    public class WebScrapingStocksAndDividendsController : ControllerBase
     {
-        private readonly IWebScrapingFundsAndYeldsService _webScrapingFundsAndYelds;
-        private readonly IRankOfTheBestFundsService _rankOfTheBestFundsService;
+        private readonly IWebScrapingStocksAndDividendsService _webScrapingStocksAndDividendsService;
+        private readonly RankOfTheBestStocksService _rankOfTheBestStocksService;
         private readonly WebScrapingSocketManager _socketManager;
-        private readonly IDetailedFundService _detailedFundService;
-        private readonly IFundsService _fundsService;
-        private readonly IFundsYieldService _fundsYieldService;
+        private readonly IDetailedStockService _detailedStockService;
+        private readonly IStocksDividendService _stocksDividendService;
         private static CancellationTokenSource? _cancellationTokenSource;
         private static bool _isRunning = false;
 
-        public WebScrapingFundsAndYeldsController(IWebScrapingFundsAndYeldsService webScrapingFundsAndYelds,
-                                                  IRankOfTheBestFundsService rankOfTheBestFundsService,
-                                                  WebScrapingSocketManager socketManager,
-                                                  IDetailedFundService detailedFundService,
-                                                  IFundsService fundsService,
-                                                  IFundsYieldService fundsYieldService)
+        public WebScrapingStocksAndDividendsController(IWebScrapingStocksAndDividendsService webScrapingStocksAndDividendsService,
+                                                       RankOfTheBestStocksService rankOfTheBestStocksService,
+                                                       WebScrapingSocketManager socketManager,
+                                                       IDetailedStockService detailedStockService,
+                                                       IStocksDividendService stocksDividendService)
         {
-            _webScrapingFundsAndYelds = webScrapingFundsAndYelds;
-            _rankOfTheBestFundsService = rankOfTheBestFundsService;
+            _webScrapingStocksAndDividendsService = webScrapingStocksAndDividendsService;
+            _rankOfTheBestStocksService = rankOfTheBestStocksService;
             _socketManager = socketManager;
-            _detailedFundService = detailedFundService;
-            _fundsService = fundsService;
-            _fundsYieldService = fundsYieldService;
+            _detailedStockService = detailedStockService;
+            _stocksDividendService = stocksDividendService;
         }
 
-        [HttpGet("Funds")]
+        [HttpGet("GetStocks")]
         [Authorize(policy: "AdminOrUser")]
-        public async Task<IActionResult> GetFundsAsync()
+        public async Task<IActionResult> GetStocksAsync()
         {
             try
             {
@@ -51,7 +49,7 @@ namespace Investments.API.Controllers
 
                 _socketManager.GetAll();
 
-                var result = await _webScrapingFundsAndYelds.GetFundsAsync(_cancellationTokenSource);
+                var result = await _webScrapingStocksAndDividendsService.GetStocksAsync(_cancellationTokenSource);
 
                 if(result.Count() > 0)
                 {
@@ -72,9 +70,9 @@ namespace Investments.API.Controllers
             
         }
 
-        [HttpGet("Yelds")]
+        [HttpGet("GetStockDividends")]
         [Authorize(policy: "Admin")]
-        public async Task<IActionResult> GetYeldsFundsAsync()
+        public async Task<IActionResult> GetStockDividendsAsync()
         {
 
             try
@@ -85,15 +83,18 @@ namespace Investments.API.Controllers
                 if (_cancellationTokenSource.IsCancellationRequested)
                     return Ok();
 
-                var detailedFunds = await _detailedFundService.GetAllDetailedFundsAsync();
+                var detailedFunds = await _detailedStockService.GetAllDetailedStocksAsync();
 
-                var fundYelds = await _webScrapingFundsAndYelds.GetYeldsFundsAsync(detailedFunds, _cancellationTokenSource);
+                var fundYelds = await _webScrapingStocksAndDividendsService.GetStocksDividendsAsync(detailedFunds, _cancellationTokenSource);
                 
                 if(fundYelds.Count() > 0)
                 {
-                    var rankingOfTheBestFunds = await _rankOfTheBestFundsService.GetCalculationRankOfTheBestFundsAsync();
-                    await _rankOfTheBestFundsService.AddRankOfTheBestFundsAsync(rankingOfTheBestFunds);
+
+                    var rankingOfTheBestFunds = await _rankOfTheBestStocksService.GetRankOfTheBestStocksAsync();
+                    await _rankOfTheBestStocksService.AddRankOfTheBestStocksAsync(rankingOfTheBestFunds);
+                    
                     return Ok(fundYelds);
+
                 }
                 else
                 {

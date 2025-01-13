@@ -14,14 +14,14 @@ using Microsoft.IdentityModel.Tokens;
 namespace Investments.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    [Route("api/v1/[controller]")]
+    public class AccountsController : ControllerBase
     {
         private readonly IEnderecoUsuarioService _enderecoUsuarioService;
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;
 
-        public AccountController(IAccountService accountService,
+        public AccountsController(IAccountService accountService,
                                  IEnderecoUsuarioService enderecoUsuarioService,
                                  ITokenService tokenService)
         {

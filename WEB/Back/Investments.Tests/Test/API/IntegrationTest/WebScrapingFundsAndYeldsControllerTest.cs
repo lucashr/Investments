@@ -122,7 +122,7 @@ namespace Investments.Tests.Test.IntegrationTest
 
             string result = await response.Content.ReadAsStringAsync();
 
-            List<FundsYeld> fundsYeld = JsonConvert.DeserializeObject<List<FundsYeld>>(result);
+            List<FundDividends> fundsYeld = JsonConvert.DeserializeObject<List<FundDividends>>(result);
 
             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
                 System.Net.HttpStatusCode.OK);

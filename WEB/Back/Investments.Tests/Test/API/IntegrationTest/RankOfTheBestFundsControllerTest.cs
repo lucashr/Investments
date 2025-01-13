@@ -28,8 +28,8 @@ namespace Investments.Tests.Test.IntegrationTest
         private static RankOfTheBestFundsService rankOfTheBestFundsService = null;
         private static DetailedFundPersist detailedFundPersist = null;
         private static DetailedFundService detailedFundService = null;
-        private static FundYeldsPersist fundYeldsPersist = null;
-        private static FundsYieldService fundsYeldService = null;
+        private static FundDividendsPersist fundYeldsPersist = null;
+        private static FundsDividendsService fundsYeldService = null;
         private static string dbName = null;
 
         public RankOfTheBestFundsControllerTest(ITestOutputHelper output)
@@ -75,11 +75,11 @@ namespace Investments.Tests.Test.IntegrationTest
 
             IMapper mapper = config.CreateMapper();
 
-            fundYeldsPersist = new FundYeldsPersist(ctx);
+            fundYeldsPersist = new FundDividendsPersist(ctx);
             detailedFundPersist = new DetailedFundPersist(ctx);
 
             detailedFundService = new DetailedFundService(detailedFundPersist);
-            fundsYeldService = new FundsYieldService(fundYeldsPersist);
+            fundsYeldService = new FundsDividendsService(fundYeldsPersist);
 
             rankOfTheBestFundsService = new RankOfTheBestFundsService(rankOfTheBestFundsPersist, detailedFundService, fundsYeldService, mapper);
 

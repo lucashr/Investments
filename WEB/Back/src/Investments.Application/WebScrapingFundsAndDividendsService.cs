@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -15,7 +16,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Investments.Application
 {
-    public class WebScrapingFundsAndYeldsService : IWebScrapingFundsAndYeldsService, IDisposable
+    public class WebScrapingFundsAndDividendsService : IWebScrapingFundsAndYeldsService, IDisposable
     {
         IWebDriver driver;
         IDetailedFundPersist _detailedFundPersist;
@@ -27,7 +28,7 @@ namespace Investments.Application
         const string WEBPAGE_FUNDS = "https://www.fundamentus.com.br/fii_resultado.php";
         const string WEBPAGE_YELDS = "https://www.fundamentus.com.br/fii_proventos.php?papel";
 
-        public WebScrapingFundsAndYeldsService(IDetailedFundPersist detailedFundPersist,
+        public WebScrapingFundsAndDividendsService(IDetailedFundPersist detailedFundPersist,
                                                IFundsYeldPersist fundsYeldPersist)
         {
             _detailedFundPersist = detailedFundPersist;
@@ -59,7 +60,7 @@ namespace Investments.Application
 
         }
 
-        public async Task<IEnumerable<FundsYeld>> GetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds, CancellationTokenSource cancellationTokenSource)
+        public async Task<IEnumerable<FundDividends>> GetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds, CancellationTokenSource cancellationTokenSource)
         {
 
             _cancellationTokenSource = cancellationTokenSource;
@@ -117,7 +118,9 @@ namespace Investments.Application
         public async Task<IEnumerable<DetailedFunds>> DriverGetFundsAsync()
         {
 
+            var clock = new Stopwatch();
             await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Started: Capture of FIIs"));
+            clock.Start();
 
             GoToPage(WEBPAGE_FUNDS);
 
@@ -217,8 +220,6 @@ namespace Investments.Application
                     detailedFunds.Add(fund);
                 }
 
-                driver.Close();
-
                 await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Completed: Capture of FIIs "));
 
                 return await Task.FromResult<IEnumerable<DetailedFunds>>(detailedFunds);
@@ -226,19 +227,30 @@ namespace Investments.Application
             }
             catch (System.Exception ex)
             {
-                driver.Close();
                 Console.WriteLine(ex.Message);
                 await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Error: Capture of FIIs"));
                 return await Task.FromResult<IEnumerable<DetailedFunds>>(detailedFunds);
             }
+            finally{
+                driver.Close();
+
+                var elapsed = clock.Elapsed;
+                var elapsedTime = string.Format("Tempo decorrido: {0:00}:{1:00}:{2:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
+
+                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(elapsedTime));
+                Console.WriteLine($"{JsonConvert.SerializeObject(elapsedTime)}");
+                Debug.WriteLine($"{JsonConvert.SerializeObject(elapsedTime)}");
+            }
         }
 
-        public async Task<IEnumerable<FundsYeld>> DriverGetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
+        public async Task<IEnumerable<FundDividends>> DriverGetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
         {
 
-            var fundsYelds = new List<FundsYeld>();
-            var fundsYeldsTmp = new List<FundsYeld>();
-            var totalFundYeldsDb = new List<FundsYeld>();
+            var fundsYelds = new List<FundDividends>();
+            var fundsYeldsTmp = new List<FundDividends>();
+            var totalFundYeldsDb = new List<FundDividends>();
+            var clock = new Stopwatch();
+            clock.Start();
 
             dynamic rows;
             dynamic columns;
@@ -262,7 +274,7 @@ namespace Investments.Application
                 {
                     
                     if(AbortarProcesso())
-                        return Enumerable.Empty<FundsYeld>();
+                        return Enumerable.Empty<FundDividends>();
                     
                     GoToPage($"{WEBPAGE_YELDS}={fund.FundCode}");
 
@@ -309,7 +321,7 @@ namespace Investments.Application
                         if (orderColumnTableOfFunds[j - 1] != campo)
                         {
                             Console.Write($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
-                            return await Task.FromResult<IEnumerable<FundsYeld>>(fundsYelds);
+                            return await Task.FromResult<IEnumerable<FundDividends>>(fundsYelds);
                         }
 
                         Console.Write(driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text + " | ");
@@ -319,7 +331,7 @@ namespace Investments.Application
                     {
                         
                         if(AbortarProcesso())
-                            return Enumerable.Empty<FundsYeld>();
+                            return Enumerable.Empty<FundDividends>();
 
                         string[] obj = new string[4];
 
@@ -329,7 +341,7 @@ namespace Investments.Application
                             obj[j - 1] = e;
                         }
 
-                        var fY = new FundsYeld()
+                        var fY = new FundDividends()
                         {
                             Id = Guid.NewGuid().ToString("D"),
                             FundCode = fund.FundCode,
@@ -350,7 +362,7 @@ namespace Investments.Application
 
                 if (fundsYeldsTmp.Count() == 0)
                 {
-                    return await Task.FromResult<IEnumerable<FundsYeld>>(fundsYelds);
+                    return await Task.FromResult<IEnumerable<FundDividends>>(fundsYelds);
                 }
 
                 fundsYelds.AddRange(fundsYeldsTmp);
@@ -358,18 +370,25 @@ namespace Investments.Application
                 fundsYeldsTmp.Clear();
                 totalFundYeldsDb.Clear();
 
-                driver.Close();
-
                 await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Completed: Capture of yelds"));
 
-                return await Task.FromResult<IEnumerable<FundsYeld>>(fundsYelds);
+                return await Task.FromResult<IEnumerable<FundDividends>>(fundsYelds);
             }
             catch (System.Exception ex)
             {
-                driver.Close();
                 Console.WriteLine(ex.Message);
                 await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Error: Capture of yelds"));
-                return await Task.FromResult<IEnumerable<FundsYeld>>(fundsYelds);
+                return await Task.FromResult<IEnumerable<FundDividends>>(fundsYelds);
+            }
+            finally{
+                driver.Close();
+
+                var elapsed = clock.Elapsed;
+                var elapsedTime = string.Format("Tempo decorrido: {0:00}:{1:00}:{2:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
+
+                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(elapsedTime));
+                Console.WriteLine($"{JsonConvert.SerializeObject(elapsedTime)}");
+                Debug.WriteLine($"{JsonConvert.SerializeObject(elapsedTime)}");
             }
         }
 

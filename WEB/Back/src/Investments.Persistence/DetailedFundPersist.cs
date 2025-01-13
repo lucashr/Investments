@@ -70,7 +70,7 @@ namespace Investments.Persistence
             }
         }
 
-        public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundsYeld> fundsYelds)
+        public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundDividends> fundsYelds)
         {
             try
             {

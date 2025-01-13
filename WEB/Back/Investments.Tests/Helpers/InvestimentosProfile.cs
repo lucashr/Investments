@@ -1,6 +1,7 @@
 using AutoMapper;
 using Investments.Application.Contracts;
 using Investments.Application.Dtos;
+using Investments.Domain;
 using Investments.Domain.Models;
 
 namespace Investments.Tests.Helpers
@@ -9,10 +10,8 @@ namespace Investments.Tests.Helpers
     {
         public InvestmentsProfile()
         {
-            CreateMap<Stocks, StocksDto>().ReverseMap()
-            .ForMember(dst => dst.MetaData,
-                    map => map.MapFrom(src => src.MetaData));
             CreateMap<DetailedFunds, RankOfTheBestFunds>().ReverseMap();
+            CreateMap<DetailedStocks, RankOfTheBestStocks>().ReverseMap();
         }
     }
 }

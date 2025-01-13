@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Investments.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class DetailedFundsController : ControllerBase
     {
         private readonly IDetailedFundService _detailedFundService;
@@ -20,7 +20,7 @@ namespace Investments.API.Controllers
             _detailedFundService = detailedFundService;
         }
         
-        [HttpGet("AllFunds")]
+        [HttpGet("GetAllFunds")]
         public async Task<IActionResult> GetAllFunds()
         {
 
@@ -37,44 +37,6 @@ namespace Investments.API.Controllers
             }
             
         }
-
-        // [AllowAnonymous]
-        // [HttpGet("{fundCode}")]
-        // public async Task<IActionResult> GetFundsByCode(string fundCode)
-        // {
-
-        //     try
-        //     {
-        //         var funds = await _detailedFundService.GetDetailedFundByCodeAsync(fundCode);
-
-        //         return Ok(funds);
-        //     }
-        //     catch (System.Exception ex)
-        //     {
-        //         return this.StatusCode(StatusCodes.Status500InternalServerError,
-        //             $"Erro ao tentar recuperar fundos. Erro: {ex.Message}");
-        //     }
-            
-        // }
-
-        // [HttpPost("Registration")]
-        // public async Task<IActionResult> AddDetailedFunds(IEnumerable<DetailedFunds> detailedFunds)
-        // {
-
-        //     try
-        //     {
-        //         var funds = await _detailedFundService.AddDetailedFundsAsync(detailedFunds);
-
-        //         return Ok(funds);
-        //     }
-        //     catch (System.Exception ex)
-        //     {
-        //         return this.StatusCode(StatusCodes.Status500InternalServerError,
-        //             $"Erro ao tentar recuperar fundos. Erro: {ex.Message}");
-        //     }
-            
-        // }
-        
 
     }
 }

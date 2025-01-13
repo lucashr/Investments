@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Investments.Domain.Models
 {
-    public class FundsYeld
+    public class FundDividends
     {
         public string Id { get; set; }
         public string FundCode { get; set; }

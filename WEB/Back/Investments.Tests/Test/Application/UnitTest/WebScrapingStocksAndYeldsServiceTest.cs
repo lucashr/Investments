@@ -14,22 +14,22 @@ using Xunit;
 
 namespace Investments.Tests.Test.Application.UnitTest
 {
-    public class WebScrapingStocksAndYeldsServiceTest
+    public class WebScrapingStocksAndDividendsServiceTest
     {
 
         private readonly Mock<IDetailedStocksPersist> _mockDetailedStocksPersist;
         private readonly Mock<IStocksYeldPersist> _mockStocksYeldPersist;
-        private readonly WebScrapingStocksAndYeldsService _service;
+        private readonly WebScrapingStocksAndDividendsService _service;
         private InvestmentsContext _context;
         private const string DatabasePath = @"C:\Users\lucas\Desktop\Repositorios\meus_repositorios\Book_projeto_Investments\Angular\Investments\WEB\Back\src\Investments.API\Investments.db";
 
         private DbContextOptions<InvestmentsContext> options;
 
-        public WebScrapingStocksAndYeldsServiceTest()
+        public WebScrapingStocksAndDividendsServiceTest()
         {
             _mockDetailedStocksPersist = new Mock<IDetailedStocksPersist>();
             _mockStocksYeldPersist = new Mock<IStocksYeldPersist>();
-            _service = new WebScrapingStocksAndYeldsService(
+            _service = new WebScrapingStocksAndDividendsService(
                 _mockDetailedStocksPersist.Object,
                 _mockStocksYeldPersist.Object
             );
@@ -67,7 +67,7 @@ namespace Investments.Tests.Test.Application.UnitTest
             var cancellationTokenSource = new CancellationTokenSource();
 
             // Act
-            var result = await _service.GetYeldsStocksAsync(_context.DetailedStocks, cancellationTokenSource);
+            var result = await _service.GetStocksDividendsAsync(_context.DetailedStocks, cancellationTokenSource);
             
             _context.StocksDividends.RemoveRange(_context.StocksDividends);
             await _context.SaveChangesAsync();

@@ -14,12 +14,12 @@ namespace Investments.Application
 
         private readonly IRankOfTheBestFundsPersist _rankOfTheBestFundsPersist;
         private readonly IDetailedFundService _detailedFundService;
-        private readonly IFundsYieldService _fundsYeldService;
+        private readonly IFundDividendsService _fundsYeldService;
         private readonly IMapper _mapper;
 
         public RankOfTheBestFundsService(IRankOfTheBestFundsPersist rankOfTheBestFundsPersist,
                                          IDetailedFundService detailedFundService,
-                                         IFundsYieldService fundsYeldService,
+                                         IFundDividendsService fundsYeldService,
                                          IMapper mapper)
         {
             _rankOfTheBestFundsPersist = rankOfTheBestFundsPersist;

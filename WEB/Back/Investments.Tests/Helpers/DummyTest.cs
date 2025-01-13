@@ -7,42 +7,42 @@ namespace Investments.Tests.Helpers
     public static class DummyTest
     {
 
-        public static IEnumerable<object[]> FundsYeld(){
+        public static IEnumerable<object[]> FundDividends(){
 
             yield return new object[]
             {
-                new List<FundsYeld>()
+                new List<FundDividends>()
                 {
-                    new FundsYeld() { FundCode = "AAZQ11", DatePayment = DateTime.Now.AddDays(20).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.90, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "ABCP11", DatePayment = DateTime.Now.AddDays(21).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.90, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AEFI11", DatePayment = DateTime.Now.AddDays(22).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.90, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AFCR11", DatePayment = DateTime.Now.AddDays(23).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.90, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AFHI11", DatePayment = DateTime.Now.AddDays(24).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.90, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AFOF11", DatePayment = DateTime.Now.AddDays(20).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.80, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AGCX11", DatePayment = DateTime.Now.AddDays(21).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.80, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AGRX11", DatePayment = DateTime.Now.AddDays(22).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.80, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AIEC11", DatePayment = DateTime.Now.AddDays(23).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.80, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "ALMI11", DatePayment = DateTime.Now.AddDays(24).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.80, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AAZQ11", DatePayment = DateTime.Now.AddDays(20).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.50, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "ABCP11", DatePayment = DateTime.Now.AddDays(21).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.50, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AEFI11", DatePayment = DateTime.Now.AddDays(22).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.50, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AFCR11", DatePayment = DateTime.Now.AddDays(23).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.50, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AFHI11", DatePayment = DateTime.Now.AddDays(24).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.50, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AFOF11", DatePayment = DateTime.Now.AddDays(20).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.77, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AGCX11", DatePayment = DateTime.Now.AddDays(21).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.77, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AGRX11", DatePayment = DateTime.Now.AddDays(22).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.77, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AIEC11", DatePayment = DateTime.Now.AddDays(23).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.77, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "ALMI11", DatePayment = DateTime.Now.AddDays(24).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.77, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AAZQ11", DatePayment = DateTime.Now.AddDays(20).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.50, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "ABCP11", DatePayment = DateTime.Now.AddDays(21).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.50, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AEFI11", DatePayment = DateTime.Now.AddDays(22).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.50, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AFCR11", DatePayment = DateTime.Now.AddDays(23).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.50, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AFHI11", DatePayment = DateTime.Now.AddDays(24).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.50, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AFOF11", DatePayment = DateTime.Now.AddDays(20).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.00, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AGCX11", DatePayment = DateTime.Now.AddDays(21).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.00, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AGRX11", DatePayment = DateTime.Now.AddDays(22).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.00, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "AIEC11", DatePayment = DateTime.Now.AddDays(23).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.00, Type = "DIVIDENDO" },
-                    new FundsYeld() { FundCode = "ALMI11", DatePayment = DateTime.Now.AddDays(24).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.00, Type = "DIVIDENDO" }
+                    new FundDividends() { FundCode = "AAZQ11", DatePayment = DateTime.Now.AddDays(20).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.90, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "ABCP11", DatePayment = DateTime.Now.AddDays(21).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.90, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AEFI11", DatePayment = DateTime.Now.AddDays(22).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.90, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AFCR11", DatePayment = DateTime.Now.AddDays(23).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.90, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AFHI11", DatePayment = DateTime.Now.AddDays(24).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.90, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AFOF11", DatePayment = DateTime.Now.AddDays(20).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.80, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AGCX11", DatePayment = DateTime.Now.AddDays(21).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.80, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AGRX11", DatePayment = DateTime.Now.AddDays(22).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.80, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AIEC11", DatePayment = DateTime.Now.AddDays(23).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.80, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "ALMI11", DatePayment = DateTime.Now.AddDays(24).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.80, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AAZQ11", DatePayment = DateTime.Now.AddDays(20).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.50, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "ABCP11", DatePayment = DateTime.Now.AddDays(21).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.50, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AEFI11", DatePayment = DateTime.Now.AddDays(22).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.50, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AFCR11", DatePayment = DateTime.Now.AddDays(23).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.50, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AFHI11", DatePayment = DateTime.Now.AddDays(24).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.50, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AFOF11", DatePayment = DateTime.Now.AddDays(20).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.77, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AGCX11", DatePayment = DateTime.Now.AddDays(21).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.77, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AGRX11", DatePayment = DateTime.Now.AddDays(22).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.77, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AIEC11", DatePayment = DateTime.Now.AddDays(23).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.77, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "ALMI11", DatePayment = DateTime.Now.AddDays(24).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 0.77, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AAZQ11", DatePayment = DateTime.Now.AddDays(20).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.50, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "ABCP11", DatePayment = DateTime.Now.AddDays(21).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.50, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AEFI11", DatePayment = DateTime.Now.AddDays(22).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.50, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AFCR11", DatePayment = DateTime.Now.AddDays(23).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.50, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AFHI11", DatePayment = DateTime.Now.AddDays(24).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.50, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AFOF11", DatePayment = DateTime.Now.AddDays(20).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.00, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AGCX11", DatePayment = DateTime.Now.AddDays(21).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.00, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AGRX11", DatePayment = DateTime.Now.AddDays(22).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.00, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "AIEC11", DatePayment = DateTime.Now.AddDays(23).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.00, Type = "DIVIDENDO" },
+                    new FundDividends() { FundCode = "ALMI11", DatePayment = DateTime.Now.AddDays(24).ToString("dd/MM/yyyy"), LastComputedDate = DateTime.Now.ToString("dd/MM/yyyy"), Value = 1.00, Type = "DIVIDENDO" }
                 }
 
             };

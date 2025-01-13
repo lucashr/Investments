@@ -1,32 +1,32 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Investments.Application.Contracts;
+using Investments.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Investments.API.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class RankOfTheBestFundsController : ControllerBase
+    public class DetailedStocksController : ControllerBase
     {
-        
-        private readonly IRankOfTheBestFundsService _rankOfTheBestFundsService;
+        private readonly IDetailedStockService _detailedStockService;
 
-        public RankOfTheBestFundsController(IRankOfTheBestFundsService rankOfTheBestFundsService)
+        public DetailedStocksController(IDetailedStockService detailedFundService)
         {
-            _rankOfTheBestFundsService = rankOfTheBestFundsService;
+            _detailedStockService = detailedFundService;
         }
-
-        [HttpGet("GetRank/{totalFundsInRank}")]
-        [Authorize(policy: "Admin")]
-        public async Task<IActionResult> GetRank(int? totalFundsInRank = null)
+        
+        [HttpGet("GetAllStocks")]
+        public async Task<IActionResult> GetAllStocks()
         {
 
             try
             {
-                var allFunds = await _rankOfTheBestFundsService.GetRankOfTheBestFundsAsync(totalFundsInRank);
+                var allFunds = await _detailedStockService.GetAllDetailedStocksAsync();
 
                 return Ok(allFunds);
             }

@@ -9,20 +9,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Investments.Persistence
 {
-    public class FundYeldsPersist : GeneralPersist, IFundsYeldPersist
+    public class FundDividendsPersist : GeneralPersist, IFundsYeldPersist
     {
         private readonly InvestmentsContext _context;
 
-        public FundYeldsPersist(InvestmentsContext context) : base(context)
+        public FundDividendsPersist(InvestmentsContext context) : base(context)
         {
             _context = context;
         }
 
-        public async Task<IEnumerable<FundsYeld>> GetFundYeldByCodeAsync(string fundCode)
+        public async Task<IEnumerable<FundDividends>> GetFundYeldByCodeAsync(string fundCode)
         {
             try
             {
-                IQueryable<FundsYeld> query = _context.FundsYeld
+                IQueryable<FundDividends> query = _context.FundsYeld
                                                       .AsNoTracking()
                                                       .Where(f => f.FundCode.ToUpper() == fundCode.ToUpper().Trim());
                 
@@ -37,11 +37,11 @@ namespace Investments.Persistence
             
         }
 
-        public async Task<IEnumerable<FundsYeld>> GetAllFundsYeldAsync()
+        public async Task<IEnumerable<FundDividends>> GetAllFundsYeldAsync()
         {
             try
             {
-                IQueryable<FundsYeld> query = _context.FundsYeld.AsNoTracking();
+                IQueryable<FundDividends> query = _context.FundsYeld.AsNoTracking();
 
                 return await query.ToListAsync();
             }
@@ -53,7 +53,7 @@ namespace Investments.Persistence
             
         }
 
-        public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundsYeld> fundsYelds)
+        public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundDividends> fundsYelds)
         {
             try
             {

@@ -20,8 +20,8 @@ namespace Investments.Tests.Test.IntegrationTest
     {
 
         private static CustomWebApplicationFactory<Investments.API.Startup> _factory;
-        private static FundYeldsPersist fundYeldsPersist = null;
-        private static FundsYieldService fundsYieldService = null;
+        private static FundDividendsPersist fundYeldsPersist = null;
+        private static FundsDividendsService fundsYieldService = null;
         private static DbContextOptionsBuilder<InvestmentsContext> optionsBuilder = null;
         private static InvestmentsContext ctx = null;
         private static string dbName = null;
@@ -52,8 +52,8 @@ namespace Investments.Tests.Test.IntegrationTest
 
             await CreateContext();
 
-            fundYeldsPersist = new FundYeldsPersist(ctx);
-            fundsYieldService = new FundsYieldService(fundYeldsPersist);
+            fundYeldsPersist = new FundDividendsPersist(ctx);
+            fundsYieldService = new FundsDividendsService(fundYeldsPersist);
         }
 
         static dynamic clientOptions = new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryClientOptions()
@@ -67,7 +67,7 @@ namespace Investments.Tests.Test.IntegrationTest
         public async Task SeedDB()
         {
             
-            dynamic fundsYeld = DummyTest.FundsYeld().ElementAt(0).ElementAt(0);
+            dynamic fundsYeld = DummyTest.FundDividends().ElementAt(0).ElementAt(0);
 
             using (InvestmentsContext ctx = new(optionsBuilder.Options))
             {
@@ -101,7 +101,7 @@ namespace Investments.Tests.Test.IntegrationTest
 
             string result = await response.Content.ReadAsStringAsync();
 
-            List<FundsYeld> fundsYeld = JsonConvert.DeserializeObject<List<FundsYeld>>(result);
+            List<FundDividends> fundsYeld = JsonConvert.DeserializeObject<List<FundDividends>>(result);
 
             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
                 System.Net.HttpStatusCode.OK);
@@ -130,7 +130,7 @@ namespace Investments.Tests.Test.IntegrationTest
 
             string result = await response.Content.ReadAsStringAsync();
 
-            List<FundsYeld> fundsYeld = JsonConvert.DeserializeObject<List<FundsYeld>>(result);
+            List<FundDividends> fundsYeld = JsonConvert.DeserializeObject<List<FundDividends>>(result);
 
             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
                 System.Net.HttpStatusCode.OK);
@@ -138,8 +138,8 @@ namespace Investments.Tests.Test.IntegrationTest
         }
 
         [Theory]
-        [MemberData(nameof(DummyTest.FundsYeld), MemberType = typeof(DummyTest))]
-        public async void MustEnterFundsYeldsAndReturnTrue(List<FundsYeld> FundsYelds)
+        [MemberData(nameof(DummyTest.FundDividends), MemberType = typeof(DummyTest))]
+        public async void MustEnterFundsYeldsAndReturnTrue(List<FundDividends> FundsYelds)
         {
 
             await Setup();

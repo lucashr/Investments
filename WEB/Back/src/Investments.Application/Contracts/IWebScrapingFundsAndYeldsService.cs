@@ -11,8 +11,8 @@ namespace Investments.Application.Contracts
     {
         Task<IEnumerable<DetailedFunds>> GetFundsAsync(CancellationTokenSource cancellationTokenSource);
         Task<IEnumerable<DetailedFunds>> DriverGetFundsAsync();
-        Task<IEnumerable<FundsYeld>> GetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds, CancellationTokenSource cancellationTokenSource);
-        Task<IEnumerable<FundsYeld>> DriverGetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds);
+        Task<IEnumerable<FundDividends>> GetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds, CancellationTokenSource cancellationTokenSource);
+        Task<IEnumerable<FundDividends>> DriverGetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds);
         
     }
 }

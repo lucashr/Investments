@@ -12,19 +12,19 @@ namespace Investments.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
-    public class FundYeldsController : ControllerBase
+    [Route("api/v1/[controller]")]
+    public class FundDividendsController : ControllerBase
     {
 
-        private readonly IFundsYieldService _fundsYeldService;
+        private readonly IFundDividendsService _fundsYeldService;
         
-        public FundYeldsController(IFundsYieldService fundsYeldService)
+        public FundDividendsController(IFundDividendsService fundsYeldService)
         {
             _fundsYeldService = fundsYeldService;
         }
 
-        [HttpGet("{fundCode}")]
-        public async Task<IActionResult> GetFundsYeldByCode(string fundCode)
+        [HttpGet("GetFundDividendsByCode/{fundCode}")]
+        public async Task<IActionResult> GetFundDividendsByCode(string fundCode)
         {
 
             try
@@ -41,8 +41,8 @@ namespace Investments.API.Controllers
             
         }
 
-        [HttpGet("AllFundsYeld")]
-        public async Task<IActionResult> GetAllFundsYeld()
+        [HttpGet("GetAllFundsDividends")]
+        public async Task<IActionResult> GetAllFundsDividends()
         {
 
             try
@@ -59,23 +59,5 @@ namespace Investments.API.Controllers
             
         }
 
-        [HttpPost("Registration")]
-        public async Task<IActionResult> AddFundsYields(IEnumerable<FundsYeld> fundsYelds)
-        {
-
-            try
-            {
-                var funds = await _fundsYeldService.AddFundsYieldsAsync(fundsYelds);
-
-                return Ok(funds);
-            }
-            catch (System.Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Erro ao tentar recuperar fundos. Erro: {ex.Message}");
-            }
-            
-        }
-        
     }
 }

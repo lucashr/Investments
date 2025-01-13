@@ -9,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Investments.Persistence
 {
-    public class StocksYeldPersist : GeneralPersist, IStocksYeldPersist
+    public class StocksDividendsPersist : GeneralPersist, IStocksYeldPersist
     {
 
         private readonly InvestmentsContext _context;
 
-        public StocksYeldPersist(InvestmentsContext context) : base(context)
+        public StocksDividendsPersist(InvestmentsContext context) : base(context)
         {
             _context = context;
         }
@@ -58,8 +58,9 @@ namespace Investments.Persistence
             try
             {
                 IQueryable<StocksDividends> query = _context.StocksDividends
-                                                      .AsNoTracking()
-                                                      .Where(f => f.FundCode.ToUpper() == stockCode.ToUpper().Trim());
+                                                      .FromSqlRaw(@"SELECT * FROM StocksDividends 
+                                                                  WHERE UPPER(FundCode) = UPPER({0}) 
+                                                                  ORDER BY strftime('%Y-%m-%d', substr(date, 7, 4) || '-' || substr(date, 4, 2) || '-' || substr(date, 1, 2)) DESC", stockCode);
                 
                 return await query.ToListAsync();
                 
