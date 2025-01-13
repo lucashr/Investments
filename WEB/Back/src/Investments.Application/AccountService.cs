@@ -135,7 +135,7 @@ namespace Investments.Application
         {
             try
             {
-                // Encontra o usuário pelo ID
+                
                 var user = await _userManager.FindByIdAsync(userId);
                 if (user == null)
                 {
@@ -153,10 +153,8 @@ namespace Investments.Application
                     }
                 }
 
-                // Obtém as roles atuais do usuário
                 var currentRoles = await _userManager.GetRolesAsync(user);
 
-                // Remove as roles atuais
                 var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
                 
                 if (!removeResult.Succeeded)
@@ -164,14 +162,6 @@ namespace Investments.Application
                     throw new Exception("Erro ao remover as roles atuais do usuário.");
                 }
 
-                // // Verifica se a nova role existe
-                // var roleExists = await _userManager.IsInRoleAsync(user, newRole);
-                // if (!roleExists)
-                // {
-                //     throw new Exception("A role especificada não existe.");
-                // }
-
-                // Adiciona a nova role ao usuário
                 var addResult = await _userManager.AddToRoleAsync(user, newRole);
                 if (!addResult.Succeeded)
                 {

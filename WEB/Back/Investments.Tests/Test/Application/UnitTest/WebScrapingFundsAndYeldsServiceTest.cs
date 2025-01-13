@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Castle.Core.Logging;
 using FluentAssertions;
 using Investments.Application;
 using Investments.Domain.Models;
 using Investments.Persistence.Contracts;
 using Investments.Tests.Helpers;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -24,7 +26,8 @@ namespace Investments.Tests.Test
         static List<DetailedFunds> memoryDetailedFunds = null;
         static List<FundDividends> memoryFundsYeld = null;
         static IEnumerable<DetailedFunds> dummyDetailedFunds = null;
-        
+        ILogger<WebScrapingFundsAndDividendsService> logger = null;
+
         [Fact]
         public void Setup()
         {
@@ -87,10 +90,8 @@ namespace Investments.Tests.Test
             var detailedFunds = new List<DetailedFunds>();
             var ct = new CancellationTokenSource();
 
-            using(var webScraping = new WebScrapingFundsAndDividendsService(detailedFundPersist.Object, mockFundsYeldPersist.Object))
-            {
-                detailedFunds = (List<DetailedFunds>)await webScraping.GetFundsAsync(ct);
-            }
+            var webScraping = new WebScrapingFundsAndDividendsService(detailedFundPersist.Object, mockFundsYeldPersist.Object, logger);
+            detailedFunds = (List<DetailedFunds>)await webScraping.GetFundsAsync(ct);
 
             detailedFunds.Should().HaveCount(10);
 
@@ -107,10 +108,8 @@ namespace Investments.Tests.Test
             var yelds = new List<FundDividends>();
             var ct = new CancellationTokenSource();
 
-            using(var webScraping = new WebScrapingFundsAndDividendsService(detailedFundPersist.Object, mockFundsYeldPersist.Object))
-            {
-                yelds = (List<FundDividends>)await webScraping.GetYeldsFundsAsync(detailedFunds, ct);
-            }
+            var webScraping = new WebScrapingFundsAndDividendsService(detailedFundPersist.Object, mockFundsYeldPersist.Object, logger);
+            yelds = (List<FundDividends>)await webScraping.GetYeldsFundsAsync(detailedFunds, ct);
 
             yelds.Should().HaveCountGreaterThan(0);
 

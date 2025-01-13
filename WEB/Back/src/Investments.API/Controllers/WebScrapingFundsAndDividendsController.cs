@@ -15,27 +15,24 @@ namespace Investments.API.Controllers
     [Route("api/v1/[controller]")]
     public class WebScrapingFundsAndDividendsController : ControllerBase
     {
-        private readonly IWebScrapingFundsAndYeldsService _webScrapingFundsAndYelds;
+        private readonly IWebScrapingFundsAndDividendsService _webScrapingFundsAndYelds;
         private readonly IRankOfTheBestFundsService _rankOfTheBestFundsService;
         private readonly WebScrapingSocketManager _socketManager;
         private readonly IDetailedFundService _detailedFundService;
-        private readonly IFundsService _fundsService;
         private readonly IFundDividendsService _fundsYieldService;
         private static CancellationTokenSource? _cancellationTokenSource;
         private static bool _isRunning = false;
 
-        public WebScrapingFundsAndDividendsController(IWebScrapingFundsAndYeldsService webScrapingFundsAndYelds,
+        public WebScrapingFundsAndDividendsController(IWebScrapingFundsAndDividendsService webScrapingFundsAndYelds,
                                                   IRankOfTheBestFundsService rankOfTheBestFundsService,
                                                   WebScrapingSocketManager socketManager,
                                                   IDetailedFundService detailedFundService,
-                                                  IFundsService fundsService,
                                                   IFundDividendsService fundsYieldService)
         {
             _webScrapingFundsAndYelds = webScrapingFundsAndYelds;
             _rankOfTheBestFundsService = rankOfTheBestFundsService;
             _socketManager = socketManager;
             _detailedFundService = detailedFundService;
-            _fundsService = fundsService;
             _fundsYieldService = fundsYieldService;
         }
 

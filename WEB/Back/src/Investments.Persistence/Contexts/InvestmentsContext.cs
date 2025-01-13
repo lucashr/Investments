@@ -24,14 +24,13 @@ namespace Investments.Persistence.Contexts
             this.ChangeTracker.LazyLoadingEnabled = false;
         }
 
-            public virtual DbSet<DetailedFunds> DetailedFunds { get; set; }
-            public virtual DbSet<Funds> Funds { get; set; }
-            public virtual DbSet<FundDividends> FundsYeld { get; set; }
-            public virtual DbSet<RankOfTheBestFunds> RankFunds { get; set; }
-            public virtual DbSet<EnderecoUsuario> EnderecoUsuarios { get; set; }
-            public virtual DbSet<DetailedStocks> DetailedStocks { get; set; }
-            public virtual DbSet<StocksDividends> StocksDividends { get; set; }
-            public virtual DbSet<RankOfTheBestStocks> RankOfStocks { get; set; }
+        public virtual DbSet<DetailedFunds> DetailedFunds { get; set; }
+        public virtual DbSet<FundDividends> FundsYeld { get; set; }
+        public virtual DbSet<RankOfTheBestFunds> RankFunds { get; set; }
+        public virtual DbSet<EnderecoUsuario> EnderecoUsuarios { get; set; }
+        public virtual DbSet<DetailedStocks> DetailedStocks { get; set; }
+        public virtual DbSet<StocksDividends> StocksDividends { get; set; }
+        public virtual DbSet<RankOfTheBestStocks> RankOfStocks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
@@ -57,12 +56,6 @@ namespace Investments.Persistence.Contexts
                 modelBuilder.Entity<DetailedFunds>(
                     funds => funds.HasKey(x => x.Id)
                 );
-
-                base.OnModelCreating(modelBuilder);
-                modelBuilder.Entity<Funds>( funds => {
-                    funds.HasKey(x => x.Id);
-                    funds.Property(x => x.Id).ValueGeneratedOnAdd();
-                });
 
                 base.OnModelCreating(modelBuilder);
                 modelBuilder.Entity<FundDividends>(funds => {

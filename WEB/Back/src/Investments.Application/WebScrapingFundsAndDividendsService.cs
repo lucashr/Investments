@@ -7,8 +7,11 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Investments.Application.Contracts;
+using Investments.Application.helpers;
+using Investments.Application.Utils;
 using Investments.Domain.Models;
 using Investments.Persistence.Contracts;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -16,25 +19,25 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Investments.Application
 {
-    public class WebScrapingFundsAndDividendsService : IWebScrapingFundsAndYeldsService, IDisposable
+    public class WebScrapingFundsAndDividendsService : IWebScrapingFundsAndDividendsService
     {
-        IWebDriver driver;
-        IDetailedFundPersist _detailedFundPersist;
-        IFundsPersist _fundsPersist;
-        IFundsYeldPersist _fundsYeldPersist;
-        CancellationTokenSource _cancellationTokenSource;
-        
 
         const string WEBPAGE_FUNDS = "https://www.fundamentus.com.br/fii_resultado.php";
         const string WEBPAGE_YELDS = "https://www.fundamentus.com.br/fii_proventos.php?papel";
+        IWebDriver _driver;
+        IDetailedFundPersist _detailedFundPersist;
+        IFundsYeldPersist _fundsYeldPersist;
+        CancellationTokenSource _cancellationTokenSource;
+        ILogger _logger;
 
         public WebScrapingFundsAndDividendsService(IDetailedFundPersist detailedFundPersist,
-                                               IFundsYeldPersist fundsYeldPersist)
+                                                   IFundsYeldPersist fundsYeldPersist,
+                                                   ILogger<WebScrapingFundsAndDividendsService> logger)
         {
             _detailedFundPersist = detailedFundPersist;
             _fundsYeldPersist = fundsYeldPersist;
-
-            ConfigDriver();
+            _logger = logger;
+            _driver = WebDriverSelenium.ConfigDriver();
         }
 
         public async Task<IEnumerable<DetailedFunds>> GetFundsAsync(CancellationTokenSource cancellationTokenSource)
@@ -53,13 +56,12 @@ namespace Investments.Application
 
             if (bIsOk == false)
             {
-                new Exception("GetFundsAsync::Error SaveChangesAsync");
+                _logger.LogError("GetFundsAsync::Error SaveChangesAsync");
             }
 
             return result;
 
         }
-
         public async Task<IEnumerable<FundDividends>> GetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds, CancellationTokenSource cancellationTokenSource)
         {
 
@@ -76,53 +78,24 @@ namespace Investments.Application
 
             if (bIsOk == false)
             {
-                throw new Exception("GetYeldsFundsAsync::Error SaveChangesAsync");
+                _logger.LogError("GetYeldsFundsAsync::Error SaveChangesAsync");
             }
 
             return result;
 
         }
-
-        public void GoToPage(string linkPage)
-        {
-            try
-            {
-                driver.Navigate().GoToUrl(linkPage);
-            }
-            catch (System.Exception)
-            {
-                GoToPage(linkPage);
-            }
-        }
-
-        public void ConfigDriver()
-        {
-            
-            var options = new ChromeOptions();
-            options.AddArgument("--headless"); // Executar sem abrir a interface do navegador
-            options.AddArgument("--disable-gpu"); // Desativar GPU para evitar erros em algumas plataformas
-            options.AddArgument("--no-sandbox"); // Evitar o uso de sandbox, útil em ambientes de produção
-
-            driver = new ChromeDriver(
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), options);
-
-            driver.Manage().Window.Maximize();
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
-        }
-
-        public void Dispose()
-        {
-            driver.Quit();
-        }
-
         public async Task<IEnumerable<DetailedFunds>> DriverGetFundsAsync()
         {
 
             var clock = new Stopwatch();
-            await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Started: Capture of FIIs"));
             clock.Start();
 
-            GoToPage(WEBPAGE_FUNDS);
+            await LogUtils.LogActions("Started: Capture of FIIs");
+
+            bool navigateOK = await GoToPage(WEBPAGE_FUNDS);
+
+            if (!navigateOK)
+                        return Enumerable.Empty<DetailedFunds>();
 
             List<string> orderColumnTableOfFunds = new List<string>
             {
@@ -142,11 +115,11 @@ namespace Investments.Application
                 if(AbortarProcesso())
                         return Enumerable.Empty<DetailedFunds>();
                         
-                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
 
                 wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='tabelaResultado']/tbody/tr")));
 
-                var rows = driver.FindElements(By.XPath("//*[@id='tabelaResultado']/tbody/tr"));
+                var rows = _driver.FindElements(By.XPath("//*[@id='tabelaResultado']/tbody/tr"));
 
                 // #if DEBUG
                 //     int numberOfLines = 10;
@@ -156,7 +129,7 @@ namespace Investments.Application
 
                 Console.WriteLine($"Total de linhas {numberOfLines}");
 
-                var columns = driver.FindElements(By.XPath("//*[@id='tabelaResultado']/thead/tr/th"));
+                var columns = _driver.FindElements(By.XPath("//*[@id='tabelaResultado']/thead/tr/th"));
 
                 int numberOfColumn = columns.Count;
 
@@ -164,21 +137,24 @@ namespace Investments.Application
 
                 if (totalOfColumnExpected != numberOfColumn)
                 {
-                    Console.WriteLine($"Total of columns expected invalid {numberOfColumn}");
+                    await LogUtils.LogActions($"Total of columns expected invalid {numberOfColumn}");
+                    _logger.LogError($"Total of columns expected invalid {numberOfColumn}");
+                    return await Task.FromResult<IEnumerable<DetailedFunds>>(Enumerable.Empty<DetailedFunds>());
                 }
 
 
                 for (int j = 1; j <= numberOfColumn - 1; j++)
                 {
-                    string campo = driver.FindElement(By.XPath($"//*[@id='tabelaResultado']/thead/tr[{1}]/th[{j}]")).Text;
+                    string campo = _driver.FindElement(By.XPath($"//*[@id='tabelaResultado']/thead/tr[{1}]/th[{j}]")).Text;
 
                     if (orderColumnTableOfFunds[j - 1] != campo)
                     {
-                        Console.Write($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
+                        await LogUtils.LogActions($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
+                        _logger.LogError($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
                         return await Task.FromResult<IEnumerable<DetailedFunds>>(detailedFunds);
                     }
 
-                    Console.Write(driver.FindElement(By.XPath($"//*[@id='tabelaResultado']/thead/tr[{1}]/th[{j}]")).Text + " | ");
+                    Console.Write(_driver.FindElement(By.XPath($"//*[@id='tabelaResultado']/thead/tr[{1}]/th[{j}]")).Text + " | ");
                 }
 
                 for (int i = 1; i <= numberOfLines; i++)
@@ -192,7 +168,7 @@ namespace Investments.Application
 
                     for (int j = 1; j <= numberOfColumn - 1; j++)
                     {
-                        var e = driver.FindElement(By.XPath($"//*[@id='tabelaResultado']/tbody/tr[{i}]/td[{j}]")).Text;
+                        var e = _driver.FindElement(By.XPath($"//*[@id='tabelaResultado']/tbody/tr[{i}]/td[{j}]")).Text;
                         obj[j] = e;
                     }
 
@@ -214,49 +190,39 @@ namespace Investments.Application
                         AverageVacancy = Convert.ToDouble(obj[13].Replace("%", ""))
                     };
 
-                    await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(fund));
-                    Console.WriteLine($"{JsonConvert.SerializeObject(fund)}");
+                    await LogUtils.LogActions(fund);
 
                     detailedFunds.Add(fund);
+
                 }
 
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Completed: Capture of FIIs "));
-
+                await LogUtils.LogActions("Completed: Capture of FIIs");
                 return await Task.FromResult<IEnumerable<DetailedFunds>>(detailedFunds);
 
             }
             catch (System.Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Error: Capture of FIIs"));
+                await LogUtils.LogActions($"Error: Capture of FIIs -> {ex.Message}");
+                _logger.LogError($"Error: Capture of FIIs -> {ex.Message}");
                 return await Task.FromResult<IEnumerable<DetailedFunds>>(detailedFunds);
             }
             finally{
-                driver.Close();
+                _driver.Quit();
 
                 var elapsed = clock.Elapsed;
                 var elapsedTime = string.Format("Tempo decorrido: {0:00}:{1:00}:{2:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
-
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(elapsedTime));
-                Console.WriteLine($"{JsonConvert.SerializeObject(elapsedTime)}");
-                Debug.WriteLine($"{JsonConvert.SerializeObject(elapsedTime)}");
+                await LogUtils.LogActions(elapsedTime);
+                
             }
         }
-
         public async Task<IEnumerable<FundDividends>> DriverGetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
         {
 
-            var fundsYelds = new List<FundDividends>();
-            var fundsYeldsTmp = new List<FundDividends>();
-            var totalFundYeldsDb = new List<FundDividends>();
+            
             var clock = new Stopwatch();
             clock.Start();
 
-            dynamic rows;
-            dynamic columns;
-
-            int numberOfLines = 0;
-            int numberOfColumn = 0;
+            await LogUtils.LogActions("Started: Capture of funds dividends");
 
             List<string> orderColumnTableOfFunds = new List<string>
             {
@@ -270,61 +236,55 @@ namespace Investments.Application
 
                 await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Started: Capture Yelds Funds"));
 
+                var fundsYeldsTmp = new List<FundDividends>();
+                var fundsYelds = new List<FundDividends>();
+
                 foreach (var fund in detailedFunds)
                 {
                     
                     if(AbortarProcesso())
                         return Enumerable.Empty<FundDividends>();
                     
-                    GoToPage($"{WEBPAGE_YELDS}={fund.FundCode}");
+                    bool navigateOK = await GoToPage($"{WEBPAGE_YELDS}={fund.FundCode}");
 
-                    try
+                    if (!navigateOK)
+                        return Enumerable.Empty<FundDividends>();
+
+                    var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+                    wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='resultado']/tbody/tr")));
+
+                    var rows = _driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr"));
+
+                    var numberOfLines = rows.Count;
+                    Console.WriteLine($"Total de linhas {numberOfLines}");
+
+                    var columns = _driver.FindElements(By.XPath("//*[@id='resultado']/thead/tr/th"));
+
+                    var numberOfColumn = columns.Count;
+                    Console.WriteLine($"Total de colunas {numberOfColumn}");
+
+                    if (totalOfColumnExpected != numberOfColumn)
                     {
-
-                        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-
-                        wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='resultado']/tbody/tr")));
-
-                        rows = driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr"));
-
-                        numberOfLines = rows.Count;
-
-                        Console.WriteLine($"Total de linhas {numberOfLines}");
-
-                        columns = driver.FindElements(By.XPath("//*[@id='resultado']/thead/tr/th"));
-
-                        numberOfColumn = columns.Count;
-
-                        Console.WriteLine($"Total de colunas {numberOfColumn}");
-
-                        if (totalOfColumnExpected != numberOfColumn)
-                        {
-                            Console.WriteLine($"Total of columns expected invalid {numberOfColumn}");
-                        }
-
-                        Console.WriteLine(driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div[2]/p/strong")).Text);
-                    }
-                    catch (System.Exception)
-                    {
-                        continue;
+                        await LogUtils.LogActions($"Total of columns expected invalid {numberOfColumn}");
+                        _logger.LogError($"Total of columns expected invalid {numberOfColumn}");
+                        return await Task.FromResult<IEnumerable<FundDividends>>(Enumerable.Empty<FundDividends>());
                     }
 
-                    if (numberOfLines > 12)
-                    {
-                        numberOfLines = 12;
-                    }
+                    Console.WriteLine(_driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div[2]/p/strong")).Text);
+
+                    numberOfLines = numberOfLines > 12 ? 12 : numberOfLines;
 
                     for (int j = 1; j <= numberOfColumn; j++)
                     {
-                        string campo = driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text;
+                        string campo = _driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text;
 
                         if (orderColumnTableOfFunds[j - 1] != campo)
                         {
                             Console.Write($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
-                            return await Task.FromResult<IEnumerable<FundDividends>>(fundsYelds);
+                            return await Task.FromResult<IEnumerable<FundDividends>>(Enumerable.Empty<FundDividends>());
                         }
 
-                        Console.Write(driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text + " | ");
+                        Console.Write(_driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text + " | ");
                     }
 
                     for (int i = 1; i <= numberOfLines; i++)
@@ -337,11 +297,11 @@ namespace Investments.Application
 
                         for (int j = 1; j <= numberOfColumn; j++)
                         {
-                            var e = driver.FindElement(By.XPath($"//*[@id='resultado']/tbody/tr[{i}]/td[{j}]")).Text;
+                            var e = _driver.FindElement(By.XPath($"//*[@id='resultado']/tbody/tr[{i}]/td[{j}]")).Text;
                             obj[j - 1] = e;
                         }
 
-                        var fY = new FundDividends()
+                        var fundDividends = new FundDividends()
                         {
                             Id = Guid.NewGuid().ToString("D"),
                             FundCode = fund.FundCode,
@@ -351,44 +311,67 @@ namespace Investments.Application
                             Value = Convert.ToDouble(obj[3])
                         };
 
-                        Console.WriteLine($"{JsonConvert.SerializeObject(fY)}");
-                        await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(fY));
-
-                        fundsYeldsTmp.Add(fY);
+                        await LogUtils.LogActions(fundDividends);
+                        fundsYeldsTmp.Add(fundDividends);
 
                     }
 
                 }
 
                 if (fundsYeldsTmp.Count() == 0)
-                {
                     return await Task.FromResult<IEnumerable<FundDividends>>(fundsYelds);
-                }
 
                 fundsYelds.AddRange(fundsYeldsTmp);
-
                 fundsYeldsTmp.Clear();
-                totalFundYeldsDb.Clear();
 
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Completed: Capture of yelds"));
+                await LogUtils.LogActions("Completed: Capture of funds dividends");
 
                 return await Task.FromResult<IEnumerable<FundDividends>>(fundsYelds);
+
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Error: Capture of yelds"));
-                return await Task.FromResult<IEnumerable<FundDividends>>(fundsYelds);
+                await LogUtils.LogActions("Error: Capture of funds dividends");
+                _logger.LogError("Error: Capture of funds dividends");
+                return await Task.FromResult<IEnumerable<FundDividends>>(Enumerable.Empty<FundDividends>());
             }
             finally{
-                driver.Close();
+
+                _driver.Quit();
 
                 var elapsed = clock.Elapsed;
                 var elapsedTime = string.Format("Tempo decorrido: {0:00}:{1:00}:{2:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
 
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(elapsedTime));
-                Console.WriteLine($"{JsonConvert.SerializeObject(elapsedTime)}");
-                Debug.WriteLine($"{JsonConvert.SerializeObject(elapsedTime)}");
+                await LogUtils.LogActions(elapsedTime);
+
+            }
+        }
+
+        public async Task<bool> GoToPage(string linkPage)
+        {
+
+            int attempts = 0;
+
+            try
+            {
+                _driver.Navigate().GoToUrl(linkPage);
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                if (attempts > 10)
+                {
+                    await LogUtils.LogActions($"Error: GoToPage {ex.Message}");
+                    _logger.LogError($"Error: GoToPage {ex.Message}");
+                    return false;
+                }
+                    
+                attempts++;
+
+                return await GoToPage(linkPage);
+                
             }
         }
 

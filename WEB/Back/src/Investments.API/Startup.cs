@@ -30,6 +30,7 @@ using System.Threading;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using Investments.VariablesManager;
+using Serilog;
 
 namespace Investments.API
 {
@@ -120,6 +121,8 @@ namespace Investments.API
                             new Newtonsoft.Json.Serialization.DefaultContractResolver();
                     });
 
+            services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog());
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IDetailedFundService, DetailedFundService>();
@@ -127,10 +130,9 @@ namespace Investments.API
             services.AddScoped<IRankOfTheBestStocksService, RankOfTheBestStocksService>();
             services.AddScoped<IStocksDividendService, StocksDividendService>();
             services.AddScoped<IStocksDividendService, StocksDividendService>();
-            services.AddScoped<IFundsService, FundsService>();
             services.AddScoped<IFundDividendsService, FundsDividendsService>();
             services.AddScoped<IRankOfTheBestFundsService, RankOfTheBestFundsService>();
-            services.AddScoped<IWebScrapingFundsAndYeldsService, WebScrapingFundsAndDividendsService>();
+            services.AddScoped<IWebScrapingFundsAndDividendsService, WebScrapingFundsAndDividendsService>();
             services.AddScoped<IWebScrapingStocksAndDividendsService, WebScrapingStocksAndDividendsService>();
             services.AddScoped<IEnderecoUsuarioService, EnderecoUsuarioService>();
             services.AddScoped<IAccountService, AccountService>();
@@ -138,7 +140,6 @@ namespace Investments.API
 
             services.AddScoped<IDetailedFundPersist, DetailedFundPersist>();
             services.AddScoped<IDetailedStocksPersist, DetailedStocksPersist>();
-            services.AddScoped<IFundsPersist, FundsPersist>();
             services.AddScoped<IGeneralPersist, GeneralPersist>();
             services.AddScoped<IFundsYeldPersist, FundDividendsPersist>();
             services.AddScoped<IRankOfTheBestFundsPersist, RankOfTheBestFundsPersist>();

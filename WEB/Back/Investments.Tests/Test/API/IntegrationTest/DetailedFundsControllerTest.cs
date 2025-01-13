@@ -29,7 +29,6 @@ namespace Investments.Tests.Tests.API.IntegrationTest
         private static DetailedFundService detailedFundService = null;
         private static Mock<IGeneralPersist> iGeneralPersist = null;
         private static Mock<IMapper> iMapper = null;
-        private static Mock<FundsPersist> fundsPersist = null;
         private static InvestmentsContext ctx = null;
         private static DbContextOptionsBuilder<InvestmentsContext> optionsBuilder = null;
         private static string dbName = null;
@@ -70,7 +69,6 @@ namespace Investments.Tests.Tests.API.IntegrationTest
             detailedFundService = new DetailedFundService(detailedFundPersist);
             iGeneralPersist = new Mock<IGeneralPersist>();
             iMapper = new Mock<IMapper>();
-            fundsPersist = new Mock<FundsPersist>(ctx);
 
         }
 

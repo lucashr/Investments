@@ -7,7 +7,7 @@ using Investments.Domain.Models;
 
 namespace Investments.Application.Contracts
 {
-    public interface IWebScrapingFundsAndYeldsService
+    public interface IWebScrapingFundsAndDividendsService
     {
         Task<IEnumerable<DetailedFunds>> GetFundsAsync(CancellationTokenSource cancellationTokenSource);
         Task<IEnumerable<DetailedFunds>> DriverGetFundsAsync();

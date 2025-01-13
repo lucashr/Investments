@@ -8,8 +8,11 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Investments.Application.Contracts;
+using Investments.Application.helpers;
+using Investments.Application.Utils;
 using Investments.Domain;
 using Investments.Persistence.Contracts;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -20,21 +23,23 @@ namespace Investments.Application
     public class WebScrapingStocksAndDividendsService : IWebScrapingStocksAndDividendsService
     {
 
-        IWebDriver driver;
-        IDetailedStocksPersist _detailedStocksPersist;
-        IStocksYeldPersist _stocksYeldPersist;
-
         const string WEBPAGE_STOCKS = "https://www.fundamentus.com.br/resultado.php";
         const string WEBPAGE_YELDS = "https://www.fundamentus.com.br/proventos.php?papel";
+        IWebDriver _driver;
+        IDetailedStocksPersist _detailedStocksPersist;
+        IStocksYeldPersist _stockDividendsPersist;
+        ILogger<WebScrapingStocksAndDividendsService> _logger;
         
         CancellationTokenSource _cancellationTokenSource;
 
         public WebScrapingStocksAndDividendsService(IDetailedStocksPersist detailedStocksPersist,
-                                                IStocksYeldPersist stocksYeldPersist)
+                                                    IStocksYeldPersist stocksYeldPersist,
+                                                    ILogger<WebScrapingStocksAndDividendsService> logger)
         {
             _detailedStocksPersist = detailedStocksPersist;
-            _stocksYeldPersist = stocksYeldPersist;
-            ConfigDriver();
+            _stockDividendsPersist = stocksYeldPersist;
+            _logger = logger;
+            _driver = WebDriverSelenium.ConfigDriver();
         }
 
         public async Task<IEnumerable<DetailedStocks>> GetStocksAsync(CancellationTokenSource cancellationTokenSource)
@@ -53,7 +58,7 @@ namespace Investments.Application
 
             if (bIsOk == false)
             {
-                new Exception("GetFundsAsync::Error SaveChangesAsync");
+                _logger.LogError("GetStocksAsync::Error SaveChangesAsync");
             }
 
             return result;
@@ -64,7 +69,7 @@ namespace Investments.Application
         {
 
             _cancellationTokenSource = cancellationTokenSource;
-            // detailedStocks = await _stocksYeldPersist.GetAllStockDividendsAsync();
+
             var result = await DriverGetStocksDividendsAsync(detailedStocks);
 
             if (_cancellationTokenSource.IsCancellationRequested)
@@ -72,11 +77,11 @@ namespace Investments.Application
                 return result;
             }
 
-            var bIsOk = await _stocksYeldPersist.AddStockDividendsAsync(result.ToList());
+            var bIsOk = await _stockDividendsPersist.AddStockDividendsAsync(result.ToList());
 
             if (bIsOk == false)
             {
-                // throw new Exception("GetYeldsFundsAsync::Error SaveChangesAsync");
+                _logger.LogError("GetStocksDividendsAsync::Error SaveChangesAsync");
             }
 
             return result;
@@ -87,13 +92,6 @@ namespace Investments.Application
         {
 
             var clock = new Stopwatch();
-            var stocksDividends = new List<StocksDividends>();
-            var stocksDividendsTmp = new List<StocksDividends>();
-            dynamic rows;
-            dynamic columns;
-
-            int numberOfLines = 0;
-            int numberOfColumn = 0;
 
             clock.Start();
 
@@ -107,7 +105,10 @@ namespace Investments.Application
             try
             {
 
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Started: Capture Dividends Stocks"));
+                await LogUtils.LogActions("Started: Capture Dividends Stocks");
+
+                var stocksDividends = new List<StocksDividends>();
+                var stocksDividendsTmp = new List<StocksDividends>();
 
                 foreach (var fund in detailedStocks)
                 {
@@ -115,60 +116,49 @@ namespace Investments.Application
                     if(AbortarProcesso())
                         return Enumerable.Empty<StocksDividends>();
                     
-                    GoToPage($"{WEBPAGE_YELDS}={fund.FundCode}&tipo=2");
+                    bool navigateOK = await GoToPage($"{WEBPAGE_YELDS}={fund.FundCode}&tipo=2");
 
-                    try
-                    {
-
-                        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+                    if (!navigateOK)
+                        return Enumerable.Empty<StocksDividends>();
                         
-                        // wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='resultado']/tbody/tr")));
-                        var tableResultadoExists = driver.FindElements(By.Id("resultado"));
-                        if(tableResultadoExists == null || tableResultadoExists.Count == 0)
-                            continue;
-                        
-
-                        rows = driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr"));
-
-                        numberOfLines = rows.Count;
-
-                        Console.WriteLine($"Total de linhas {numberOfLines}");
-
-                        columns = driver.FindElements(By.XPath("//*[@id='resultado']/thead/tr/th"));
-
-                        numberOfColumn = columns.Count;
-
-                        Console.WriteLine($"Total de colunas {numberOfColumn}");
-
-                        if (totalOfColumnExpected != numberOfColumn)
-                        {
-                            Console.WriteLine($"Total of columns expected invalid {numberOfColumn}");
-                        }
-
-                        Console.WriteLine(driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div[2]/p/strong")).Text);
-                    }
-                    catch (System.Exception)
-                    {
+                    var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+                    
+                    var tableResultadoExists = _driver.FindElements(By.Id("resultado"));
+                    
+                    if(tableResultadoExists == null || tableResultadoExists.Count == 0)
                         continue;
+
+                    var rows = _driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr"));
+                    int numberOfLines = rows.Count;
+
+                    Console.WriteLine($"Total de linhas {numberOfLines}");
+
+                    var columns = _driver.FindElements(By.XPath("//*[@id='resultado']/thead/tr/th"));
+                    int numberOfColumn = columns.Count;
+
+                    Console.WriteLine($"Total de colunas {numberOfColumn}");
+
+                    if (totalOfColumnExpected != numberOfColumn)
+                    {
+                        await LogUtils.LogActions($"Total of columns expected invalid {numberOfColumn}");
+                        _logger.LogError($"Total of columns expected invalid {numberOfColumn}");
+                        return await Task.FromResult<IEnumerable<StocksDividends>>(Enumerable.Empty<StocksDividends>());
                     }
 
-                    //Limitador de historico de curto prazo
-                    // if (numberOfLines > 12)
-                    // {
-                    //     numberOfLines = 12;
-                    // }
+                    Console.WriteLine(_driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div[2]/p/strong")).Text);
 
                     for (int j = 1; j <= numberOfColumn; j++)
                     {
-                        string campo = driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text;
+                        string campo = _driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text;
 
                         if (orderColumnTableOfFunds[j - 1] != campo)
                         {
-                            Console.Write($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
-                            return await Task.FromResult<IEnumerable<StocksDividends>>(stocksDividends);
+                            await LogUtils.LogActions($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
+                            _logger.LogError($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
+                            return await Task.FromResult<IEnumerable<StocksDividends>>(Enumerable.Empty<StocksDividends>());
                         }
 
-                        Console.Write(driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text + " | ");
+                        Console.Write(_driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text + " | ");
                     }
 
                     for (int i = 1; i <= numberOfLines; i++)
@@ -181,7 +171,7 @@ namespace Investments.Application
 
                         for (int j = 1; j <= numberOfColumn; j++)
                         {
-                            var e = driver.FindElement(By.XPath($"//*[@id='resultado']/tbody/tr[{i}]/td[{j}]")).Text;
+                            var e = _driver.FindElement(By.XPath($"//*[@id='resultado']/tbody/tr[{i}]/td[{j}]")).Text;
                             obj[j - 1] = e;
                         }
                         
@@ -199,10 +189,8 @@ namespace Investments.Application
                             ForHowManyShares = Convert.ToInt16(obj[4]),
                         };
 
-                        await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(stockDividends));
-                        Console.WriteLine($"{JsonConvert.SerializeObject(stockDividends)}");
-                        Debug.WriteLine($"{JsonConvert.SerializeObject(stockDividends)}");
-                        
+                        await LogUtils.LogActions(stockDividends);
+
                         stocksDividendsTmp.Add(stockDividends);
 
                     }
@@ -210,90 +198,32 @@ namespace Investments.Application
                 }
 
                 if (stocksDividendsTmp.Count() == 0)
-                {
                     return await Task.FromResult<IEnumerable<StocksDividends>>(stocksDividends);
-                }
 
                 stocksDividends.AddRange(stocksDividendsTmp);
-
                 stocksDividendsTmp.Clear();
 
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Completed: Capture of yelds"));
+                await LogUtils.LogActions("Completed: Capture of stocks dividends");
 
                 return await Task.FromResult<IEnumerable<StocksDividends>>(stocksDividends);
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Error: Capture of yelds"));
-                return await Task.FromResult<IEnumerable<StocksDividends>>(stocksDividends);
-            }
-            finally{
-                driver.Close();
-
-                var elapsed = clock.Elapsed;
-                var elapsedTime = string.Format("Tempo decorrido: {0:00}:{1:00}:{2:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
-
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(elapsedTime));
-                Console.WriteLine($"{JsonConvert.SerializeObject(elapsedTime)}");
-                Debug.WriteLine($"{JsonConvert.SerializeObject(elapsedTime)}");
-            }
-        }
-
-        private async Task<IEnumerable<DetailedStocks>> GetStocksAsync()
-        {
-
-            var result = new List<DetailedStocks>();
-
-            try
-            {
-
-                var stockList = await DriverGetStocksAsync();
-
-                result.AddRange(stockList);
-
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Finished: Capture of Stocks"));
 
             }
             catch (Exception ex)
             {
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Error: Capture of Stocks"));
-                throw new Exception("DriverGetFundsAsync::Error", ex);
+                Console.WriteLine(ex.Message);
+                await LogUtils.LogActions($"Error: Capture of stocks dividends -> {ex.Message}");
+                _logger.LogError($"Error: Capture of stocks dividends -> {ex.Message}");
+                return await Task.FromResult<IEnumerable<StocksDividends>>(Enumerable.Empty<StocksDividends>());
             }
+            finally{
 
-            return result;
-        }
-        
-        public void ConfigDriver()
-        {
+                _driver.Close();
 
-            var options = new ChromeOptions();
-            options.AddArgument("--headless"); // Executar sem abrir a interface do navegador
-            options.AddArgument("--disable-gpu"); // Desativar GPU para evitar erros em algumas plataformas
-            options.AddArgument("--no-sandbox"); // Evitar o uso de sandbox, útil em ambientes de produção
+                var elapsed = clock.Elapsed;
+                var elapsedTime = string.Format("Tempo decorrido: {0:00}:{1:00}:{2:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
 
-            driver = new ChromeDriver(
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), options);
+                await LogUtils.LogActions(elapsedTime);
 
-            driver.Manage().Window.Maximize();
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
-        }
-
-        public void Dispose()
-        {
-            driver.Close();
-            driver.Quit();
-        }
-
-        public void GoToPage(string linkPage)
-        {
-            try
-            {
-                driver.Navigate().GoToUrl(linkPage);
-            }
-            catch (System.Exception)
-            {
-                GoToPage(linkPage);
             }
         }
 
@@ -308,10 +238,12 @@ namespace Investments.Application
             
             var totalRows = new ReadOnlyCollection<IWebElement>(new List<IWebElement>());
             
-            
-            GoToPage(WEBPAGE_STOCKS);
+            bool navigateOK = await GoToPage(WEBPAGE_STOCKS);
 
-            List<string> orderColumnTableOfFunds = new List<string>
+            if (!navigateOK)
+                        return Enumerable.Empty<DetailedStocks>();
+            
+            var orderColumnTableOfFunds = new List<string>
             {
                 "Papel", "Cotação", "P/L", "P/VP",
                 "PSR", "Div.Yield", "P/Ativo",
@@ -331,19 +263,19 @@ namespace Investments.Application
                 if(AbortarProcesso())
                         return Enumerable.Empty<DetailedStocks>();
 
-                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
 
                 wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='resultado']/tbody/tr")));
                 
                 // #if DEBUG
                 //     totalRows = new ReadOnlyCollection<IWebElement>(driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr")).Take(10).ToList());
                 // #else
-                    totalRows = new ReadOnlyCollection<IWebElement>(driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr")).ToList());
+                    totalRows = new ReadOnlyCollection<IWebElement>(_driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr")).ToList());
                 // #endif
                 
                 Console.WriteLine($"Total de linhas {totalRows.Count}");
 
-                var table = driver.FindElement(By.Id("resultado"));
+                var table = _driver.FindElement(By.Id("resultado"));
 
                 var header = table.FindElement(By.TagName("thead"));
 
@@ -352,22 +284,29 @@ namespace Investments.Application
 
                 if (headerColumns.Count != totalOfColumnExpected)
                 {
-                    throw new Exception("ScrapeStockData::Error: The number of columns in the table is different from the expected number of columns");
+                    await LogUtils.LogActions("ScrapeStockData::Error: The number of columns in the table is different from the expected number of columns");
+                    _logger.LogError("ScrapeStockData::Error: The number of columns in the table is different from the expected number of columns");
+                    return Enumerable.Empty<DetailedStocks>();
                 }
 
                 for (int i = 0; i < headerColumns.Count; i++)
                 {
                     if (headerColumns[i].Text.Trim() != orderColumnTableOfFunds[i])
                     {
-                        throw new Exception("ScrapeStockData::Error: The order of the columns in the table is different from the expected order");
+                        await LogUtils.LogActions("ScrapeStockData::Error: The order of the columns in the table is different from the expected order");
+                        _logger.LogError("ScrapeStockData::Error: The order of the columns in the table is different from the expected order");
+                        return Enumerable.Empty<DetailedStocks>();
                     }
                 }
 
-                
-
                 foreach (var row in totalRows)
                 {
+
+                    if(AbortarProcesso())
+                        return Enumerable.Empty<DetailedStocks>();
+
                     var cells = row.FindElements(By.TagName("td"));
+
                     if (cells.Count > 0)
                     {
                         var stock = new DetailedStocks
@@ -396,41 +335,63 @@ namespace Investments.Application
                             RevenueGrowthFiveYears = double.TryParse(cells[20].Text.Replace("%", "").Trim(), out double crescRec5a) ? crescRec5a : 0                        
                         };
 
-                        await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(stock));
-                        Console.WriteLine($"{JsonConvert.SerializeObject(stock)}");
-                        Debug.WriteLine($"{JsonConvert.SerializeObject(stock)}");
+                        await LogUtils.LogActions(stock);
 
                         stockList.Add(stock);
+
                     }
                 }
 
+                 await LogUtils.LogActions("Completed: Capture of stocks");
+
+                 return stockList;
 
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Error: Capture of stocks"));
+                _logger.LogError($"Error: Capture of stocks -> {ex.Message}");
+                await LogUtils.LogActions($"Error: Capture of stocks -> {ex.Message}");
                 return await Task.FromResult<IEnumerable<DetailedStocks>>(stockList);
             }
             finally{
 
-                driver.Close();
-                clock.Stop();
+                _driver.Quit();
 
                 var elapsed = clock.Elapsed;
                 var elapsedTime = string.Format("Tempo decorrido: {0:00}:{1:00}:{2:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
 
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject(elapsedTime));
-                Console.WriteLine($"{JsonConvert.SerializeObject(elapsedTime)}");
-                Debug.WriteLine($"{JsonConvert.SerializeObject(elapsedTime)}");
+                await LogUtils.LogActions(elapsedTime);
+                
             }
 
-            await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Completed: Capture of stocks"));
-
-            return stockList;
-
         }
+        
+        public async Task<bool> GoToPage(string linkPage)
+        {
 
+            int attempts = 0;
+
+            try
+            {
+                _driver.Navigate().GoToUrl(linkPage);
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                if (attempts > 10)
+                {
+                    await LogUtils.LogActions($"Error: GoToPage {ex.Message}");
+                    _logger.LogError($"Error: GoToPage {ex.Message}");
+                    return false;
+                }
+                    
+                attempts++;
+
+                return await GoToPage(linkPage);
+                
+            }
+        }
         private bool AbortarProcesso(){
 
             if (_cancellationTokenSource.IsCancellationRequested)
