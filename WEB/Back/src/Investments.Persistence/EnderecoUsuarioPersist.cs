@@ -19,19 +19,19 @@ namespace Investments.Persistence
             _context = context;
         }
 
-        public async Task<EnderecoUsuario> GetAddressUser(string username)
+        public async Task<UserAddress> GetAddressUser(string username)
         {
-            return await _context.EnderecoUsuarios.Where(x=> x.User.UserName == username)
+            return await _context.UserAddresses.Where(x=> x.User.UserName == username)
                                                   .AsNoTracking().FirstOrDefaultAsync();
         }
 
-        public async Task<bool> SaveAddressUser(EnderecoUsuario enderecoUsuario)
+        public async Task<bool> SaveAddressUser(UserAddress enderecoUsuario)
         {
             await _context.AddAsync(enderecoUsuario);
             return await Task.FromResult(Convert.ToBoolean(await _context.SaveChangesAsync()));
         }
 
-        public async Task<bool> UpdateAddressUser(EnderecoUsuario enderecoUsuario)
+        public async Task<bool> UpdateAddressUser(UserAddress enderecoUsuario)
         {
             _context.Update(enderecoUsuario);
             return await Task.FromResult(Convert.ToBoolean(await _context.SaveChangesAsync()));

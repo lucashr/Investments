@@ -19,7 +19,7 @@ namespace Investments.Persistence
             _context = context;
         }
 
-        public async Task<bool> AddStockDividendsAsync(IEnumerable<StocksDividends> stockDividends)
+        public async Task<bool> AddStockDividendsAsync(IEnumerable<StockDividend> stockDividends)
         {
             try
             {
@@ -38,11 +38,11 @@ namespace Investments.Persistence
             }
         }
 
-        public async Task<IEnumerable<StocksDividends>> GetAllStockDividendsAsync()
+        public async Task<IEnumerable<StockDividend>> GetAllStockDividendsAsync()
         {
             try
             {
-                IQueryable<StocksDividends> query = _context.StocksDividends.AsNoTracking();
+                IQueryable<StockDividend> query = _context.StocksDividends.AsNoTracking();
 
                 return await query.ToListAsync();
             }
@@ -53,11 +53,11 @@ namespace Investments.Persistence
             }
         }
 
-        public async Task<IEnumerable<StocksDividends>> GetStockDividendsByCodeAsync(string stockCode)
+        public async Task<IEnumerable<StockDividend>> GetStockDividendsByCodeAsync(string stockCode)
         {
             try
             {
-                IQueryable<StocksDividends> query = _context.StocksDividends
+                IQueryable<StockDividend> query = _context.StocksDividends
                                                       .FromSqlRaw(@"SELECT * FROM StocksDividends 
                                                                   WHERE UPPER(FundCode) = UPPER({0}) 
                                                                   ORDER BY strftime('%Y-%m-%d', substr(date, 7, 4) || '-' || substr(date, 4, 2) || '-' || substr(date, 1, 2)) DESC", stockCode);

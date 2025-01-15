@@ -209,8 +209,8 @@ namespace Investments.API
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
+            app.UseSerilogRequestLogging();
 
             // Configurar CORS
             app.UseCors(options =>

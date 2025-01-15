@@ -62,7 +62,7 @@ namespace Investments.Tests.Test.IntegrationTest
         public async Task SeedDB()
         {
             
-            var detailedFunds = (List<DetailedFunds>)DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
+            var detailedFunds = (List<DetailedFund>)DummyTest.DetailedFund().ElementAt(0).ElementAt(0);
 
             using (InvestmentsContext ctx = new(optionsBuilder.Options))
             {
@@ -93,7 +93,7 @@ namespace Investments.Tests.Test.IntegrationTest
 
             string result = await response.Content.ReadAsStringAsync();
 
-            List<DetailedFunds> fundsYeld = JsonConvert.DeserializeObject<List<DetailedFunds>>(result);
+            List<DetailedFund> fundsYeld = JsonConvert.DeserializeObject<List<DetailedFund>>(result);
 
             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
                 System.Net.HttpStatusCode.OK);
@@ -122,7 +122,7 @@ namespace Investments.Tests.Test.IntegrationTest
 
             string result = await response.Content.ReadAsStringAsync();
 
-            List<FundDividends> fundsYeld = JsonConvert.DeserializeObject<List<FundDividends>>(result);
+            List<FundDividend> fundsYeld = JsonConvert.DeserializeObject<List<FundDividend>>(result);
 
             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
                 System.Net.HttpStatusCode.OK);

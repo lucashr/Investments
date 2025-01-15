@@ -7,8 +7,8 @@ namespace Investments.Application.Contracts
 {
     public interface IDetailedStockService
     {
-        Task<DetailedStocks> GetDetailedStockByCodeAsync(string fundCode);
-        Task<IEnumerable<DetailedStocks>> GetAllDetailedStocksAsync();
-        Task<bool> AddDetailedStocksAsync(IEnumerable<DetailedStocks> detailedStocks);
+        Task<DetailedStock> GetDetailedStockByCodeAsync(string fundCode);
+        Task<IEnumerable<DetailedStock>> GetAllDetailedStocksAsync();
+        Task<bool> AddDetailedStocksAsync(IEnumerable<DetailedStock> detailedStocks);
     }
 }

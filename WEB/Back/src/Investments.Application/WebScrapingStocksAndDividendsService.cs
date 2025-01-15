@@ -42,7 +42,7 @@ namespace Investments.Application
             _driver = WebDriverSelenium.ConfigDriver();
         }
 
-        public async Task<IEnumerable<DetailedStocks>> GetStocksAsync(CancellationTokenSource cancellationTokenSource)
+        public async Task<IEnumerable<DetailedStock>> GetStocksAsync(CancellationTokenSource cancellationTokenSource)
         {
 
             _cancellationTokenSource = cancellationTokenSource;
@@ -65,7 +65,7 @@ namespace Investments.Application
 
         }
 
-        public async Task<IEnumerable<StocksDividends>> GetStocksDividendsAsync(IEnumerable<DetailedStocks> detailedStocks, CancellationTokenSource cancellationTokenSource)
+        public async Task<IEnumerable<StockDividend>> GetStocksDividendsAsync(IEnumerable<DetailedStock> detailedStocks, CancellationTokenSource cancellationTokenSource)
         {
 
             _cancellationTokenSource = cancellationTokenSource;
@@ -88,7 +88,7 @@ namespace Investments.Application
 
         }
 
-        public async Task<IEnumerable<StocksDividends>> DriverGetStocksDividendsAsync(IEnumerable<DetailedStocks> detailedStocks)
+        public async Task<IEnumerable<StockDividend>> DriverGetStocksDividendsAsync(IEnumerable<DetailedStock> detailedStocks)
         {
 
             var clock = new Stopwatch();
@@ -107,19 +107,19 @@ namespace Investments.Application
 
                 await LogUtils.LogActions("Started: Capture Dividends Stocks");
 
-                var stocksDividends = new List<StocksDividends>();
-                var stocksDividendsTmp = new List<StocksDividends>();
+                var stocksDividends = new List<StockDividend>();
+                var stocksDividendsTmp = new List<StockDividend>();
 
                 foreach (var fund in detailedStocks)
                 {
                     
                     if(AbortarProcesso())
-                        return Enumerable.Empty<StocksDividends>();
+                        return Enumerable.Empty<StockDividend>();
                     
                     bool navigateOK = await GoToPage($"{WEBPAGE_YELDS}={fund.FundCode}&tipo=2");
 
                     if (!navigateOK)
-                        return Enumerable.Empty<StocksDividends>();
+                        return Enumerable.Empty<StockDividend>();
                         
                     var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
                     
@@ -142,7 +142,7 @@ namespace Investments.Application
                     {
                         await LogUtils.LogActions($"Total of columns expected invalid {numberOfColumn}");
                         _logger.LogError($"Total of columns expected invalid {numberOfColumn}");
-                        return await Task.FromResult<IEnumerable<StocksDividends>>(Enumerable.Empty<StocksDividends>());
+                        return await Task.FromResult<IEnumerable<StockDividend>>(Enumerable.Empty<StockDividend>());
                     }
 
                     Console.WriteLine(_driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div[2]/p/strong")).Text);
@@ -155,7 +155,7 @@ namespace Investments.Application
                         {
                             await LogUtils.LogActions($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
                             _logger.LogError($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
-                            return await Task.FromResult<IEnumerable<StocksDividends>>(Enumerable.Empty<StocksDividends>());
+                            return await Task.FromResult<IEnumerable<StockDividend>>(Enumerable.Empty<StockDividend>());
                         }
 
                         Console.Write(_driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text + " | ");
@@ -165,7 +165,7 @@ namespace Investments.Application
                     {
                         
                         if(AbortarProcesso())
-                            return Enumerable.Empty<StocksDividends>();
+                            return Enumerable.Empty<StockDividend>();
 
                         string[] obj = new string[5];
 
@@ -178,7 +178,7 @@ namespace Investments.Application
                         var datePayment = new DateTime();
                         DateTime.TryParse(obj[3].ToString(), out datePayment);
 
-                        var stockDividends = new StocksDividends()
+                        var stockDividends = new StockDividend()
                         {
                             Id = Guid.NewGuid().ToString("D"),
                             FundCode = fund.FundCode,
@@ -198,14 +198,14 @@ namespace Investments.Application
                 }
 
                 if (stocksDividendsTmp.Count() == 0)
-                    return await Task.FromResult<IEnumerable<StocksDividends>>(stocksDividends);
+                    return await Task.FromResult<IEnumerable<StockDividend>>(stocksDividends);
 
                 stocksDividends.AddRange(stocksDividendsTmp);
                 stocksDividendsTmp.Clear();
 
                 await LogUtils.LogActions("Completed: Capture of stocks dividends");
 
-                return await Task.FromResult<IEnumerable<StocksDividends>>(stocksDividends);
+                return await Task.FromResult<IEnumerable<StockDividend>>(stocksDividends);
 
             }
             catch (Exception ex)
@@ -213,7 +213,7 @@ namespace Investments.Application
                 Console.WriteLine(ex.Message);
                 await LogUtils.LogActions($"Error: Capture of stocks dividends -> {ex.Message}");
                 _logger.LogError($"Error: Capture of stocks dividends -> {ex.Message}");
-                return await Task.FromResult<IEnumerable<StocksDividends>>(Enumerable.Empty<StocksDividends>());
+                return await Task.FromResult<IEnumerable<StockDividend>>(Enumerable.Empty<StockDividend>());
             }
             finally{
 
@@ -227,7 +227,7 @@ namespace Investments.Application
             }
         }
 
-        public async Task<IEnumerable<DetailedStocks>> DriverGetStocksAsync()
+        public async Task<IEnumerable<DetailedStock>> DriverGetStocksAsync()
         {
             
             var clock = new Stopwatch();
@@ -241,7 +241,7 @@ namespace Investments.Application
             bool navigateOK = await GoToPage(WEBPAGE_STOCKS);
 
             if (!navigateOK)
-                        return Enumerable.Empty<DetailedStocks>();
+                        return Enumerable.Empty<DetailedStock>();
             
             var orderColumnTableOfFunds = new List<string>
             {
@@ -255,13 +255,13 @@ namespace Investments.Application
             };
 
             int totalOfColumnExpected = orderColumnTableOfFunds.Count;
-            var stockList = new List<DetailedStocks>();
+            var stockList = new List<DetailedStock>();
 
             try
             {
 
                 if(AbortarProcesso())
-                        return Enumerable.Empty<DetailedStocks>();
+                        return Enumerable.Empty<DetailedStock>();
 
                 var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
 
@@ -286,7 +286,7 @@ namespace Investments.Application
                 {
                     await LogUtils.LogActions("ScrapeStockData::Error: The number of columns in the table is different from the expected number of columns");
                     _logger.LogError("ScrapeStockData::Error: The number of columns in the table is different from the expected number of columns");
-                    return Enumerable.Empty<DetailedStocks>();
+                    return Enumerable.Empty<DetailedStock>();
                 }
 
                 for (int i = 0; i < headerColumns.Count; i++)
@@ -295,7 +295,7 @@ namespace Investments.Application
                     {
                         await LogUtils.LogActions("ScrapeStockData::Error: The order of the columns in the table is different from the expected order");
                         _logger.LogError("ScrapeStockData::Error: The order of the columns in the table is different from the expected order");
-                        return Enumerable.Empty<DetailedStocks>();
+                        return Enumerable.Empty<DetailedStock>();
                     }
                 }
 
@@ -303,13 +303,13 @@ namespace Investments.Application
                 {
 
                     if(AbortarProcesso())
-                        return Enumerable.Empty<DetailedStocks>();
+                        return Enumerable.Empty<DetailedStock>();
 
                     var cells = row.FindElements(By.TagName("td"));
 
                     if (cells.Count > 0)
                     {
-                        var stock = new DetailedStocks
+                        var stock = new DetailedStock
                         {
                             Id = Guid.NewGuid().ToString("D"),
                             FundCode = cells[0].Text.Trim(),
@@ -351,7 +351,7 @@ namespace Investments.Application
             {
                 _logger.LogError($"Error: Capture of stocks -> {ex.Message}");
                 await LogUtils.LogActions($"Error: Capture of stocks -> {ex.Message}");
-                return await Task.FromResult<IEnumerable<DetailedStocks>>(stockList);
+                return await Task.FromResult<IEnumerable<DetailedStock>>(stockList);
             }
             finally{
 

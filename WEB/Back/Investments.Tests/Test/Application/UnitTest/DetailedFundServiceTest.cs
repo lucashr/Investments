@@ -18,22 +18,22 @@ namespace Investments.Tests.Test
 
         static DetailedFundService service = null;
         static Mock<IDetailedFundPersist> mock = null;
-        static List<DetailedFunds> dummyDetailedFunds = null;
+        static List<DetailedFund> dummyDetailedFunds = null;
 
         public static void Setup()
         {
             
             
             mock = new Mock<IDetailedFundPersist>();
-            dummyDetailedFunds = new List<DetailedFunds>();
-            dummyDetailedFunds = ((List<DetailedFunds>)DummyTest.DetailedFunds().ElementAt(0).ElementAt(0));
+            dummyDetailedFunds = new List<DetailedFund>();
+            dummyDetailedFunds = ((List<DetailedFund>)DummyTest.DetailedFund().ElementAt(0).ElementAt(0));
 
-            mock.Setup(x=> x.AddDetailedFundsAsync(It.IsAny<IEnumerable<DetailedFunds>>())).Returns(Task.FromResult(true));
-            mock.Setup(x=> x.GetAllDetailedFundsAsync()).Returns(Task.FromResult((IEnumerable<DetailedFunds>)dummyDetailedFunds));
+            mock.Setup(x=> x.AddDetailedFundsAsync(It.IsAny<IEnumerable<DetailedFund>>())).Returns(Task.FromResult(true));
+            mock.Setup(x=> x.GetAllDetailedFundsAsync()).Returns(Task.FromResult((IEnumerable<DetailedFund>)dummyDetailedFunds));
             mock.Setup(
                         x=> x.GetDetailedFundByCodeAsync(It.IsAny<string>()))
                              .Returns((string fundCode) => {
-                                var funds = (IEnumerable<DetailedFunds>)dummyDetailedFunds;
+                                var funds = (IEnumerable<DetailedFund>)dummyDetailedFunds;
                                 var result = funds.Where(x => x.FundCode == fundCode).FirstOrDefault();
                                 return Task.FromResult(result);
             });
@@ -43,8 +43,8 @@ namespace Investments.Tests.Test
         }
 
         [Theory]
-        [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
-        public async Task MustEnterTenFunds(List<DetailedFunds> detailedFunds)
+        [MemberData(nameof(DummyTest.DetailedFund), MemberType = typeof(DummyTest))]
+        public async Task MustEnterTenFunds(List<DetailedFund> detailedFunds)
         {
             
             Setup();

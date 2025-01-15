@@ -74,7 +74,7 @@ namespace Investments.API.Controllers
             if (string.IsNullOrEmpty(result.UserName))
                 return BadRequest("Falha ao tentar criar uma conta!");
 
-            var address = new EnderecoUsuario
+            var address = new UserAddress
             {
                 Id = usrDto.Id,
                 UserId = usrDto.Id,

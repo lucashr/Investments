@@ -61,11 +61,11 @@ namespace Investments.Tests.Test.Cep.awesomeapi.UnitTest
 
         }
 
-        private async Task<(EnderecoUsuario, HttpResponseMessage)> GetCepInfoAsync(string cep)
+        private async Task<(UserAddress, HttpResponseMessage)> GetCepInfoAsync(string cep)
         {
 
             var url = $"{ApiCep}/{cep}";
-            (EnderecoUsuario, HttpResponseMessage) result = (null, null);
+            (UserAddress, HttpResponseMessage) result = (null, null);
 
             using (var client = new HttpClient())
             {
@@ -84,7 +84,7 @@ namespace Investments.Tests.Test.Cep.awesomeapi.UnitTest
                     
                 var content = await response.Content.ReadAsStringAsync();
 
-                result.Item1 = JsonSerializer.Deserialize<EnderecoUsuario>(content, new JsonSerializerOptions
+                result.Item1 = JsonSerializer.Deserialize<UserAddress>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });

@@ -20,7 +20,7 @@ namespace Investments.Persistence
             _context = context;
         }
 
-        public async Task<bool> AddDetailedStocksAsync(IEnumerable<DetailedStocks> detailedStocks)
+        public async Task<bool> AddDetailedStocksAsync(IEnumerable<DetailedStock> detailedStocks)
         {
             try
             {
@@ -38,11 +38,11 @@ namespace Investments.Persistence
             }
         }
 
-        public async Task<IEnumerable<DetailedStocks>> GetAllDetailedStocksAsync()
+        public async Task<IEnumerable<DetailedStock>> GetAllDetailedStocksAsync()
         {
             try
             {
-                IQueryable<DetailedStocks> query = _context.DetailedStocks.AsNoTracking();
+                IQueryable<DetailedStock> query = _context.DetailedStocks.AsNoTracking();
 
                 return await query.ToListAsync();
             }
@@ -53,11 +53,11 @@ namespace Investments.Persistence
             }
         }
 
-        public async Task<DetailedStocks> GetDetailedStockByCodeAsync(string stockCode)
+        public async Task<DetailedStock> GetDetailedStockByCodeAsync(string stockCode)
         {
             try
             {
-                IQueryable<DetailedStocks> query = _context.DetailedStocks
+                IQueryable<DetailedStock> query = _context.DetailedStocks
                                                           .AsNoTracking()
                                                           .Where(f => f.FundCode.ToUpper() == stockCode.ToUpper().Trim());
 

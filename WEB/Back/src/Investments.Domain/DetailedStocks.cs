@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Investments.Domain
 {
-    public class DetailedStocks
+    public class DetailedStock
     {
         public string Id { get; set; }
         public string FundCode { get; set; }

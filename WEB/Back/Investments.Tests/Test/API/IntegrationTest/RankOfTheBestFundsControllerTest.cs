@@ -70,7 +70,7 @@ namespace Investments.Tests.Test.IntegrationTest
 
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<RankOfTheBestFunds, DetailedFunds>().ReverseMap();
+                cfg.CreateMap<BestFundRank, DetailedFund>().ReverseMap();
             });
 
             IMapper mapper = config.CreateMapper();
@@ -88,7 +88,7 @@ namespace Investments.Tests.Test.IntegrationTest
         public async Task SeedDB()
         {
 
-            dynamic rankFunds = DummyTest.RankOfTheBestFunds().ElementAt(0).ElementAt(0);
+            dynamic rankFunds = DummyTest.BestFundRank().ElementAt(0).ElementAt(0);
 
             using (InvestmentsContext ctx = new(optionsBuilder.Options))
             {
@@ -121,7 +121,7 @@ namespace Investments.Tests.Test.IntegrationTest
 
             string result = await response.Content.ReadAsStringAsync();
 
-            List<RankOfTheBestFunds> fundsRank = JsonConvert.DeserializeObject<List<RankOfTheBestFunds>>(result);
+            List<BestFundRank> fundsRank = JsonConvert.DeserializeObject<List<BestFundRank>>(result);
 
             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
                 System.Net.HttpStatusCode.OK);

@@ -18,11 +18,11 @@ namespace Investments.Persistence
             _context = context;
         }
 
-        public async Task<DetailedFunds> GetDetailedFundByCodeAsync(string fundCode)
+        public async Task<DetailedFund> GetDetailedFundByCodeAsync(string fundCode)
         {
             try
             {
-                IQueryable<DetailedFunds> query = _context.DetailedFunds
+                IQueryable<DetailedFund> query = _context.DetailedFunds
                                                           .AsNoTracking()
                                                           .Where(f => f.FundCode.ToUpper() == fundCode.ToUpper().Trim());
 
@@ -36,11 +36,11 @@ namespace Investments.Persistence
             
         }
 
-        public async Task<IEnumerable<DetailedFunds>> GetAllDetailedFundsAsync()
+        public async Task<IEnumerable<DetailedFund>> GetAllDetailedFundsAsync()
         {
             try
             {
-                IQueryable<DetailedFunds> query = _context.DetailedFunds.AsNoTracking();
+                IQueryable<DetailedFund> query = _context.DetailedFunds.AsNoTracking();
 
                 return await query.ToListAsync();
             }
@@ -52,7 +52,7 @@ namespace Investments.Persistence
             
         }
 
-        public async Task<bool> AddDetailedFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
+        public async Task<bool> AddDetailedFundsAsync(IEnumerable<DetailedFund> detailedFunds)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace Investments.Persistence
             }
         }
 
-        public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundDividends> fundsYelds)
+        public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundDividend> fundsYelds)
         {
             try
             {

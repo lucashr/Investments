@@ -17,43 +17,43 @@ namespace Investments.Tests.Test.Application
 
         static RankOfTheBestFundsService rankOfTheBestFundsService = null;
         static Mock<IRankOfTheBestFundsPersist> mockRankOfTheBestFundsPersist = null;
-        static List<RankOfTheBestFunds> dummyRankOfTheBestFunds = null;
+        static List<BestFundRank> dummyRankOfTheBestFunds = null;
         static Mock<DetailedFundService> detailedFundService = null;
         static Mock<IDetailedFundPersist> mockDetailedFundPersist = null;
-        static List<DetailedFunds> dummyDetailedFunds = null;
+        static List<DetailedFund> dummyDetailedFunds = null;
         static Mock<FundsDividendsService> fundsYieldService = null;
         static Mock<IFundsYeldPersist> mockFundsYeldPersist = null;
-        static List<FundDividends> dummyFundsYieldService = null;
+        static List<FundDividend> dummyFundsYieldService = null;
 
         public void Setup()
         {   
             
             mockDetailedFundPersist = new Mock<IDetailedFundPersist>();
-            dummyDetailedFunds = new List<DetailedFunds>();
-            dummyDetailedFunds = ((List<DetailedFunds>)DummyTest.DetailedFunds().ElementAt(0).ElementAt(0));
+            dummyDetailedFunds = new List<DetailedFund>();
+            dummyDetailedFunds = ((List<DetailedFund>)DummyTest.DetailedFund().ElementAt(0).ElementAt(0));
 
             mockRankOfTheBestFundsPersist = new Mock<IRankOfTheBestFundsPersist>();
-            dummyRankOfTheBestFunds = new List<RankOfTheBestFunds>();
-            dummyRankOfTheBestFunds = ((List<RankOfTheBestFunds>)DummyTest.RankOfTheBestFunds().ElementAt(0).ElementAt(0));
+            dummyRankOfTheBestFunds = new List<BestFundRank>();
+            dummyRankOfTheBestFunds = ((List<BestFundRank>)DummyTest.BestFundRank().ElementAt(0).ElementAt(0));
             
             mockFundsYeldPersist = new Mock<IFundsYeldPersist>();
-            dummyFundsYieldService = new List<FundDividends>();
-            dummyFundsYieldService = ((List<FundDividends>)DummyTest.FundDividends().ElementAt(0).ElementAt(0));
+            dummyFundsYieldService = new List<FundDividend>();
+            dummyFundsYieldService = ((List<FundDividend>)DummyTest.FundDividend().ElementAt(0).ElementAt(0));
 
-            mockDetailedFundPersist.Setup(x=> x.AddDetailedFundsAsync(It.IsAny<IEnumerable<DetailedFunds>>())).Returns(Task.FromResult(true));
-            mockDetailedFundPersist.Setup(x=> x.GetAllDetailedFundsAsync()).Returns(Task.FromResult((IEnumerable<DetailedFunds>)dummyDetailedFunds));
+            mockDetailedFundPersist.Setup(x=> x.AddDetailedFundsAsync(It.IsAny<IEnumerable<DetailedFund>>())).Returns(Task.FromResult(true));
+            mockDetailedFundPersist.Setup(x=> x.GetAllDetailedFundsAsync()).Returns(Task.FromResult((IEnumerable<DetailedFund>)dummyDetailedFunds));
             mockDetailedFundPersist.Setup(
                         x=> x.GetDetailedFundByCodeAsync(It.IsAny<string>()))
                              .Returns((string fundCode) => {
-                                var funds = (IEnumerable<DetailedFunds>)dummyDetailedFunds;
+                                var funds = (IEnumerable<DetailedFund>)dummyDetailedFunds;
                                 var result = funds.Where(x => x.FundCode == fundCode).FirstOrDefault();
                                 return Task.FromResult(result);
             });
 
-            mockFundsYeldPersist.Setup(x => x.AddFundsYieldsAsync(It.IsAny<IEnumerable<FundDividends>>())).Returns(Task.FromResult(true));
+            mockFundsYeldPersist.Setup(x => x.AddFundsYieldsAsync(It.IsAny<IEnumerable<FundDividend>>())).Returns(Task.FromResult(true));
             
             mockFundsYeldPersist.Setup(x => x.GetAllFundsYeldAsync()).Returns(() => {
-                        return Task.FromResult((IEnumerable<FundDividends>)dummyFundsYieldService);
+                        return Task.FromResult((IEnumerable<FundDividend>)dummyFundsYieldService);
             });
 
             mockFundsYeldPersist.Setup(x => x.GetFundYeldByCodeAsync(It.IsAny<string>())).Returns((string fundCode) => {
@@ -61,7 +61,7 @@ namespace Investments.Tests.Test.Application
                 return Task.FromResult(result);
             });
 
-            mockRankOfTheBestFundsPersist.Setup(x => x.AddRankOfTheBestFundsAsync(It.IsAny<IEnumerable<RankOfTheBestFunds>>())).Returns(Task.FromResult(true));
+            mockRankOfTheBestFundsPersist.Setup(x => x.AddRankOfTheBestFundsAsync(It.IsAny<IEnumerable<BestFundRank>>())).Returns(Task.FromResult(true));
             
             mockRankOfTheBestFundsPersist.Setup(x => x.GetRankOfTheBestFundsAsync(null)).Returns((int totalRank) => {
                 return Task.FromResult(dummyRankOfTheBestFunds.Take(dummyRankOfTheBestFunds.Count()));
@@ -77,7 +77,7 @@ namespace Investments.Tests.Test.Application
 
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<RankOfTheBestFunds, DetailedFunds>().ReverseMap();
+                cfg.CreateMap<BestFundRank, DetailedFund>().ReverseMap();
             });
 
             IMapper mapper = config.CreateMapper();
@@ -89,9 +89,9 @@ namespace Investments.Tests.Test.Application
 
 
         [Theory]
-        [MemberData(nameof(DummyTest.RankOfTheBestFunds), MemberType = typeof(DummyTest))]
+        [MemberData(nameof(DummyTest.BestFundRank), MemberType = typeof(DummyTest))]
         // [ConfigureTest]
-        public async Task MustStoreAndReturnTrue(List<RankOfTheBestFunds> rankOfTheBestFunds)
+        public async Task MustStoreAndReturnTrue(List<BestFundRank> rankOfTheBestFunds)
         {
             
             Setup();
@@ -103,9 +103,9 @@ namespace Investments.Tests.Test.Application
         }
 
         [Theory]
-        [MemberData(nameof(DummyTest.RankOfTheBestFunds), MemberType = typeof(DummyTest))]
+        [MemberData(nameof(DummyTest.BestFundRank), MemberType = typeof(DummyTest))]
         // [ConfigureTest]
-        public async Task MustCalculateAndReturnNotNull(List<RankOfTheBestFunds> rankOfTheBestFunds)
+        public async Task MustCalculateAndReturnNotNull(List<BestFundRank> rankOfTheBestFunds)
         {
             
             Setup();
@@ -119,9 +119,9 @@ namespace Investments.Tests.Test.Application
         }
 
         [Theory]
-        [MemberData(nameof(DummyTest.RankOfTheBestFunds), MemberType = typeof(DummyTest))]
+        [MemberData(nameof(DummyTest.BestFundRank), MemberType = typeof(DummyTest))]
         // [ConfigureTest]
-        public async Task MustReturnAllRankOfTheBestFunds(List<RankOfTheBestFunds> rankOfTheBestFunds)
+        public async Task MustReturnAllRankOfTheBestFunds(List<BestFundRank> rankOfTheBestFunds)
         {
             
             Setup();
@@ -137,9 +137,9 @@ namespace Investments.Tests.Test.Application
         }
 
         [Theory]
-        [MemberData(nameof(DummyTest.RankOfTheBestFunds), MemberType = typeof(DummyTest))]
+        [MemberData(nameof(DummyTest.BestFundRank), MemberType = typeof(DummyTest))]
         // [ConfigureTest]
-        public async Task MustReturnNumberOfElementsRankOfTheBestFunds(List<RankOfTheBestFunds> rankOfTheBestFunds)
+        public async Task MustReturnNumberOfElementsRankOfTheBestFunds(List<BestFundRank> rankOfTheBestFunds)
         {
             
             Setup();

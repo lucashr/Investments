@@ -9,10 +9,10 @@ namespace Investments.Application.Contracts
 {
     public interface IWebScrapingFundsAndDividendsService
     {
-        Task<IEnumerable<DetailedFunds>> GetFundsAsync(CancellationTokenSource cancellationTokenSource);
-        Task<IEnumerable<DetailedFunds>> DriverGetFundsAsync();
-        Task<IEnumerable<FundDividends>> GetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds, CancellationTokenSource cancellationTokenSource);
-        Task<IEnumerable<FundDividends>> DriverGetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds);
+        Task<IEnumerable<DetailedFund>> GetFundsAsync(CancellationTokenSource cancellationTokenSource);
+        Task<IEnumerable<DetailedFund>> DriverGetFundsAsync();
+        Task<IEnumerable<FundDividend>> GetYeldsFundsAsync(IEnumerable<DetailedFund> detailedFunds, CancellationTokenSource cancellationTokenSource);
+        Task<IEnumerable<FundDividend>> DriverGetYeldsFundsAsync(IEnumerable<DetailedFund> detailedFunds);
         
     }
 }

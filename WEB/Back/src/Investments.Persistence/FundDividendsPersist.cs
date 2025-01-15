@@ -18,11 +18,11 @@ namespace Investments.Persistence
             _context = context;
         }
 
-        public async Task<IEnumerable<FundDividends>> GetFundYeldByCodeAsync(string fundCode)
+        public async Task<IEnumerable<FundDividend>> GetFundYeldByCodeAsync(string fundCode)
         {
             try
             {
-                IQueryable<FundDividends> query = _context.FundsYeld
+                IQueryable<FundDividend> query = _context.FundDividends
                                                       .AsNoTracking()
                                                       .Where(f => f.FundCode.ToUpper() == fundCode.ToUpper().Trim());
                 
@@ -37,11 +37,11 @@ namespace Investments.Persistence
             
         }
 
-        public async Task<IEnumerable<FundDividends>> GetAllFundsYeldAsync()
+        public async Task<IEnumerable<FundDividend>> GetAllFundsYeldAsync()
         {
             try
             {
-                IQueryable<FundDividends> query = _context.FundsYeld.AsNoTracking();
+                IQueryable<FundDividend> query = _context.FundDividends.AsNoTracking();
 
                 return await query.ToListAsync();
             }
@@ -53,13 +53,13 @@ namespace Investments.Persistence
             
         }
 
-        public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundDividends> fundsYelds)
+        public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundDividend> fundsYelds)
         {
             try
             {
-                _context.FundsYeld.RemoveRange(_context.FundsYeld);
+                _context.FundDividends.RemoveRange(_context.FundDividends);
                 await _context.SaveChangesAsync();
-                _context.FundsYeld.RemoveRange(_context.FundsYeld.ToList());
+                _context.FundDividends.RemoveRange(_context.FundDividends.ToList());
                 _context.AddRange(fundsYelds);
                 await _context.SaveChangesAsync();
 

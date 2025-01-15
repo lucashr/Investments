@@ -28,7 +28,7 @@ namespace Investments.Application
             _mapper = mapper;
         }
 
-        public async Task<bool> AddRankOfTheBestFundsAsync(IEnumerable<RankOfTheBestFunds> rankOfTheBestFunds)
+        public async Task<bool> AddRankOfTheBestFundsAsync(IEnumerable<BestFundRank> rankOfTheBestFunds)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace Investments.Application
 
         */
 
-        public async Task<IEnumerable<RankOfTheBestFunds>> GetCalculationRankOfTheBestFundsAsync()
+        public async Task<IEnumerable<BestFundRank>> GetCalculationRankOfTheBestFundsAsync()
         {
 
             try
@@ -71,7 +71,7 @@ namespace Investments.Application
 
                 var funds = await _detailedFundService.GetAllDetailedFundsAsync();
 
-                var bestFunds = _mapper.Map<IEnumerable<RankOfTheBestFunds>>(funds);
+                var bestFunds = _mapper.Map<IEnumerable<BestFundRank>>(funds);
 
                 // 1)
                 bestFunds = bestFunds.Where(x => x.Liquidity >= 1000000);
@@ -133,7 +133,7 @@ namespace Investments.Application
             }
         }
 
-        public async Task<IEnumerable<RankOfTheBestFunds>> GetRankOfTheBestFundsAsync(int? totalFundsInRank = null)
+        public async Task<IEnumerable<BestFundRank>> GetRankOfTheBestFundsAsync(int? totalFundsInRank = null)
         {
             try
             {

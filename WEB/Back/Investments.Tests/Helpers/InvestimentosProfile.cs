@@ -10,8 +10,8 @@ namespace Investments.Tests.Helpers
     {
         public InvestmentsProfile()
         {
-            CreateMap<DetailedFunds, RankOfTheBestFunds>().ReverseMap();
-            CreateMap<DetailedStocks, RankOfTheBestStocks>().ReverseMap();
+            CreateMap<DetailedFund, BestFundRank>().ReverseMap();
+            CreateMap<DetailedStock, BestStockRank>().ReverseMap();
         }
     }
 }

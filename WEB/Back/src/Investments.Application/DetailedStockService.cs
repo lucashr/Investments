@@ -17,7 +17,7 @@ namespace Investments.Application
             _detailedStocksPersist = detailedStocksPersist;
         }
 
-        public async Task<bool> AddDetailedStocksAsync(IEnumerable<DetailedStocks> detailedFunds)
+        public async Task<bool> AddDetailedStocksAsync(IEnumerable<DetailedStock> detailedFunds)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace Investments.Application
             }
         }
 
-        public async Task<IEnumerable<DetailedStocks>> GetAllDetailedStocksAsync()
+        public async Task<IEnumerable<DetailedStock>> GetAllDetailedStocksAsync()
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Investments.Application
             }
         }
 
-        public async Task<DetailedStocks> GetDetailedStockByCodeAsync(string fundCode)
+        public async Task<DetailedStock> GetDetailedStockByCodeAsync(string fundCode)
         {
             try
             {

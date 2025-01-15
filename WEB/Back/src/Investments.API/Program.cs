@@ -16,8 +16,10 @@ namespace Investments.API
         {
 
             Log.Logger = new LoggerConfiguration()
-                    .WriteTo.Console()
-                    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+                    .MinimumLevel.Debug() // Define o nível mínimo de log
+                    .WriteTo.Console()    // Escreve logs no console
+                    .WriteTo.Seq("http://localhost:5341") // Envia logs para o Seq
+                    .Enrich.FromLogContext() // Enriquecimento automático de logs
                     .CreateLogger();
 
             CreateHostBuilder(args).Build().Run();

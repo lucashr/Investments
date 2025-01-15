@@ -7,8 +7,8 @@ namespace Investments.Persistence.Contracts
 {
     public interface IDetailedStocksPersist
     {
-        Task<DetailedStocks> GetDetailedStockByCodeAsync(string stockCode);
-        Task<IEnumerable<DetailedStocks>> GetAllDetailedStocksAsync();
-        Task<bool> AddDetailedStocksAsync(IEnumerable<DetailedStocks> detailedStocks);
+        Task<DetailedStock> GetDetailedStockByCodeAsync(string stockCode);
+        Task<IEnumerable<DetailedStock>> GetAllDetailedStocksAsync();
+        Task<bool> AddDetailedStocksAsync(IEnumerable<DetailedStock> detailedStocks);
     }
 }

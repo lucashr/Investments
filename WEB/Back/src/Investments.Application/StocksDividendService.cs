@@ -17,7 +17,7 @@ namespace Investments.Application
             _stocksYeldPersist = fundsYeldPersist;
         }
 
-        public async Task<IEnumerable<StocksDividends>> GetStockYeldByCodeAsync(string fundCode)
+        public async Task<IEnumerable<StockDividend>> GetStockYeldByCodeAsync(string fundCode)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace Investments.Application
             }
         }
 
-        public async Task<IEnumerable<StocksDividends>> GetAllStocksYeldAsync()
+        public async Task<IEnumerable<StockDividend>> GetAllStocksYeldAsync()
         {
             try
             {
@@ -45,7 +45,7 @@ namespace Investments.Application
             }
         }
 
-        public async Task<bool> AddStocksYieldsAsync(IEnumerable<StocksDividends> stocksYelds)
+        public async Task<bool> AddStocksYieldsAsync(IEnumerable<StockDividend> stocksYelds)
         {
             try
             {

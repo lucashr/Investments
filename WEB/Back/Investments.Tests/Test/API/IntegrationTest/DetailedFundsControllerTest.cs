@@ -75,7 +75,7 @@ namespace Investments.Tests.Tests.API.IntegrationTest
         public async Task SeedDB()
         {
 
-            var funds = (List<DetailedFunds>)DummyTest.DetailedFunds().ElementAt(0).ElementAt(0);
+            var funds = (List<DetailedFund>)DummyTest.BestFundRank().ElementAt(0).ElementAt(0);
 
             using (InvestmentsContext ctx = new(optionsBuilder.Options))
             {
@@ -102,13 +102,13 @@ namespace Investments.Tests.Tests.API.IntegrationTest
                 new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
             );
 
-            string url = $"api/DetailedFunds/AllFunds";
+            string url = $"api/DetailedFund/AllFunds";
 
             var response = await client.GetAsync(url);
 
             string result = await response.Content.ReadAsStringAsync();
 
-            List<DetailedFunds> funds = JsonConvert.DeserializeObject<List<DetailedFunds>>(result);
+            List<DetailedFund> funds = JsonConvert.DeserializeObject<List<DetailedFund>>(result);
 
             funds.Should().HaveCountGreaterThan(0);
 
@@ -132,21 +132,21 @@ namespace Investments.Tests.Tests.API.IntegrationTest
                 new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
             );
 
-            string url = $"api/DetailedFunds/{fundCode}";
+            string url = $"api/DetailedFund/{fundCode}";
 
             var response = await client.GetAsync(url);
 
             string result = await response.Content.ReadAsStringAsync();
 
-            DetailedFunds fund = JsonConvert.DeserializeObject<DetailedFunds>(result);
+            DetailedFund fund = JsonConvert.DeserializeObject<DetailedFund>(result);
 
             fund.FundCode.Should().Be(fundCode);
 
         }
 
         [Theory]
-        [MemberData(nameof(DummyTest.DetailedFunds), MemberType = typeof(DummyTest))]
-        public async void MustEnterFourDetailedFundsAndReturnTrue(List<DetailedFunds> newfunds)
+        [MemberData(nameof(DummyTest.DetailedFund), MemberType = typeof(DummyTest))]
+        public async void MustEnterFourDetailedFundsAndReturnTrue(List<DetailedFund> newfunds)
         {
 
             await Setup();
@@ -164,7 +164,7 @@ namespace Investments.Tests.Tests.API.IntegrationTest
             var jsonContent = JsonConvert.SerializeObject(newfunds); 
             var contentString  = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json-patch+json");
 
-            string url = $"api/DetailedFunds/Registration";
+            string url = $"api/DetailedFund/Registration";
 
             var response = await client.PostAsync(url, contentString);
 

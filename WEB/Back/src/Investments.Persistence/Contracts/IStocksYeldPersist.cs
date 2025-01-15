@@ -7,8 +7,8 @@ namespace Investments.Persistence.Contracts
 {
     public interface IStocksYeldPersist
     {
-        Task<IEnumerable<StocksDividends>> GetStockDividendsByCodeAsync(string stockCode);
-        Task<IEnumerable<StocksDividends>> GetAllStockDividendsAsync();
-        Task<bool> AddStockDividendsAsync(IEnumerable<StocksDividends> stockDividends);
+        Task<IEnumerable<StockDividend>> GetStockDividendsByCodeAsync(string stockCode);
+        Task<IEnumerable<StockDividend>> GetAllStockDividendsAsync();
+        Task<bool> AddStockDividendsAsync(IEnumerable<StockDividend> stockDividends);
     }
 }

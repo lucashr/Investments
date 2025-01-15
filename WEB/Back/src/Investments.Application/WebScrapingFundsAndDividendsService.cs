@@ -40,7 +40,7 @@ namespace Investments.Application
             _driver = WebDriverSelenium.ConfigDriver();
         }
 
-        public async Task<IEnumerable<DetailedFunds>> GetFundsAsync(CancellationTokenSource cancellationTokenSource)
+        public async Task<IEnumerable<DetailedFund>> GetFundsAsync(CancellationTokenSource cancellationTokenSource)
         {
 
             _cancellationTokenSource = cancellationTokenSource;
@@ -62,7 +62,7 @@ namespace Investments.Application
             return result;
 
         }
-        public async Task<IEnumerable<FundDividends>> GetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds, CancellationTokenSource cancellationTokenSource)
+        public async Task<IEnumerable<FundDividend>> GetYeldsFundsAsync(IEnumerable<DetailedFund> detailedFunds, CancellationTokenSource cancellationTokenSource)
         {
 
             _cancellationTokenSource = cancellationTokenSource;
@@ -84,7 +84,7 @@ namespace Investments.Application
             return result;
 
         }
-        public async Task<IEnumerable<DetailedFunds>> DriverGetFundsAsync()
+        public async Task<IEnumerable<DetailedFund>> DriverGetFundsAsync()
         {
 
             var clock = new Stopwatch();
@@ -95,7 +95,7 @@ namespace Investments.Application
             bool navigateOK = await GoToPage(WEBPAGE_FUNDS);
 
             if (!navigateOK)
-                        return Enumerable.Empty<DetailedFunds>();
+                        return Enumerable.Empty<DetailedFund>();
 
             List<string> orderColumnTableOfFunds = new List<string>
             {
@@ -107,13 +107,13 @@ namespace Investments.Application
             };
 
             int totalOfColumnExpected = orderColumnTableOfFunds.Count;
-            var detailedFunds = new List<DetailedFunds>();
+            var detailedFunds = new List<DetailedFund>();
 
             try
             {
 
                 if(AbortarProcesso())
-                        return Enumerable.Empty<DetailedFunds>();
+                        return Enumerable.Empty<DetailedFund>();
                         
                 var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
 
@@ -139,7 +139,7 @@ namespace Investments.Application
                 {
                     await LogUtils.LogActions($"Total of columns expected invalid {numberOfColumn}");
                     _logger.LogError($"Total of columns expected invalid {numberOfColumn}");
-                    return await Task.FromResult<IEnumerable<DetailedFunds>>(Enumerable.Empty<DetailedFunds>());
+                    return await Task.FromResult<IEnumerable<DetailedFund>>(Enumerable.Empty<DetailedFund>());
                 }
 
 
@@ -151,7 +151,7 @@ namespace Investments.Application
                     {
                         await LogUtils.LogActions($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
                         _logger.LogError($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
-                        return await Task.FromResult<IEnumerable<DetailedFunds>>(detailedFunds);
+                        return await Task.FromResult<IEnumerable<DetailedFund>>(detailedFunds);
                     }
 
                     Console.Write(_driver.FindElement(By.XPath($"//*[@id='tabelaResultado']/thead/tr[{1}]/th[{j}]")).Text + " | ");
@@ -161,7 +161,7 @@ namespace Investments.Application
                 {
 
                     if(AbortarProcesso())
-                        return Enumerable.Empty<DetailedFunds>();
+                        return Enumerable.Empty<DetailedFund>();
 
                     string[] obj = new string[14];
                     obj[0] = i.ToString();
@@ -172,7 +172,7 @@ namespace Investments.Application
                         obj[j] = e;
                     }
 
-                    var fund = new DetailedFunds()
+                    var fund = new DetailedFund()
                     {
                         Id = Guid.NewGuid().ToString("D"),
                         FundCode = obj[1],
@@ -191,20 +191,21 @@ namespace Investments.Application
                     };
 
                     await LogUtils.LogActions(fund);
+                    _logger.LogInformation("{@fund}", fund);
 
                     detailedFunds.Add(fund);
 
                 }
 
                 await LogUtils.LogActions("Completed: Capture of FIIs");
-                return await Task.FromResult<IEnumerable<DetailedFunds>>(detailedFunds);
+                return await Task.FromResult<IEnumerable<DetailedFund>>(detailedFunds);
 
             }
             catch (System.Exception ex)
             {
                 await LogUtils.LogActions($"Error: Capture of FIIs -> {ex.Message}");
                 _logger.LogError($"Error: Capture of FIIs -> {ex.Message}");
-                return await Task.FromResult<IEnumerable<DetailedFunds>>(detailedFunds);
+                return await Task.FromResult<IEnumerable<DetailedFund>>(detailedFunds);
             }
             finally{
                 _driver.Quit();
@@ -215,7 +216,7 @@ namespace Investments.Application
                 
             }
         }
-        public async Task<IEnumerable<FundDividends>> DriverGetYeldsFundsAsync(IEnumerable<DetailedFunds> detailedFunds)
+        public async Task<IEnumerable<FundDividend>> DriverGetYeldsFundsAsync(IEnumerable<DetailedFund> detailedFunds)
         {
 
             
@@ -236,19 +237,19 @@ namespace Investments.Application
 
                 await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Started: Capture Yelds Funds"));
 
-                var fundsYeldsTmp = new List<FundDividends>();
-                var fundsYelds = new List<FundDividends>();
+                var fundsYeldsTmp = new List<FundDividend>();
+                var fundsYelds = new List<FundDividend>();
 
                 foreach (var fund in detailedFunds)
                 {
                     
                     if(AbortarProcesso())
-                        return Enumerable.Empty<FundDividends>();
+                        return Enumerable.Empty<FundDividend>();
                     
                     bool navigateOK = await GoToPage($"{WEBPAGE_YELDS}={fund.FundCode}");
 
                     if (!navigateOK)
-                        return Enumerable.Empty<FundDividends>();
+                        return Enumerable.Empty<FundDividend>();
 
                     var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
                     wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='resultado']/tbody/tr")));
@@ -267,7 +268,7 @@ namespace Investments.Application
                     {
                         await LogUtils.LogActions($"Total of columns expected invalid {numberOfColumn}");
                         _logger.LogError($"Total of columns expected invalid {numberOfColumn}");
-                        return await Task.FromResult<IEnumerable<FundDividends>>(Enumerable.Empty<FundDividends>());
+                        return await Task.FromResult<IEnumerable<FundDividend>>(Enumerable.Empty<FundDividend>());
                     }
 
                     Console.WriteLine(_driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div[2]/p/strong")).Text);
@@ -281,7 +282,7 @@ namespace Investments.Application
                         if (orderColumnTableOfFunds[j - 1] != campo)
                         {
                             Console.Write($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
-                            return await Task.FromResult<IEnumerable<FundDividends>>(Enumerable.Empty<FundDividends>());
+                            return await Task.FromResult<IEnumerable<FundDividend>>(Enumerable.Empty<FundDividend>());
                         }
 
                         Console.Write(_driver.FindElement(By.XPath($"//*[@id='resultado']/thead/tr[{1}]/th[{j}]")).Text + " | ");
@@ -291,7 +292,7 @@ namespace Investments.Application
                     {
                         
                         if(AbortarProcesso())
-                            return Enumerable.Empty<FundDividends>();
+                            return Enumerable.Empty<FundDividend>();
 
                         string[] obj = new string[4];
 
@@ -301,7 +302,7 @@ namespace Investments.Application
                             obj[j - 1] = e;
                         }
 
-                        var fundDividends = new FundDividends()
+                        var fundDividends = new FundDividend()
                         {
                             Id = Guid.NewGuid().ToString("D"),
                             FundCode = fund.FundCode,
@@ -319,14 +320,14 @@ namespace Investments.Application
                 }
 
                 if (fundsYeldsTmp.Count() == 0)
-                    return await Task.FromResult<IEnumerable<FundDividends>>(fundsYelds);
+                    return await Task.FromResult<IEnumerable<FundDividend>>(fundsYelds);
 
                 fundsYelds.AddRange(fundsYeldsTmp);
                 fundsYeldsTmp.Clear();
 
                 await LogUtils.LogActions("Completed: Capture of funds dividends");
 
-                return await Task.FromResult<IEnumerable<FundDividends>>(fundsYelds);
+                return await Task.FromResult<IEnumerable<FundDividend>>(fundsYelds);
 
             }
             catch (Exception ex)
@@ -334,7 +335,7 @@ namespace Investments.Application
                 Console.WriteLine(ex.Message);
                 await LogUtils.LogActions("Error: Capture of funds dividends");
                 _logger.LogError("Error: Capture of funds dividends");
-                return await Task.FromResult<IEnumerable<FundDividends>>(Enumerable.Empty<FundDividends>());
+                return await Task.FromResult<IEnumerable<FundDividend>>(Enumerable.Empty<FundDividend>());
             }
             finally{
 

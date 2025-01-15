@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Investments.Domain
 {
-    public class EnderecoUsuario
+    public class UserAddress
     {
         public string Id { get; set; }
         public string UserId { get; set; }

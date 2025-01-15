@@ -18,11 +18,11 @@ namespace Investments.Persistence
             _context = context;
         }
 
-        public async Task<bool> AddRankOfTheBestStocksAsync(IEnumerable<RankOfTheBestStocks> rankOfTheBestStocks)
+        public async Task<bool> AddRankOfTheBestStocksAsync(IEnumerable<BestStockRank> rankOfTheBestStocks)
         {
             try
             {
-                _context.RankOfStocks.RemoveRange(_context.RankOfStocks.ToList());
+                _context.BestStockRanks.RemoveRange(_context.BestStockRanks.ToList());
                 await _context.SaveChangesAsync();
 
                 await _context.AddRangeAsync(rankOfTheBestStocks);
@@ -37,14 +37,14 @@ namespace Investments.Persistence
             }
         }
 
-        public Task<IEnumerable<RankOfTheBestStocks>> GetRankOfTheBestStocksAsync(int? totalFundsInRank = null)
+        public Task<IEnumerable<BestStockRank>> GetRankOfTheBestStocksAsync(int? totalFundsInRank = null)
         {
 
             try
             {
-                IQueryable<RankOfTheBestStocks> funds = totalFundsInRank is null ? 
-                                                        _context.RankOfStocks.AsNoTracking() : 
-                                                        _context.RankOfStocks.AsNoTracking().Take((int)totalFundsInRank);
+                IQueryable<BestStockRank> funds = totalFundsInRank is null ? 
+                                                        _context.BestStockRanks.AsNoTracking() : 
+                                                        _context.BestStockRanks.AsNoTracking().Take((int)totalFundsInRank);
                 
                 return Task.FromResult(funds.AsEnumerable());
                 
@@ -52,7 +52,7 @@ namespace Investments.Persistence
             catch (System.Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return (Task<IEnumerable<RankOfTheBestStocks>>)null;
+                return (Task<IEnumerable<BestStockRank>>)null;
             }
             
         }

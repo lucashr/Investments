@@ -50,6 +50,61 @@ namespace Investments.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BestFundRanks",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    FundCode = table.Column<string>(type: "TEXT", nullable: true),
+                    Segment = table.Column<string>(type: "TEXT", nullable: true),
+                    MultiplierRanking = table.Column<int>(type: "INTEGER", nullable: false),
+                    CoefficientOfVariation = table.Column<double>(type: "REAL", nullable: false),
+                    FFOYield = table.Column<double>(type: "REAL", nullable: false),
+                    DividendYield = table.Column<double>(type: "REAL", nullable: false),
+                    DividendYieldRanking = table.Column<int>(type: "INTEGER", nullable: false),
+                    PriceEquityValue = table.Column<double>(type: "REAL", nullable: false),
+                    RankPrice = table.Column<int>(type: "INTEGER", nullable: false),
+                    ValueOfMarket = table.Column<double>(type: "REAL", nullable: false),
+                    Liquidity = table.Column<double>(type: "REAL", nullable: false),
+                    AverageVacancy = table.Column<double>(type: "REAL", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BestFundRanks", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BestStockRanks",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    FundCode = table.Column<string>(type: "TEXT", nullable: true),
+                    Quotation = table.Column<double>(type: "REAL", nullable: false),
+                    PL = table.Column<double>(type: "REAL", nullable: false),
+                    PVP = table.Column<double>(type: "REAL", nullable: false),
+                    PSR = table.Column<double>(type: "REAL", nullable: false),
+                    DivYield = table.Column<double>(type: "REAL", nullable: false),
+                    PriceOverAsset = table.Column<double>(type: "REAL", nullable: false),
+                    PriceOnWorkingCapital = table.Column<double>(type: "REAL", nullable: false),
+                    PEBIT = table.Column<double>(type: "REAL", nullable: false),
+                    PriceOverNetCurrentAssets = table.Column<double>(type: "REAL", nullable: false),
+                    EVEBIT = table.Column<double>(type: "REAL", nullable: false),
+                    EVEBITDA = table.Column<double>(type: "REAL", nullable: false),
+                    EbitMargin = table.Column<double>(type: "REAL", nullable: false),
+                    LiquidityMargin = table.Column<double>(type: "REAL", nullable: false),
+                    LiquidityCurrent = table.Column<double>(type: "REAL", nullable: false),
+                    ROIC = table.Column<double>(type: "REAL", nullable: false),
+                    ROE = table.Column<double>(type: "REAL", nullable: false),
+                    LiquidityTwoMonths = table.Column<double>(type: "REAL", nullable: false),
+                    NetWorth = table.Column<double>(type: "REAL", nullable: false),
+                    GrossEquityDebt = table.Column<double>(type: "REAL", nullable: false),
+                    RevenueGrowthFiveYears = table.Column<double>(type: "REAL", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BestStockRanks", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DetailedFunds",
                 columns: table => new
                 {
@@ -106,20 +161,7 @@ namespace Investments.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Funds",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FundCode = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Funds", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FundsYeld",
+                name: "FundDividends",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
@@ -131,30 +173,7 @@ namespace Investments.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FundsYeld", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RankFunds",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    FundCode = table.Column<string>(type: "TEXT", nullable: true),
-                    Segment = table.Column<string>(type: "TEXT", nullable: true),
-                    MultiplierRanking = table.Column<int>(type: "INTEGER", nullable: false),
-                    CoefficientOfVariation = table.Column<double>(type: "REAL", nullable: false),
-                    FFOYield = table.Column<double>(type: "REAL", nullable: false),
-                    DividendYield = table.Column<double>(type: "REAL", nullable: false),
-                    DividendYieldRanking = table.Column<int>(type: "INTEGER", nullable: false),
-                    PriceEquityValue = table.Column<double>(type: "REAL", nullable: false),
-                    RankPrice = table.Column<int>(type: "INTEGER", nullable: false),
-                    ValueOfMarket = table.Column<double>(type: "REAL", nullable: false),
-                    Liquidity = table.Column<double>(type: "REAL", nullable: false),
-                    AverageVacancy = table.Column<double>(type: "REAL", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RankFunds", x => x.Id);
+                    table.PrimaryKey("PK_FundDividends", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -295,7 +314,7 @@ namespace Investments.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EnderecoUsuarios",
+                name: "UserAddresses",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
@@ -308,9 +327,9 @@ namespace Investments.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EnderecoUsuarios", x => x.Id);
+                    table.PrimaryKey("PK_UserAddresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EnderecoUsuarios_AspNetUsers_UserId",
+                        name: "FK_UserAddresses_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -320,22 +339,22 @@ namespace Investments.Persistence.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "1f269e67-a0b7-439b-b073-da1c5b7a31b3", "619edf3c-daa8-4832-a37e-df0123d40c76", "Admin", "ADMIN" });
+                values: new object[] { "42103ea4-63fa-4b38-bd1b-c38160bfda2b", "b1d19665-6b11-4b77-9109-136a376a6276", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "29fc0fb0-214f-4296-b272-1da2c4dbc331", "592e74dd-789e-4757-b941-808395395677", "User", "USER" });
+                values: new object[] { "6ddfe99a-6ff0-41d1-a4f3-697ccbc4c2e5", "36a582e0-c7e3-42ad-92e3-75bf323c66c4", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "Function", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "f567372b-4173-4ed6-a9c2-c4ae4e290613", 0, "908cb8b8-a284-4faf-aee1-73ba708decf5", "admin@example.com", true, null, 0, null, false, null, "ADMIN@EXAMPLE.COM", "ADMIN", "AQAAAAEAACcQAAAAEAhuGE2BaWievCAiLjuyBfPUWGCdn8HXLg1HhHw8yaX9KX1mTX+Twk5eLJLr1mv2Ug==", null, false, "70f25348-1af2-47bd-be0e-8996ccf861c0", false, "admin" });
+                values: new object[] { "e1ef25ad-9080-4e51-82dd-9cfc2b9bba90", 0, "a44ec98e-96db-4570-8839-7797e0611408", "admin@example.com", true, null, 0, null, false, null, "ADMIN@EXAMPLE.COM", "ADMIN", "AQAAAAEAACcQAAAAEFTpw+QDRXuBY9Ron1UL+Fh9FWiMrnpownK1zu9slutgA5WYQF6D7scHoaxTaXQ1ZQ==", null, false, "d5f8f172-bffe-43a2-9775-1238940e6eaf", false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId", "RoleId1", "UserId1" },
-                values: new object[] { "1f269e67-a0b7-439b-b073-da1c5b7a31b3", "f567372b-4173-4ed6-a9c2-c4ae4e290613", null, null });
+                values: new object[] { "42103ea4-63fa-4b38-bd1b-c38160bfda2b", "e1ef25ad-9080-4e51-82dd-9cfc2b9bba90", null, null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -385,8 +404,8 @@ namespace Investments.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_EnderecoUsuarios_UserId",
-                table: "EnderecoUsuarios",
+                name: "IX_UserAddresses_UserId",
+                table: "UserAddresses",
                 column: "UserId",
                 unique: true);
         }
@@ -409,25 +428,25 @@ namespace Investments.Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "BestFundRanks");
+
+            migrationBuilder.DropTable(
+                name: "BestStockRanks");
+
+            migrationBuilder.DropTable(
                 name: "DetailedFunds");
 
             migrationBuilder.DropTable(
                 name: "DetailedStocks");
 
             migrationBuilder.DropTable(
-                name: "EnderecoUsuarios");
-
-            migrationBuilder.DropTable(
-                name: "Funds");
-
-            migrationBuilder.DropTable(
-                name: "FundsYeld");
-
-            migrationBuilder.DropTable(
-                name: "RankFunds");
+                name: "FundDividends");
 
             migrationBuilder.DropTable(
                 name: "StocksDividends");
+
+            migrationBuilder.DropTable(
+                name: "UserAddresses");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -7,8 +7,8 @@ namespace Investments.Application.Contracts
 {
     public interface IStocksDividendService
     {
-        Task<IEnumerable<StocksDividends>> GetStockYeldByCodeAsync(string fundCode);
-        Task<IEnumerable<StocksDividends>> GetAllStocksYeldAsync();
-        Task<bool> AddStocksYieldsAsync(IEnumerable<StocksDividends> stocksYelds);
+        Task<IEnumerable<StockDividend>> GetStockYeldByCodeAsync(string fundCode);
+        Task<IEnumerable<StockDividend>> GetAllStocksYeldAsync();
+        Task<bool> AddStocksYieldsAsync(IEnumerable<StockDividend> stocksYelds);
     }
 }

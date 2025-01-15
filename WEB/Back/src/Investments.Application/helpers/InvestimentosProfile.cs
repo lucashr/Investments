@@ -11,8 +11,8 @@ namespace Investments.Application.helpers
     {
         public InvestmentsProfile()
         {
-            CreateMap<DetailedFunds, RankOfTheBestFunds>().ReverseMap();
-            CreateMap<DetailedStocks, RankOfTheBestStocks>().ReverseMap();
+            CreateMap<DetailedFund, BestFundRank>().ReverseMap();
+            CreateMap<DetailedStock, BestStockRank>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, UserLoginDto>().ReverseMap();
             CreateMap<User, UserUpdateDto>().ReverseMap();

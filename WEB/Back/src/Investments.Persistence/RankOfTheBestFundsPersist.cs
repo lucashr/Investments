@@ -18,11 +18,11 @@ namespace Investments.Persistence
             _context = context;
         }
 
-        public async Task<bool> AddRankOfTheBestFundsAsync(IEnumerable<RankOfTheBestFunds> rankOfTheBestFunds)
+        public async Task<bool> AddRankOfTheBestFundsAsync(IEnumerable<BestFundRank> rankOfTheBestFunds)
         {
             try
             {
-                _context.RankFunds.RemoveRange(_context.RankFunds.ToList());
+                _context.BestFundRanks.RemoveRange(_context.BestFundRanks.ToList());
                 await _context.SaveChangesAsync();
 
                 await _context.AddRangeAsync(rankOfTheBestFunds);
@@ -37,12 +37,12 @@ namespace Investments.Persistence
             }
         }
 
-        public Task<IEnumerable<RankOfTheBestFunds>> GetRankOfTheBestFundsAsync(int? totalFundsInRank = null)
+        public Task<IEnumerable<BestFundRank>> GetRankOfTheBestFundsAsync(int? totalFundsInRank = null)
         {
 
             try
             {
-                IQueryable<RankOfTheBestFunds> funds = _context.RankFunds.AsNoTracking();
+                IQueryable<BestFundRank> funds = _context.BestFundRanks.AsNoTracking();
                 
                 if(totalFundsInRank != null)
                 {
@@ -55,7 +55,7 @@ namespace Investments.Persistence
             catch (System.Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return (Task<IEnumerable<RankOfTheBestFunds>>)null;
+                return (Task<IEnumerable<BestFundRank>>)null;
             }
             
         }

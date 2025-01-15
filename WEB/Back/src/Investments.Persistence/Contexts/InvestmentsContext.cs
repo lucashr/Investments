@@ -24,13 +24,13 @@ namespace Investments.Persistence.Contexts
             this.ChangeTracker.LazyLoadingEnabled = false;
         }
 
-        public virtual DbSet<DetailedFunds> DetailedFunds { get; set; }
-        public virtual DbSet<FundDividends> FundsYeld { get; set; }
-        public virtual DbSet<RankOfTheBestFunds> RankFunds { get; set; }
-        public virtual DbSet<EnderecoUsuario> EnderecoUsuarios { get; set; }
-        public virtual DbSet<DetailedStocks> DetailedStocks { get; set; }
-        public virtual DbSet<StocksDividends> StocksDividends { get; set; }
-        public virtual DbSet<RankOfTheBestStocks> RankOfStocks { get; set; }
+        public virtual DbSet<DetailedFund> DetailedFunds { get; set; }
+        public virtual DbSet<FundDividend> FundDividends { get; set; }
+        public virtual DbSet<BestFundRank> BestFundRanks { get; set; }
+        public virtual DbSet<UserAddress> UserAddresses { get; set; }
+        public virtual DbSet<DetailedStock> DetailedStocks { get; set; }
+        public virtual DbSet<StockDividend> StocksDividends { get; set; }
+        public virtual DbSet<BestStockRank> BestStockRanks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
@@ -53,19 +53,23 @@ namespace Investments.Persistence.Contexts
 
                 });
 
-                modelBuilder.Entity<DetailedFunds>(
+                modelBuilder.Entity<DetailedFund>(
                     funds => funds.HasKey(x => x.Id)
                 );
 
                 base.OnModelCreating(modelBuilder);
-                modelBuilder.Entity<FundDividends>(funds => {
+                modelBuilder.Entity<FundDividend>(funds => {
                      funds.HasKey(x => x.Id);
                      funds.Property(x => x.Id).ValueGeneratedOnAdd();
                 });
 
                 base.OnModelCreating(modelBuilder);
-                modelBuilder.Entity<RankOfTheBestFunds>(Fund => {
-                    // Fund.HasKey(x=> x.FundCode); antigo
+                modelBuilder.Entity<BestFundRank>(Fund => {
+                    Fund.HasKey(x=> x.Id);
+                });
+
+                base.OnModelCreating(modelBuilder);
+                modelBuilder.Entity<BestStockRank>(Fund => {
                     Fund.HasKey(x=> x.Id);
                 });
 
@@ -73,7 +77,7 @@ namespace Investments.Persistence.Contexts
                     modelBuilder.Entity<User>(o => {
                         o.HasOne(u => u.EnderecoUsuario)
                         .WithOne(e => e.User)
-                        .HasForeignKey<EnderecoUsuario>(e => e.UserId)
+                        .HasForeignKey<UserAddress>(e => e.UserId)
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

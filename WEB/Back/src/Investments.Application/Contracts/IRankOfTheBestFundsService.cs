@@ -6,8 +6,8 @@ namespace Investments.Application.Contracts
 {
     public interface IRankOfTheBestFundsService
     {
-        Task<IEnumerable<RankOfTheBestFunds>> GetCalculationRankOfTheBestFundsAsync();
-        Task<IEnumerable<RankOfTheBestFunds>> GetRankOfTheBestFundsAsync(int? totalFundsInRank = null);
-        Task<bool> AddRankOfTheBestFundsAsync(IEnumerable<RankOfTheBestFunds> rankOfTheBestFunds);
+        Task<IEnumerable<BestFundRank>> GetCalculationRankOfTheBestFundsAsync();
+        Task<IEnumerable<BestFundRank>> GetRankOfTheBestFundsAsync(int? totalFundsInRank = null);
+        Task<bool> AddRankOfTheBestFundsAsync(IEnumerable<BestFundRank> rankOfTheBestFunds);
     }
 }

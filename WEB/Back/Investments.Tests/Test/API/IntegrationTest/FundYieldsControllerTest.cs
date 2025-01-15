@@ -67,7 +67,7 @@ namespace Investments.Tests.Test.IntegrationTest
         public async Task SeedDB()
         {
             
-            dynamic fundsYeld = DummyTest.FundDividends().ElementAt(0).ElementAt(0);
+            dynamic fundsYeld = DummyTest.FundDividend().ElementAt(0).ElementAt(0);
 
             using (InvestmentsContext ctx = new(optionsBuilder.Options))
             {
@@ -101,7 +101,7 @@ namespace Investments.Tests.Test.IntegrationTest
 
             string result = await response.Content.ReadAsStringAsync();
 
-            List<FundDividends> fundsYeld = JsonConvert.DeserializeObject<List<FundDividends>>(result);
+            List<FundDividend> fundsYeld = JsonConvert.DeserializeObject<List<FundDividend>>(result);
 
             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
                 System.Net.HttpStatusCode.OK);
@@ -130,7 +130,7 @@ namespace Investments.Tests.Test.IntegrationTest
 
             string result = await response.Content.ReadAsStringAsync();
 
-            List<FundDividends> fundsYeld = JsonConvert.DeserializeObject<List<FundDividends>>(result);
+            List<FundDividend> fundsYeld = JsonConvert.DeserializeObject<List<FundDividend>>(result);
 
             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
                 System.Net.HttpStatusCode.OK);
@@ -138,8 +138,8 @@ namespace Investments.Tests.Test.IntegrationTest
         }
 
         [Theory]
-        [MemberData(nameof(DummyTest.FundDividends), MemberType = typeof(DummyTest))]
-        public async void MustEnterFundsYeldsAndReturnTrue(List<FundDividends> FundsYelds)
+        [MemberData(nameof(DummyTest.FundDividend), MemberType = typeof(DummyTest))]
+        public async void MustEnterFundsYeldsAndReturnTrue(List<FundDividend> FundsYelds)
         {
 
             await Setup();

@@ -13,7 +13,7 @@ namespace Investments.Domain.Identity
         public string LastName { get; set; }
         public Function Function { get; set; }
         public IEnumerable<UserRole> UserRoles { get; set; }
-        public EnderecoUsuario EnderecoUsuario { get; set; }
+        public UserAddress EnderecoUsuario { get; set; }
 
     }
 }

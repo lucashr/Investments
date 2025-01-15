@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Investments.Persistence.Migrations
 {
     [DbContext(typeof(InvestmentsContext))]
-    [Migration("20250110021309_initial")]
+    [Migration("20250115030528_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,7 +18,7 @@ namespace Investments.Persistence.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.17");
 
-            modelBuilder.Entity("Investments.Domain.DetailedStocks", b =>
+            modelBuilder.Entity("Investments.Domain.DetailedStock", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -91,37 +91,6 @@ namespace Investments.Persistence.Migrations
                     b.ToTable("DetailedStocks");
                 });
 
-            modelBuilder.Entity("Investments.Domain.EnderecoUsuario", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("City")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("District")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("State")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ZipCode")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("EnderecoUsuarios");
-                });
-
             modelBuilder.Entity("Investments.Domain.Identity.Role", b =>
                 {
                     b.Property<string>("Id")
@@ -150,15 +119,15 @@ namespace Investments.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1f269e67-a0b7-439b-b073-da1c5b7a31b3",
-                            ConcurrencyStamp = "619edf3c-daa8-4832-a37e-df0123d40c76",
+                            Id = "42103ea4-63fa-4b38-bd1b-c38160bfda2b",
+                            ConcurrencyStamp = "b1d19665-6b11-4b77-9109-136a376a6276",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "29fc0fb0-214f-4296-b272-1da2c4dbc331",
-                            ConcurrencyStamp = "592e74dd-789e-4757-b941-808395395677",
+                            Id = "6ddfe99a-6ff0-41d1-a4f3-697ccbc4c2e5",
+                            ConcurrencyStamp = "36a582e0-c7e3-42ad-92e3-75bf323c66c4",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -239,18 +208,18 @@ namespace Investments.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f567372b-4173-4ed6-a9c2-c4ae4e290613",
+                            Id = "e1ef25ad-9080-4e51-82dd-9cfc2b9bba90",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "908cb8b8-a284-4faf-aee1-73ba708decf5",
+                            ConcurrencyStamp = "a44ec98e-96db-4570-8839-7797e0611408",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             Function = 0,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAhuGE2BaWievCAiLjuyBfPUWGCdn8HXLg1HhHw8yaX9KX1mTX+Twk5eLJLr1mv2Ug==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFTpw+QDRXuBY9Ron1UL+Fh9FWiMrnpownK1zu9slutgA5WYQF6D7scHoaxTaXQ1ZQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "70f25348-1af2-47bd-be0e-8996ccf861c0",
+                            SecurityStamp = "d5f8f172-bffe-43a2-9775-1238940e6eaf",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -283,12 +252,131 @@ namespace Investments.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "f567372b-4173-4ed6-a9c2-c4ae4e290613",
-                            RoleId = "1f269e67-a0b7-439b-b073-da1c5b7a31b3"
+                            UserId = "e1ef25ad-9080-4e51-82dd-9cfc2b9bba90",
+                            RoleId = "42103ea4-63fa-4b38-bd1b-c38160bfda2b"
                         });
                 });
 
-            modelBuilder.Entity("Investments.Domain.Models.DetailedFunds", b =>
+            modelBuilder.Entity("Investments.Domain.Models.BestFundRank", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("AverageVacancy")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("CoefficientOfVariation")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("DividendYield")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("DividendYieldRanking")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("FFOYield")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("FundCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Liquidity")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("MultiplierRanking")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("PriceEquityValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("RankPrice")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Segment")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("ValueOfMarket")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BestFundRanks");
+                });
+
+            modelBuilder.Entity("Investments.Domain.Models.BestStockRank", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("DivYield")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("EVEBIT")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("EVEBITDA")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("EbitMargin")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("FundCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("GrossEquityDebt")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("LiquidityCurrent")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("LiquidityMargin")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("LiquidityTwoMonths")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("NetWorth")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PEBIT")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PL")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PSR")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PVP")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PriceOnWorkingCapital")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PriceOverAsset")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PriceOverNetCurrentAssets")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Quotation")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("ROE")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("ROIC")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("RevenueGrowthFiveYears")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BestStockRanks");
+                });
+
+            modelBuilder.Entity("Investments.Domain.Models.DetailedFund", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -337,21 +425,7 @@ namespace Investments.Persistence.Migrations
                     b.ToTable("DetailedFunds");
                 });
 
-            modelBuilder.Entity("Investments.Domain.Models.Funds", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FundCode")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Funds");
-                });
-
-            modelBuilder.Entity("Investments.Domain.Models.FundsYeld", b =>
+            modelBuilder.Entity("Investments.Domain.Models.FundDividend", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -374,56 +448,10 @@ namespace Investments.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FundsYeld");
+                    b.ToTable("FundDividends");
                 });
 
-            modelBuilder.Entity("Investments.Domain.Models.RankOfTheBestFunds", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double>("AverageVacancy")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("CoefficientOfVariation")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("DividendYield")
-                        .HasColumnType("REAL");
-
-                    b.Property<int>("DividendYieldRanking")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double>("FFOYield")
-                        .HasColumnType("REAL");
-
-                    b.Property<string>("FundCode")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double>("Liquidity")
-                        .HasColumnType("REAL");
-
-                    b.Property<int>("MultiplierRanking")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double>("PriceEquityValue")
-                        .HasColumnType("REAL");
-
-                    b.Property<int>("RankPrice")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Segment")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double>("ValueOfMarket")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RankFunds");
-                });
-
-            modelBuilder.Entity("Investments.Domain.StocksDividends", b =>
+            modelBuilder.Entity("Investments.Domain.StockDividend", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -449,6 +477,37 @@ namespace Investments.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StocksDividends");
+                });
+
+            modelBuilder.Entity("Investments.Domain.UserAddress", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("City")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("District")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("State")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserAddresses");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -538,16 +597,6 @@ namespace Investments.Persistence.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Investments.Domain.EnderecoUsuario", b =>
-                {
-                    b.HasOne("Investments.Domain.Identity.User", "User")
-                        .WithOne("EnderecoUsuario")
-                        .HasForeignKey("Investments.Domain.EnderecoUsuario", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Investments.Domain.Identity.UserRole", b =>
                 {
                     b.HasOne("Investments.Domain.Identity.Role", null)
@@ -571,6 +620,16 @@ namespace Investments.Persistence.Migrations
                         .HasForeignKey("UserId1");
 
                     b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Investments.Domain.UserAddress", b =>
+                {
+                    b.HasOne("Investments.Domain.Identity.User", "User")
+                        .WithOne("EnderecoUsuario")
+                        .HasForeignKey("Investments.Domain.UserAddress", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
                 });

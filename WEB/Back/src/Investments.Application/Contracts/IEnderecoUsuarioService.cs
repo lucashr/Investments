@@ -8,8 +8,8 @@ namespace Investments.Application.Contracts
 {
     public interface IEnderecoUsuarioService
     {
-        Task<EnderecoUsuario> GetAddressUser(string username);
-        Task<bool> SaveAddressUser(EnderecoUsuario enderecoUsuario);
-        Task<bool> UpdateAddressUser(EnderecoUsuario enderecoUsuario);
+        Task<UserAddress> GetAddressUser(string username);
+        Task<bool> SaveAddressUser(UserAddress enderecoUsuario);
+        Task<bool> UpdateAddressUser(UserAddress enderecoUsuario);
     }
 }

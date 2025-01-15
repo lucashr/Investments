@@ -80,7 +80,7 @@ namespace Investments.Application
             Capex / Receita: Percentual do investimento em bens de capital em relação à receita, importante em setores intensivos em capital.
         */
 
-        public async Task<IEnumerable<RankOfTheBestStocks>> GetRankOfTheBestStocksAsync(int totalStocksRank = 0)
+        public async Task<IEnumerable<BestStockRank>> GetRankOfTheBestStocksAsync(int totalStocksRank = 0)
         {
             var stocks = await _detailedStocksService.GetAllDetailedStocksAsync();
             stocks = FilterStocks(stocks);
@@ -99,18 +99,18 @@ namespace Investments.Application
             var rankedStocks = stockScores.OrderByDescending(stock => stock.Score)
                                           .Select(stock => stock.Stock);
 
-            var result = _mapper.Map<IEnumerable<RankOfTheBestStocks>>(rankedStocks);  
+            var result = _mapper.Map<IEnumerable<BestStockRank>>(rankedStocks);  
                     
             return  result;
 
         }
 
-        public Task<bool> AddRankOfTheBestStocksAsync(IEnumerable<RankOfTheBestStocks> rankOfTheBestStocks)
+        public Task<bool> AddRankOfTheBestStocksAsync(IEnumerable<BestStockRank> rankOfTheBestStocks)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<double> CalculateScore(DetailedStocks stock)
+        public async Task<double> CalculateScore(DetailedStock stock)
         {
             double score = 0;
 
@@ -174,7 +174,7 @@ namespace Investments.Application
         }
 
         // Calcular a consistência dos dividendos ao longo dos anos
-        public double CalculateDividendConsistency(IEnumerable<StocksDividends> dividends)
+        public double CalculateDividendConsistency(IEnumerable<StockDividend> dividends)
         {
 
             try
@@ -200,7 +200,7 @@ namespace Investments.Application
         }
 
         // Calcular o crescimento anual composto (CAGR) dos dividendos
-        public double CalculateDividendCAGR(IEnumerable<StocksDividends> dividends)
+        public double CalculateDividendCAGR(IEnumerable<StockDividend> dividends)
         {
 
             try
@@ -256,7 +256,7 @@ namespace Investments.Application
 
         }
 
-        public IEnumerable<DetailedStocks> FilterStocks(IEnumerable<DetailedStocks> stocks)
+        public IEnumerable<DetailedStock> FilterStocks(IEnumerable<DetailedStock> stocks)
         {
             
             try

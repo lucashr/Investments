@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Investments.Domain.Models
 {
-    public class RankOfTheBestStocks
+    public class BestStockRank
     {
         public string Id { get; set; }
         public string FundCode { get; set; }

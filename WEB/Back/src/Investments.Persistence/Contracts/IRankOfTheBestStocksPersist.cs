@@ -6,7 +6,7 @@ namespace Investments.Persistence.Contracts
 {
     public interface IRankOfTheBestStocksPersist
     {
-        Task<IEnumerable<RankOfTheBestStocks>> GetRankOfTheBestStocksAsync(int? totalFundsInRank = null);
-        Task<bool> AddRankOfTheBestStocksAsync(IEnumerable<RankOfTheBestStocks> rankOfTheBestFunds);
+        Task<IEnumerable<BestStockRank>> GetRankOfTheBestStocksAsync(int? totalFundsInRank = null);
+        Task<bool> AddRankOfTheBestStocksAsync(IEnumerable<BestStockRank> rankOfTheBestFunds);
     }
 }

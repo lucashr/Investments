@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Investments.Domain.Models
 {
-    public class DetailedFunds
+    public class DetailedFund
     {
         public string Id { get; set; }
         public string FundCode { get; set; }

@@ -16,19 +16,19 @@ namespace Investments.Tests.Test
 
         static FundsDividendsService fundsYieldService = null;
         static Mock<IFundsYeldPersist> mockPersist = null;
-        static List<FundDividends> dummyFundsYield = null;
+        static List<FundDividend> dummyFundsYield = null;
 
         public void Setup()
         {
             
             mockPersist = new Mock<IFundsYeldPersist>();
-            dummyFundsYield = new List<FundDividends>();
-            dummyFundsYield = ((List<FundDividends>)DummyTest.FundDividends().ElementAt(0).ElementAt(0));
+            dummyFundsYield = new List<FundDividend>();
+            dummyFundsYield = ((List<FundDividend>)DummyTest.FundDividend().ElementAt(0).ElementAt(0));
 
-            mockPersist.Setup(x => x.AddFundsYieldsAsync(It.IsAny<IEnumerable<FundDividends>>())).Returns(Task.FromResult(true));
+            mockPersist.Setup(x => x.AddFundsYieldsAsync(It.IsAny<IEnumerable<FundDividend>>())).Returns(Task.FromResult(true));
             
             mockPersist.Setup(x => x.GetAllFundsYeldAsync()).Returns(() => {
-                        return Task.FromResult((IEnumerable<FundDividends>)dummyFundsYield);
+                        return Task.FromResult((IEnumerable<FundDividend>)dummyFundsYield);
             });
 
             mockPersist.Setup(x => x.GetFundYeldByCodeAsync(It.IsAny<string>())).Returns((string fundCode) => {
@@ -41,9 +41,9 @@ namespace Investments.Tests.Test
         }
 
         [Theory]
-        [MemberData(nameof(DummyTest.FundDividends), MemberType = typeof(DummyTest))]
+        [MemberData(nameof(DummyTest.FundDividend), MemberType = typeof(DummyTest))]
         // [ConfigureTest]
-        public async Task MustEnterThirtyFundsYeldsAndReturnTrue(List<FundDividends> fundsYelds)
+        public async Task MustEnterThirtyFundsYeldsAndReturnTrue(List<FundDividend> fundsYelds)
         {
 
             Setup();
@@ -55,9 +55,9 @@ namespace Investments.Tests.Test
         }
 
         [Theory]
-        [MemberData(nameof(DummyTest.FundDividends), MemberType = typeof(DummyTest))]
+        [MemberData(nameof(DummyTest.FundDividend), MemberType = typeof(DummyTest))]
         // [ConfigureTest]
-        public async Task MustReturnThirtyFundsYelds(List<FundDividends> fundsYelds)
+        public async Task MustReturnThirtyFundsYelds(List<FundDividend> fundsYelds)
         {
 
             Setup();
@@ -69,9 +69,9 @@ namespace Investments.Tests.Test
         }
 
         [Theory]
-        [MemberData(nameof(DummyTest.FundDividends), MemberType = typeof(DummyTest))]
+        [MemberData(nameof(DummyTest.FundDividend), MemberType = typeof(DummyTest))]
         // [ConfigureTest]
-        public async Task MustReturnFundYeldByCode(List<FundDividends> fundsYelds)
+        public async Task MustReturnFundYeldByCode(List<FundDividend> fundsYelds)
         {
 
             Setup();
