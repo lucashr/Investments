@@ -112,28 +112,21 @@ namespace Investments.Application
 
         public async Task<double> CalculateScore(DetailedStock stock)
         {
+
             double score = 0;
 
-            try
-            {
-                // Critérios de pontuação
-                score += Normalize(stock.DivYield, 5, 10) * 0.3;         // Dividend Yield (30%)
-                score += Normalize(stock.LiquidityTwoMonths, 10000, 100000) * 0.2; // Liquidez (20%)
-                score += Normalize(1 / stock.PL, 0.05, 0.15) * 0.1;      // Preço sobre Lucro (10%)
-                score += Normalize(stock.ROE, 10, 25) * 0.15;           // Retorno sobre Patrimônio (15%)
-                score += Normalize(stock.ROIC, 10, 20) * 0.1;           // Retorno sobre Capital Investido (10%)
-                score += Normalize(stock.RevenueGrowthFiveYears, 5, 15) * 0.1; // Crescimento Receita (10%)
-                score += Normalize(stock.EbitMargin, 10, 30) * 0.05;    // Margem EBIT (5%)
-                score += Normalize(stock.NetWorth / stock.GrossEquityDebt, 1, 3) * 0.1;  // Solidez Financeira (10%)
-                score += Normalize(stock.EVEBITDA, 5, 12) * 0.05;                        // EV/EBITDA (5%)
-                score += Normalize(stock.LiquidityMargin, 1, 3) * 0.05;                  // Margem de Liquidez (5%)
-                score += Normalize(stock.GrossEquityDebt / stock.NetWorth, 0.5, 2) * 0.1; // Alavancagem patrimonial (10%)
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return -1;
-            }
+            // Critérios de pontuação
+            score += Normalize(stock.DivYield, 5, 10) * 0.3;         // Dividend Yield (30%)
+            score += Normalize(stock.LiquidityTwoMonths, 10000, 100000) * 0.2; // Liquidez (20%)
+            score += Normalize(1 / stock.PL, 0.05, 0.15) * 0.1;      // Preço sobre Lucro (10%)
+            score += Normalize(stock.ROE, 10, 25) * 0.15;           // Retorno sobre Patrimônio (15%)
+            score += Normalize(stock.ROIC, 10, 20) * 0.1;           // Retorno sobre Capital Investido (10%)
+            score += Normalize(stock.RevenueGrowthFiveYears, 5, 15) * 0.1; // Crescimento Receita (10%)
+            score += Normalize(stock.EbitMargin, 10, 30) * 0.05;    // Margem EBIT (5%)
+            score += Normalize(stock.NetWorth / stock.GrossEquityDebt, 1, 3) * 0.1;  // Solidez Financeira (10%)
+            score += Normalize(stock.EVEBITDA, 5, 12) * 0.05;                        // EV/EBITDA (5%)
+            score += Normalize(stock.LiquidityMargin, 1, 3) * 0.05;                  // Margem de Liquidez (5%)
+            score += Normalize(stock.GrossEquityDebt / stock.NetWorth, 0.5, 2) * 0.1; // Alavancagem patrimonial (10%)
 
             var dividends = await _stocksYeldService.GetStockYeldByCodeAsync(stock.FundCode);
             
@@ -177,56 +170,37 @@ namespace Investments.Application
         public double CalculateDividendConsistency(IEnumerable<StockDividend> dividends)
         {
 
-            try
-            {
-                int totalYears = dividends
-                .Select(d => DateTime.Parse(d.Date).Year)
-                .Distinct()
-                .Count();
+            int totalYears = dividends
+            .Select(d => DateTime.Parse(d.Date).Year)
+            .Distinct()
+            .Count();
 
-                int yearsWithDividends = dividends
-                    .GroupBy(d => DateTime.Parse(d.Date).Year)
-                    .Count(g => g.Sum(d => d.Value) > 0);
+            int yearsWithDividends = dividends
+                .GroupBy(d => DateTime.Parse(d.Date).Year)
+                .Count(g => g.Sum(d => d.Value) > 0);
 
-                return (double)yearsWithDividends / totalYears;
+            return (double)yearsWithDividends / totalYears;
 
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return -1;
-            }
-            
         }
 
         // Calcular o crescimento anual composto (CAGR) dos dividendos
         public double CalculateDividendCAGR(IEnumerable<StockDividend> dividends)
         {
 
-            try
-            {
+            var groupedDividends = dividends
+                                    .GroupBy(d => DateTime.Parse(d.Date).Year)
+                                    .Select(g => new { Year = g.Key, TotalDividend = g.Sum(d => d.Value) })
+                                    .OrderBy(d => d.Year)
+                                    .ToList();
 
-                var groupedDividends = dividends
-                                        .GroupBy(d => DateTime.Parse(d.Date).Year)
-                                        .Select(g => new { Year = g.Key, TotalDividend = g.Sum(d => d.Value) })
-                                        .OrderBy(d => d.Year)
-                                        .ToList();
+            if (groupedDividends.Count < 2) return 0;
 
-                if (groupedDividends.Count < 2) return 0;
+            double firstYear = groupedDividends.First().TotalDividend;
+            double lastYear = groupedDividends.Last().TotalDividend;
+            int years = groupedDividends.Last().Year - groupedDividends.First().Year;
 
-                double firstYear = groupedDividends.First().TotalDividend;
-                double lastYear = groupedDividends.Last().TotalDividend;
-                int years = groupedDividends.Last().Year - groupedDividends.First().Year;
+            return Math.Pow(lastYear / firstYear, 1.0 / years) - 1;
 
-                return Math.Pow(lastYear / firstYear, 1.0 / years) - 1;
-
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return -1;
-            }
-            
         }
 
         public double Normalize(double value, double min, double max)
@@ -234,47 +208,27 @@ namespace Investments.Application
 
             double score = 0;
 
-            try
-            {
+            if (value <= min) return 0;
+            if (value >= max) return 1;
 
-                if (value <= min) return 0;
-                if (value >= max) return 1;
+            score = (value - min) / (max - min);
 
-                score = (value - min) / (max - min);
+            if(double.IsNaN(score))
+                score = 0;
 
-                if(double.IsNaN(score))
-                    score = 0;
-
-                return score;
+            return score;
                 
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return -1;
-            }
-
         }
 
         public IEnumerable<DetailedStock> FilterStocks(IEnumerable<DetailedStock> stocks)
         {
-            
-            try
-            {
-                return stocks.Where(stock => 
-                    stock.DivYield >= 3 &&  // Dividend Yield mínimo
-                    stock.LiquidityTwoMonths >= 1000000 &&  // Liquidez mínima
-                    stock.ROE > 0 &&  // ROE positivo
-                    stock.PVP <= 3 && // P/VP aceitável
-                    stock.Quotation > 0  // Preço positivo
-                ).ToList();
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return stocks;
-            }
-
+            return stocks.Where(stock => 
+                stock.DivYield >= 3 &&  // Dividend Yield mínimo
+                stock.LiquidityTwoMonths >= 1000000 &&  // Liquidez mínima
+                stock.ROE > 0 &&  // ROE positivo
+                stock.PVP <= 3 && // P/VP aceitável
+                stock.Quotation > 0  // Preço positivo
+            ).ToList();
         }
 
     }

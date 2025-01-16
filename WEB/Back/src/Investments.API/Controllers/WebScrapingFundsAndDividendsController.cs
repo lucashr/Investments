@@ -40,70 +40,39 @@ namespace Investments.API.Controllers
         [Authorize(policy: "AdminOrUser")]
         public async Task<IActionResult> GetFundsAsync()
         {
-            try
-            {
-                
-                _isRunning = true;
-                _cancellationTokenSource = new CancellationTokenSource();
+            _isRunning = true;
+            _cancellationTokenSource = new CancellationTokenSource();
 
-                _socketManager.GetAll();
+            _socketManager.GetAll();
 
-                var result = await _webScrapingFundsAndYelds.GetFundsAsync(_cancellationTokenSource);
+            var result = await _webScrapingFundsAndYelds.GetFundsAsync(_cancellationTokenSource);
 
-                if(result.Count() > 0)
-                {
-                    return Ok(result);
-                }
-                else
-                {
-                    return Ok(result);
-                }
+            return result.Count() > 0 ? Ok(result) : NotFound("No funds found.");
 
-                
-            }
-            catch (System.Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Erro ao tentar obter fundos. Erro: {ex.Message}");
-            }
-            
         }
 
         [HttpGet("GetFundDividends")]
         [Authorize(policy: "Admin")]
         public async Task<IActionResult> GetFundDividendsAsync()
         {
+            _socketManager.GetAll();
 
-            try
-            {
+            if (_cancellationTokenSource.IsCancellationRequested)
+                return Ok();
 
-                _socketManager.GetAll();
+            var detailedFunds = await _detailedFundService.GetAllDetailedFundsAsync();
 
-                if (_cancellationTokenSource.IsCancellationRequested)
-                    return Ok();
-
-                var detailedFunds = await _detailedFundService.GetAllDetailedFundsAsync();
-
-                var fundYelds = await _webScrapingFundsAndYelds.GetYeldsFundsAsync(detailedFunds, _cancellationTokenSource);
-                
-                if(fundYelds.Count() > 0)
-                {
-                    var rankingOfTheBestFunds = await _rankOfTheBestFundsService.GetCalculationRankOfTheBestFundsAsync();
-                    await _rankOfTheBestFundsService.AddRankOfTheBestFundsAsync(rankingOfTheBestFunds);
-                    return Ok(fundYelds);
-                }
-                else
-                {
-                    return Ok(fundYelds);
-                }
-                
-            }
-            catch (System.Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Erro ao tentar obter fundos. Erro: {ex.Message}");
-            }
+            var fundYelds = await _webScrapingFundsAndYelds.GetYeldsFundsAsync(detailedFunds, _cancellationTokenSource);
             
+            if(fundYelds.Count() > 0)
+            {
+                var rankingOfTheBestFunds = await _rankOfTheBestFundsService.GetCalculationRankOfTheBestFundsAsync();
+                await _rankOfTheBestFundsService.AddRankOfTheBestFundsAsync(rankingOfTheBestFunds);
+                return Ok(fundYelds);
+            }
+            else
+                return NotFound("No funds dividends found.");
+
         }
 
         [HttpGet("StopWebScraping")]
@@ -111,10 +80,7 @@ namespace Investments.API.Controllers
         public IActionResult Pause()
         {
             if (!_isRunning)
-            {
-                // return BadRequest("No process is running.");
                 return Ok("No process is running.");
-            }
 
             _cancellationTokenSource?.Cancel();
             return Ok("Process paused.");

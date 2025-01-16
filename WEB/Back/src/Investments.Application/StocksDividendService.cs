@@ -19,46 +19,17 @@ namespace Investments.Application
 
         public async Task<IEnumerable<StockDividend>> GetStockYeldByCodeAsync(string fundCode)
         {
-            try
-            {
-                var funds = await _stocksYeldPersist.GetStockDividendsByCodeAsync(fundCode);
-
-                return funds;
-            }
-            catch (System.Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return await _stocksYeldPersist.GetStockDividendsByCodeAsync(fundCode);;
         }
 
         public async Task<IEnumerable<StockDividend>> GetAllStocksYeldAsync()
         {
-            try
-            {
-                var funds = await _stocksYeldPersist.GetAllStockDividendsAsync();
-
-                return funds;
-            }
-            catch (System.Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return await _stocksYeldPersist.GetAllStockDividendsAsync();;
         }
 
         public async Task<bool> AddStocksYieldsAsync(IEnumerable<StockDividend> stocksYelds)
         {
-            try
-            {
-
-                await _stocksYeldPersist.AddStockDividendsAsync(stocksYelds);
-
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
+            return await _stocksYeldPersist.AddStockDividendsAsync(stocksYelds);;
         }
     }
 }

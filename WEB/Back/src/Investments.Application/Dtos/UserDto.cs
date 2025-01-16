@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Investments.Application.Dtos
 {
-    public class UserDto
+    public record UserDto
     {
         [JsonProperty("id")]
         public string Id { get; set; }

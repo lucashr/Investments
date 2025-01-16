@@ -19,47 +19,17 @@ namespace Investments.Application
 
         public async Task<bool> AddDetailedStocksAsync(IEnumerable<DetailedStock> detailedFunds)
         {
-            try
-            {
-                
-                await _detailedStocksPersist.AddDetailedStocksAsync(detailedFunds);
-
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
+            return await _detailedStocksPersist.AddDetailedStocksAsync(detailedFunds);
         }
 
         public async Task<IEnumerable<DetailedStock>> GetAllDetailedStocksAsync()
         {
-            try
-            {
-                var allFunds = await _detailedStocksPersist.GetAllDetailedStocksAsync();
-
-                return allFunds;
-            }
-            catch (System.Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return await _detailedStocksPersist.GetAllDetailedStocksAsync();
         }
 
         public async Task<DetailedStock> GetDetailedStockByCodeAsync(string fundCode)
         {
-            try
-            {
-                var funds = await _detailedStocksPersist.GetDetailedStockByCodeAsync(fundCode);
-
-                return funds;
-            }
-            catch (System.Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
+            return await _detailedStocksPersist.GetDetailedStockByCodeAsync(fundCode);;
         }
     }
 }

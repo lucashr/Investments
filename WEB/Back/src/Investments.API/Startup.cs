@@ -31,6 +31,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using Investments.VariablesManager;
 using Serilog;
+using Investments.API.Middlewares;
 
 namespace Investments.API
 {
@@ -238,6 +239,8 @@ namespace Investments.API
             // Middleware para WebSockets
             app.UseWebSockets();
             app.UseMiddleware<WebScrapingSocketMiddleware>();
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             // Mapear endpoints
             app.UseEndpoints(endpoints =>

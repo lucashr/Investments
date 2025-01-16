@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Investments.Application.Contracts;
 using Investments.Domain.Models;
@@ -23,19 +24,8 @@ namespace Investments.API.Controllers
         [HttpGet("GetAllStocks")]
         public async Task<IActionResult> GetAllStocks()
         {
-
-            try
-            {
-                var allFunds = await _detailedStockService.GetAllDetailedStocksAsync();
-
-                return Ok(allFunds);
-            }
-            catch (System.Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Erro ao tentar recuperar fundos. Erro: {ex.Message}");
-            }
-            
+            var stocks = await _detailedStockService.GetAllDetailedStocksAsync();
+            return stocks.Any() ? Ok(stocks) : NotFound("No stocks found");
         }
 
     }

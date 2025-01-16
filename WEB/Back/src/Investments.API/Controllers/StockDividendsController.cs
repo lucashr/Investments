@@ -26,37 +26,15 @@ namespace Investments.API.Controllers
         [HttpGet("GetFundDividendsByCode/{fundCode}")]
         public async Task<IActionResult> GetFundDividendsByCode(string fundCode)
         {
-
-            try
-            {
-                var funds = await _stocksYeldService.GetStockYeldByCodeAsync(fundCode);
-
-                return Ok(funds);
-            }
-            catch (System.Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Erro ao tentar recuperar fundos. Erro: {ex.Message}");
-            }
-            
+            var dividends = await _stocksYeldService.GetStockYeldByCodeAsync(fundCode);
+            return dividends.Any() ? Ok(dividends) : NotFound("No fund dividends found");
         }
 
         [HttpGet("GetAllFundsDividends")]
         public async Task<IActionResult> GetAllFundsDividends()
         {
-
-            try
-            {
-                var funds = await _stocksYeldService.GetAllStocksYeldAsync();
-
-                return Ok(funds);
-            }
-            catch (System.Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Erro ao tentar recuperar fundos. Erro: {ex.Message}");
-            }
-            
+            var dividends = await _stocksYeldService.GetAllStocksYeldAsync();
+            return dividends.Any() ? Ok(dividends) : NotFound("No funds dividends found");
         }
 
     }

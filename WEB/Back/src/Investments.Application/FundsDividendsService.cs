@@ -20,47 +20,17 @@ namespace Investments.Application
 
         public async Task<IEnumerable<FundDividend>> GetAllFundsYeldAsync()
         {
-            try
-            {
-                var funds = await _fundsYeldPersist.GetAllFundsYeldAsync();
-
-                return funds;
-            }
-            catch (System.Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            
+            return await _fundsYeldPersist.GetAllFundsYeldAsync();
         }
 
         public async Task<IEnumerable<FundDividend>> GetFundYeldByCodeAsync(string fundCode)
         {
-            try
-            {
-                var funds = await _fundsYeldPersist.GetFundYeldByCodeAsync(fundCode);
-
-                return funds;
-            }
-            catch (System.Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return await _fundsYeldPersist.GetFundYeldByCodeAsync(fundCode);
         }
 
         public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundDividend> fundsYelds)
         {
-            try
-            {
-
-                 await _fundsYeldPersist.AddFundsYieldsAsync(fundsYelds);
-
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
+            return await _fundsYeldPersist.AddFundsYieldsAsync(fundsYelds);
         }
 
     }

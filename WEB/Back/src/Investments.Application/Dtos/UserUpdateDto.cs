@@ -4,7 +4,7 @@ using Investments.Domain.Identity;
 
 namespace Investments.Application.Dtos
 {
-    public class UserUpdateDto
+    public record UserUpdateDto
     {
         public string Id { get; set; }
         public string UserName { get; set; }

@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Investments.Application.Contracts;
 using Microsoft.AspNetCore.Authorization;
@@ -19,23 +20,12 @@ namespace Investments.API.Controllers
             _rankOfTheBestFundsService = rankOfTheBestFundsService;
         }
 
-        [HttpGet("GetRank/{totalFundsInRank}")]
+        [HttpGet("GetRank/{quantity}")]
         [Authorize(policy: "Admin")]
-        public async Task<IActionResult> GetRank(int? totalFundsInRank = null)
+        public async Task<IActionResult> GetRank(int? quantity = null)
         {
-
-            try
-            {
-                var allFunds = await _rankOfTheBestFundsService.GetRankOfTheBestFundsAsync(totalFundsInRank);
-
-                return Ok(allFunds);
-            }
-            catch (System.Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Erro ao tentar recuperar fundos. Erro: {ex.Message}");
-            }
-            
+            var rank = await _rankOfTheBestFundsService.GetRankOfTheBestFundsAsync(quantity);
+            return rank.Any() ? Ok(rank) : NotFound("No rank found");
         }
 
     }

@@ -105,30 +105,21 @@ namespace Investments.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDto userLogin)
         {
-            try
-            {
-                var user = await _accountService.GetUserByUserNameAsync(userLogin.UserName);
+            var user = await _accountService.GetUserByUserNameAsync(userLogin.UserName);
 
-                if(user == null) return Unauthorized("Usuário ou senha está inválido!");
+            if(user == null) return Unauthorized("Usuário ou senha está inválido!");
 
-                var result = await _accountService.CheckUserPasswordAsync(user, userLogin.Password);
+            var result = await _accountService.CheckUserPasswordAsync(user, userLogin.Password);
 
-                if(!result.Succeeded) return Unauthorized();
+            if(!result.Succeeded) return Unauthorized();
 
-                return Ok(new 
-                    {
-                        username = user.UserName,
-                        firstName = user.FirstName,
-                        token = _tokenService.CreateToken(user).Result
-                    }
-                );
-                
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Erro ao tentar realizar login. Erro: {ex.Message}");
-            }
+            return Ok(new 
+                {
+                    username = user.UserName,
+                    firstName = user.FirstName,
+                    token = _tokenService.CreateToken(user).Result
+                }
+            );
         }
     }
 
