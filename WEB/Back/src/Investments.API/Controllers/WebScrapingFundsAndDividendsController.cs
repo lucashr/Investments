@@ -83,7 +83,7 @@ namespace Investments.API.Controllers
                 return Ok("No process is running.");
 
             _cancellationTokenSource?.Cancel();
-            return Ok("Process paused.");
+            return Ok("Process stopped.");
         }
         
     }

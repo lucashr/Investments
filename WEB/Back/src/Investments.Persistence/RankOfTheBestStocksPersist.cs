@@ -20,41 +20,22 @@ namespace Investments.Persistence
 
         public async Task<bool> AddRankOfTheBestStocksAsync(IEnumerable<BestStockRank> rankOfTheBestStocks)
         {
-            try
-            {
-                _context.BestStockRanks.RemoveRange(_context.BestStockRanks.ToList());
-                await _context.SaveChangesAsync();
+            _context.BestStockRanks.RemoveRange(_context.BestStockRanks.ToList());
+            await _context.SaveChangesAsync();
 
-                await _context.AddRangeAsync(rankOfTheBestStocks);
-                await _context.SaveChangesAsync();
+            await _context.AddRangeAsync(rankOfTheBestStocks);
+            await _context.SaveChangesAsync();
 
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
+            return true;
         }
 
         public Task<IEnumerable<BestStockRank>> GetRankOfTheBestStocksAsync(int? totalFundsInRank = null)
         {
-
-            try
-            {
-                IQueryable<BestStockRank> funds = totalFundsInRank is null ? 
-                                                        _context.BestStockRanks.AsNoTracking() : 
-                                                        _context.BestStockRanks.AsNoTracking().Take((int)totalFundsInRank);
-                
-                return Task.FromResult(funds.AsEnumerable());
-                
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return (Task<IEnumerable<BestStockRank>>)null;
-            }
+            IQueryable<BestStockRank> funds = totalFundsInRank is null ? 
+                                                    _context.BestStockRanks.AsNoTracking() : 
+                                                    _context.BestStockRanks.AsNoTracking().Take((int)totalFundsInRank);
             
+            return Task.FromResult(funds.AsEnumerable());
         }
     }
 }

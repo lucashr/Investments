@@ -10,9 +10,9 @@ namespace Investments.Application
 {
     public class StocksDividendService : IStocksDividendService
     {
-        private readonly IStocksYeldPersist _stocksYeldPersist;
+        private readonly IStockDividendPersist _stocksYeldPersist;
 
-        public StocksDividendService(IStocksYeldPersist fundsYeldPersist)
+        public StocksDividendService(IStockDividendPersist fundsYeldPersist)
         {
             _stocksYeldPersist = fundsYeldPersist;
         }

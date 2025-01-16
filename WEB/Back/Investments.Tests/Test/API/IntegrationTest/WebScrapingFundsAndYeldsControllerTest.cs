@@ -14,7 +14,7 @@ using Xunit.Abstractions;
 
 namespace Investments.Tests.Test.IntegrationTest
 {
-    public class WebScrapingFundsAndYeldsControllerTest
+    public class WebScrapingFundsAndDividendsControllerTest
     {
 
         private static CustomWebApplicationFactory<Investments.API.Startup> _factory;
@@ -22,7 +22,7 @@ namespace Investments.Tests.Test.IntegrationTest
         private static InvestmentsContext ctx = null;
         private static string dbName = null;
 
-        public WebScrapingFundsAndYeldsControllerTest(ITestOutputHelper output)
+        public WebScrapingFundsAndDividendsControllerTest(ITestOutputHelper output)
         {
             var type = output.GetType();
             var testMember = type.GetField("test", BindingFlags.Instance | BindingFlags.NonPublic);

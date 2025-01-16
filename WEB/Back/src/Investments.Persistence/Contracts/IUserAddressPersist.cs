@@ -6,7 +6,7 @@ using Investments.Domain;
 
 namespace Investments.Persistence.Contracts
 {
-    public interface IEnderecoUsuarioPersist
+    public interface IUserAddressPersist
     {
         Task<UserAddress> GetAddressUser(string username);
         Task<bool> SaveAddressUser(UserAddress enderecoUsuario);

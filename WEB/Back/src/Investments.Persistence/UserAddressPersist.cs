@@ -9,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Investments.Persistence
 {
-    public class EnderecoUsuarioPersist : IEnderecoUsuarioPersist
+    public class UserAddressPersist : IUserAddressPersist
     {
 
         private readonly InvestmentsContext _context;
 
-        public EnderecoUsuarioPersist(InvestmentsContext context)
+        public UserAddressPersist(InvestmentsContext context)
         {
             _context = context;
         }
@@ -22,7 +22,7 @@ namespace Investments.Persistence
         public async Task<UserAddress> GetAddressUser(string username)
         {
             return await _context.UserAddresses.Where(x=> x.User.UserName == username)
-                                                  .AsNoTracking().FirstOrDefaultAsync();
+                                                .AsNoTracking().FirstOrDefaultAsync();
         }
 
         public async Task<bool> SaveAddressUser(UserAddress enderecoUsuario)

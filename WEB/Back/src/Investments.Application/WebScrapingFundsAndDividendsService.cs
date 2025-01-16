@@ -26,16 +26,16 @@ namespace Investments.Application
         const string WEBPAGE_YELDS = "https://www.fundamentus.com.br/fii_proventos.php?papel";
         IWebDriver _driver;
         IDetailedFundPersist _detailedFundPersist;
-        IFundsYeldPersist _fundsYeldPersist;
+        IFundDividendPersist _fundDividendPersist;
         CancellationTokenSource _cancellationTokenSource;
         ILogger _logger;
 
         public WebScrapingFundsAndDividendsService(IDetailedFundPersist detailedFundPersist,
-                                                   IFundsYeldPersist fundsYeldPersist,
+                                                   IFundDividendPersist fundsYeldPersist,
                                                    ILogger<WebScrapingFundsAndDividendsService> logger)
         {
             _detailedFundPersist = detailedFundPersist;
-            _fundsYeldPersist = fundsYeldPersist;
+            _fundDividendPersist = fundsYeldPersist;
             _logger = logger;
             _driver = WebDriverSelenium.ConfigDriver();
         }
@@ -74,7 +74,7 @@ namespace Investments.Application
                 return result;
             }
 
-            var bIsOk = await _fundsYeldPersist.AddFundsYieldsAsync(result.ToList());
+            var bIsOk = await _fundDividendPersist.AddFundsYieldsAsync(result.ToList());
 
             if (bIsOk == false)
             {

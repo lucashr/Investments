@@ -22,52 +22,27 @@ namespace Investments.Persistence
 
         public async Task<bool> AddDetailedStocksAsync(IEnumerable<DetailedStock> detailedStocks)
         {
-            try
-            {
-                _context.DetailedStocks.RemoveRange(_context.DetailedStocks.ToList());
-                await _context.SaveChangesAsync();
-                _context.AddRange(detailedStocks);
-                await _context.SaveChangesAsync();
+            _context.DetailedStocks.RemoveRange(_context.DetailedStocks.ToList());
+            await _context.SaveChangesAsync();
+            _context.AddRange(detailedStocks);
+            await _context.SaveChangesAsync();
 
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
+            return true;
         }
 
         public async Task<IEnumerable<DetailedStock>> GetAllDetailedStocksAsync()
         {
-            try
-            {
-                IQueryable<DetailedStock> query = _context.DetailedStocks.AsNoTracking();
-
-                return await query.ToListAsync();
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
+            IQueryable<DetailedStock> query = _context.DetailedStocks.AsNoTracking();
+            return await query.ToListAsync();
         }
 
         public async Task<DetailedStock> GetDetailedStockByCodeAsync(string stockCode)
         {
-            try
-            {
-                IQueryable<DetailedStock> query = _context.DetailedStocks
-                                                          .AsNoTracking()
-                                                          .Where(f => f.FundCode.ToUpper() == stockCode.ToUpper().Trim());
+            IQueryable<DetailedStock> query = _context.DetailedStocks
+                                                        .AsNoTracking()
+                                                        .Where(f => f.FundCode.ToUpper() == stockCode.ToUpper().Trim());
 
-                return await query.FirstOrDefaultAsync();
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
+            return await query.FirstOrDefaultAsync();
         }
     }
 }

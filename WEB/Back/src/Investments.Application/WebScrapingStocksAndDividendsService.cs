@@ -27,13 +27,13 @@ namespace Investments.Application
         const string WEBPAGE_YELDS = "https://www.fundamentus.com.br/proventos.php?papel";
         IWebDriver _driver;
         IDetailedStocksPersist _detailedStocksPersist;
-        IStocksYeldPersist _stockDividendsPersist;
+        IStockDividendPersist _stockDividendsPersist;
         ILogger<WebScrapingStocksAndDividendsService> _logger;
         
         CancellationTokenSource _cancellationTokenSource;
 
         public WebScrapingStocksAndDividendsService(IDetailedStocksPersist detailedStocksPersist,
-                                                    IStocksYeldPersist stocksYeldPersist,
+                                                    IStockDividendPersist stocksYeldPersist,
                                                     ILogger<WebScrapingStocksAndDividendsService> logger)
         {
             _detailedStocksPersist = detailedStocksPersist;

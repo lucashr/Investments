@@ -8,20 +8,21 @@ using Investments.Tests.Helpers;
 using System.Threading.Tasks;
 using Investments.Persistence.Contracts;
 using FluentAssertions;
+using Investments.Persistence;
 
 namespace Investments.Tests.Test
 {
-    public class FundYeldsServiceTest
+    public class FundDividendsServiceTest
     {
 
         static FundsDividendsService fundsYieldService = null;
-        static Mock<IFundsYeldPersist> mockPersist = null;
+        static Mock<FundDividendPersist> mockPersist = null;
         static List<FundDividend> dummyFundsYield = null;
 
         public void Setup()
         {
             
-            mockPersist = new Mock<IFundsYeldPersist>();
+            mockPersist = new Mock<FundDividendPersist>();
             dummyFundsYield = new List<FundDividend>();
             dummyFundsYield = ((List<FundDividend>)DummyTest.FundDividend().ElementAt(0).ElementAt(0));
 
@@ -84,4 +85,5 @@ namespace Investments.Tests.Test
         }
 
     }
+
 }

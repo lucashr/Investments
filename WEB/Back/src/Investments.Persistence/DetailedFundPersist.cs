@@ -20,72 +20,36 @@ namespace Investments.Persistence
 
         public async Task<DetailedFund> GetDetailedFundByCodeAsync(string fundCode)
         {
-            try
-            {
-                IQueryable<DetailedFund> query = _context.DetailedFunds
-                                                          .AsNoTracking()
-                                                          .Where(f => f.FundCode.ToUpper() == fundCode.ToUpper().Trim());
+            IQueryable<DetailedFund> query = _context.DetailedFunds
+                                                        .AsNoTracking()
+                                                        .Where(f => f.FundCode.ToUpper() == fundCode.ToUpper().Trim());
 
-                return await query.FirstOrDefaultAsync();
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
-            
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<DetailedFund>> GetAllDetailedFundsAsync()
         {
-            try
-            {
-                IQueryable<DetailedFund> query = _context.DetailedFunds.AsNoTracking();
-
-                return await query.ToListAsync();
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
-            
+            IQueryable<DetailedFund> query = _context.DetailedFunds.AsNoTracking();
+            return await query.ToListAsync();
         }
 
         public async Task<bool> AddDetailedFundsAsync(IEnumerable<DetailedFund> detailedFunds)
         {
-            try
-            {
-                _context.DetailedFunds.RemoveRange(_context.DetailedFunds.ToList());
-                await _context.SaveChangesAsync();
-                _context.AddRange(detailedFunds);
-                await _context.SaveChangesAsync();
+            _context.DetailedFunds.RemoveRange(_context.DetailedFunds.ToList());
+            await _context.SaveChangesAsync();
+            _context.AddRange(detailedFunds);
+            await _context.SaveChangesAsync();
 
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
+            return true;
         }
 
         public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundDividend> fundsYelds)
         {
-            try
-            {
+            _context.Database.EnsureDeleted();
+            _context.AddRange(fundsYelds);
+            await _context.SaveChangesAsync();
 
-                _context.Database.EnsureDeleted();
-                _context.AddRange(fundsYelds);
-                await _context.SaveChangesAsync();
-
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
+            return true;
         }
         
     }

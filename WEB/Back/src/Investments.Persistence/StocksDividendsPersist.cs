@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Investments.Persistence
 {
-    public class StocksDividendsPersist : GeneralPersist, IStocksYeldPersist
+    public class StocksDividendsPersist : GeneralPersist, IStockDividendPersist
     {
 
         private readonly InvestmentsContext _context;
@@ -21,55 +21,29 @@ namespace Investments.Persistence
 
         public async Task<bool> AddStockDividendsAsync(IEnumerable<StockDividend> stockDividends)
         {
-            try
-            {
-                _context.StocksDividends.RemoveRange(_context.StocksDividends);
-                await _context.SaveChangesAsync();
-                _context.StocksDividends.RemoveRange(_context.StocksDividends.ToList());
-                _context.AddRange(stockDividends);
-                await _context.SaveChangesAsync();
+            _context.StocksDividends.RemoveRange(_context.StocksDividends);
+            await _context.SaveChangesAsync();
+            _context.StocksDividends.RemoveRange(_context.StocksDividends.ToList());
+            _context.AddRange(stockDividends);
+            await _context.SaveChangesAsync();
 
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
+            return true;
         }
 
         public async Task<IEnumerable<StockDividend>> GetAllStockDividendsAsync()
         {
-            try
-            {
-                IQueryable<StockDividend> query = _context.StocksDividends.AsNoTracking();
-
-                return await query.ToListAsync();
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
+            IQueryable<StockDividend> query = _context.StocksDividends.AsNoTracking();
+            return await query.ToListAsync();
         }
 
         public async Task<IEnumerable<StockDividend>> GetStockDividendsByCodeAsync(string stockCode)
         {
-            try
-            {
-                IQueryable<StockDividend> query = _context.StocksDividends
-                                                      .FromSqlRaw(@"SELECT * FROM StocksDividends 
-                                                                  WHERE UPPER(FundCode) = UPPER({0}) 
-                                                                  ORDER BY strftime('%Y-%m-%d', substr(date, 7, 4) || '-' || substr(date, 4, 2) || '-' || substr(date, 1, 2)) DESC", stockCode);
-                
-                return await query.ToListAsync();
-                
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
+            IQueryable<StockDividend> query = _context.StocksDividends
+                                                    .FromSqlRaw(@"SELECT * FROM StocksDividends 
+                                                                WHERE UPPER(FundCode) = UPPER({0}) 
+                                                                ORDER BY strftime('%Y-%m-%d', substr(date, 7, 4) || '-' || substr(date, 4, 2) || '-' || substr(date, 1, 2)) DESC", stockCode);
+            
+            return await query.ToListAsync();
         }
     }
 }

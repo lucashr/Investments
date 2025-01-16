@@ -11,9 +11,9 @@ namespace Investments.Application
     public class EnderecoUsuarioService : IEnderecoUsuarioService
     {
 
-        private readonly IEnderecoUsuarioPersist _enderecoUsuarioPersist;
+        private readonly IUserAddressPersist _enderecoUsuarioPersist;
 
-        public EnderecoUsuarioService(IEnderecoUsuarioPersist enderecoUsuarioPersist)
+        public EnderecoUsuarioService(IUserAddressPersist enderecoUsuarioPersist)
         {
             _enderecoUsuarioPersist = enderecoUsuarioPersist;
         }

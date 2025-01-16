@@ -16,17 +16,17 @@ using Xunit.Abstractions;
 
 namespace Investments.Tests.Test.IntegrationTest
 {
-    public class FundYieldsControllerTest
+    public class FundDividendsControllerTest
     {
 
         private static CustomWebApplicationFactory<Investments.API.Startup> _factory;
-        private static FundDividendsPersist fundYeldsPersist = null;
-        private static FundsDividendsService fundsYieldService = null;
+        private static FundDividendPersist fundDividendsPersist = null;
+        private static FundsDividendsService fundsDividendsService = null;
         private static DbContextOptionsBuilder<InvestmentsContext> optionsBuilder = null;
         private static InvestmentsContext ctx = null;
         private static string dbName = null;
 
-        public FundYieldsControllerTest(ITestOutputHelper output)
+        public FundDividendsControllerTest(ITestOutputHelper output)
         {
             var type = output.GetType();
             var testMember = type.GetField("test", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -52,8 +52,8 @@ namespace Investments.Tests.Test.IntegrationTest
 
             await CreateContext();
 
-            fundYeldsPersist = new FundDividendsPersist(ctx);
-            fundsYieldService = new FundsDividendsService(fundYeldsPersist);
+            fundDividendsPersist = new FundDividendPersist(ctx);
+            fundsDividendsService = new FundsDividendsService(fundDividendsPersist);
         }
 
         static dynamic clientOptions = new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryClientOptions()

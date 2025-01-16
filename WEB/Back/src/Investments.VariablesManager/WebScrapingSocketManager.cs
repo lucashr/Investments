@@ -29,7 +29,6 @@ namespace Investments.VariablesManager
         public string AddSocket(WebSocket socket)
         {
             var id = CreateConnectionId();
-            // ConectionsWebSocket.sockets.TryAdd(CreateConnectionId(), socket);
             ConectionsWebSocket.sockets.TryAdd(id, socket);
 
             return id;

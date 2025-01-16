@@ -22,7 +22,7 @@ namespace Investments.Tests.Test.Application
         static Mock<IDetailedFundPersist> mockDetailedFundPersist = null;
         static List<DetailedFund> dummyDetailedFunds = null;
         static Mock<FundsDividendsService> fundsYieldService = null;
-        static Mock<IFundsYeldPersist> mockFundsYeldPersist = null;
+        static Mock<IFundDividendPersist> mockFundsYeldPersist = null;
         static List<FundDividend> dummyFundsYieldService = null;
 
         public void Setup()
@@ -36,7 +36,7 @@ namespace Investments.Tests.Test.Application
             dummyRankOfTheBestFunds = new List<BestFundRank>();
             dummyRankOfTheBestFunds = ((List<BestFundRank>)DummyTest.BestFundRank().ElementAt(0).ElementAt(0));
             
-            mockFundsYeldPersist = new Mock<IFundsYeldPersist>();
+            mockFundsYeldPersist = new Mock<IFundDividendPersist>();
             dummyFundsYieldService = new List<FundDividend>();
             dummyFundsYieldService = ((List<FundDividend>)DummyTest.FundDividend().ElementAt(0).ElementAt(0));
 

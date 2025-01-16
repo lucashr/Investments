@@ -11,7 +11,6 @@ namespace Investments.Persistence
 {
     public class GeneralPersist : IGeneralPersist
     {
-
         private readonly InvestmentsContext _context;
 
         public GeneralPersist(InvestmentsContext context)

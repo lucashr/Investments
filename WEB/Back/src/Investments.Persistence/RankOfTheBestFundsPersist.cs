@@ -20,43 +20,27 @@ namespace Investments.Persistence
 
         public async Task<bool> AddRankOfTheBestFundsAsync(IEnumerable<BestFundRank> rankOfTheBestFunds)
         {
-            try
-            {
-                _context.BestFundRanks.RemoveRange(_context.BestFundRanks.ToList());
-                await _context.SaveChangesAsync();
+            _context.BestFundRanks.RemoveRange(_context.BestFundRanks.ToList());
+            await _context.SaveChangesAsync();
 
-                await _context.AddRangeAsync(rankOfTheBestFunds);
-                await _context.SaveChangesAsync();
+            await _context.AddRangeAsync(rankOfTheBestFunds);
+            await _context.SaveChangesAsync();
 
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
+            return true;
         }
 
         public Task<IEnumerable<BestFundRank>> GetRankOfTheBestFundsAsync(int? totalFundsInRank = null)
         {
 
-            try
+            IQueryable<BestFundRank> funds = _context.BestFundRanks.AsNoTracking();
+            
+            if(totalFundsInRank != null)
             {
-                IQueryable<BestFundRank> funds = _context.BestFundRanks.AsNoTracking();
-                
-                if(totalFundsInRank != null)
-                {
-                    funds = funds.OrderBy(x => x.MultiplierRanking)
-                                 .Take(totalFundsInRank ?? funds.Count());
-                }
+                funds = funds.OrderBy(x => x.MultiplierRanking)
+                                .Take(totalFundsInRank ?? funds.Count());
+            }
 
-                return Task.FromResult(funds.AsEnumerable());
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return (Task<IEnumerable<BestFundRank>>)null;
-            }
+            return Task.FromResult(funds.AsEnumerable());
             
         }
     }

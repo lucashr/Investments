@@ -15,12 +15,12 @@ using Xunit;
 
 namespace Investments.Tests.Test
 {
-    public class WebScrapingFundsAndYeldsServiceTest
+    public class WebScrapingFundsAndDividendsServiceTest
     {
 
         static Mock<IGeneralPersist> generalPersist = null;
         static Mock<FundsDividendsService> fundsYieldService = null;
-        static Mock<IFundsYeldPersist> mockFundsYeldPersist = null;
+        static Mock<IFundDividendPersist> mockFundsYeldPersist = null;
         static Mock<IDetailedFundPersist> detailedFundPersist = null;
         static List<FundDividend> dummyFundsYieldService = null;
         static List<DetailedFund> memoryDetailedFunds = null;
@@ -33,7 +33,7 @@ namespace Investments.Tests.Test
         {
             
             generalPersist = new Mock<IGeneralPersist>();
-            mockFundsYeldPersist = new Mock<IFundsYeldPersist>();
+            mockFundsYeldPersist = new Mock<IFundDividendPersist>();
             detailedFundPersist = new Mock<IDetailedFundPersist>();
             memoryDetailedFunds = new List<DetailedFund>();
             memoryFundsYeld = new List<FundDividend>();

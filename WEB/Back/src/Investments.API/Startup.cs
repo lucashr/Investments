@@ -142,12 +142,12 @@ namespace Investments.API
             services.AddScoped<IDetailedFundPersist, DetailedFundPersist>();
             services.AddScoped<IDetailedStocksPersist, DetailedStocksPersist>();
             services.AddScoped<IGeneralPersist, GeneralPersist>();
-            services.AddScoped<IFundsYeldPersist, FundDividendsPersist>();
+            services.AddScoped<IFundDividendPersist, FundDividendPersist>();
             services.AddScoped<IRankOfTheBestFundsPersist, RankOfTheBestFundsPersist>();
             services.AddScoped<IRankOfTheBestStocksPersist, RankOfTheBestStocksPersist>();
             services.AddScoped<IUserPersist, UserPersist>();
-            services.AddScoped<IEnderecoUsuarioPersist, EnderecoUsuarioPersist>();
-            services.AddScoped<IStocksYeldPersist, StocksDividendsPersist>();
+            services.AddScoped<IUserAddressPersist, UserAddressPersist>();
+            services.AddScoped<IStockDividendPersist, StocksDividendsPersist>();
             
             services.AddSingleton<WebScrapingSocketManager>();
 

@@ -11,9 +11,9 @@ namespace Investments.Application
     public class FundsDividendsService : IFundDividendsService
     {
 
-        private readonly IFundsYeldPersist _fundsYeldPersist;
+        private readonly IFundDividendPersist _fundsYeldPersist;
 
-        public FundsDividendsService(IFundsYeldPersist fundsYeldPersist)
+        public FundsDividendsService(IFundDividendPersist fundsYeldPersist)
         {
             _fundsYeldPersist = fundsYeldPersist;
         }
