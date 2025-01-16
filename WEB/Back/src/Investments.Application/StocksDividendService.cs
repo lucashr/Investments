@@ -10,26 +10,26 @@ namespace Investments.Application
 {
     public class StocksDividendService : IStocksDividendService
     {
-        private readonly IStockDividendPersist _stocksYeldPersist;
+        private readonly IStockDividendPersist _stocksDividendsPersist;
 
-        public StocksDividendService(IStockDividendPersist fundsYeldPersist)
+        public StocksDividendService(IStockDividendPersist fundsDividendsPersist)
         {
-            _stocksYeldPersist = fundsYeldPersist;
+            _stocksDividendsPersist = fundsDividendsPersist;
         }
 
-        public async Task<IEnumerable<StockDividend>> GetStockYeldByCodeAsync(string fundCode)
+        public async Task<IEnumerable<StockDividend>> GetStockDividendsByCodeAsync(string fundCode)
         {
-            return await _stocksYeldPersist.GetStockDividendsByCodeAsync(fundCode);;
+            return await _stocksDividendsPersist.GetStockDividendsByCodeAsync(fundCode);;
         }
 
-        public async Task<IEnumerable<StockDividend>> GetAllStocksYeldAsync()
+        public async Task<IEnumerable<StockDividend>> GetAllStocksDividendsAsync()
         {
-            return await _stocksYeldPersist.GetAllStockDividendsAsync();;
+            return await _stocksDividendsPersist.GetAllStockDividendsAsync();;
         }
 
-        public async Task<bool> AddStocksYieldsAsync(IEnumerable<StockDividend> stocksYelds)
+        public async Task<bool> AddStocksDividendsAsync(IEnumerable<StockDividend> stocksDividends)
         {
-            return await _stocksYeldPersist.AddStockDividendsAsync(stocksYelds);;
+            return await _stocksDividendsPersist.AddStockDividendsAsync(stocksDividends);;
         }
     }
 }

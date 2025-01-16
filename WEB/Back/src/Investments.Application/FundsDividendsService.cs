@@ -11,26 +11,26 @@ namespace Investments.Application
     public class FundsDividendsService : IFundDividendsService
     {
 
-        private readonly IFundDividendPersist _fundsYeldPersist;
+        private readonly IFundDividendPersist _fundsDividendsPersist;
 
-        public FundsDividendsService(IFundDividendPersist fundsYeldPersist)
+        public FundsDividendsService(IFundDividendPersist fundsDividendsPersist)
         {
-            _fundsYeldPersist = fundsYeldPersist;
+            _fundsDividendsPersist = fundsDividendsPersist;
         }
 
-        public async Task<IEnumerable<FundDividend>> GetAllFundsYeldAsync()
+        public async Task<IEnumerable<FundDividend>> GetAllFundsDividendsAsync()
         {
-            return await _fundsYeldPersist.GetAllFundsYeldAsync();
+            return await _fundsDividendsPersist.GetAllFundsDividendsAsync();
         }
 
-        public async Task<IEnumerable<FundDividend>> GetFundYeldByCodeAsync(string fundCode)
+        public async Task<IEnumerable<FundDividend>> GetFundDividendsByCodeAsync(string fundCode)
         {
-            return await _fundsYeldPersist.GetFundYeldByCodeAsync(fundCode);
+            return await _fundsDividendsPersist.GetFundDividendsByCodeAsync(fundCode);
         }
 
-        public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundDividend> fundsYelds)
+        public async Task<bool> AddFundDividendsAsync(IEnumerable<FundDividend> fundsDividends)
         {
-            return await _fundsYeldPersist.AddFundsYieldsAsync(fundsYelds);
+            return await _fundsDividendsPersist.AddFundsDividendsAsync(fundsDividends);
         }
 
     }

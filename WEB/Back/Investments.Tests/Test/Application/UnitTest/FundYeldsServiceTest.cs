@@ -26,13 +26,13 @@ namespace Investments.Tests.Test
             dummyFundsYield = new List<FundDividend>();
             dummyFundsYield = ((List<FundDividend>)DummyTest.FundDividend().ElementAt(0).ElementAt(0));
 
-            mockPersist.Setup(x => x.AddFundsYieldsAsync(It.IsAny<IEnumerable<FundDividend>>())).Returns(Task.FromResult(true));
+            mockPersist.Setup(x => x.AddFundsDividendsAsync(It.IsAny<IEnumerable<FundDividend>>())).Returns(Task.FromResult(true));
             
-            mockPersist.Setup(x => x.GetAllFundsYeldAsync()).Returns(() => {
+            mockPersist.Setup(x => x.GetAllFundsDividendsAsync()).Returns(() => {
                         return Task.FromResult((IEnumerable<FundDividend>)dummyFundsYield);
             });
 
-            mockPersist.Setup(x => x.GetFundYeldByCodeAsync(It.IsAny<string>())).Returns((string fundCode) => {
+            mockPersist.Setup(x => x.GetFundDividendsByCodeAsync(It.IsAny<string>())).Returns((string fundCode) => {
                 var result = dummyFundsYield.Where(x => x.FundCode == fundCode);
                 return Task.FromResult(result);
             });
@@ -49,7 +49,7 @@ namespace Investments.Tests.Test
 
             Setup();
 
-            var resut = await fundsYieldService.AddFundsYieldsAsync(fundsYelds);
+            var resut = await fundsYieldService.AddFundDividendsAsync(fundsYelds);
 
             resut.Should().Be(true, "Must be True");
 
@@ -63,7 +63,7 @@ namespace Investments.Tests.Test
 
             Setup();
 
-            var result = await fundsYieldService.GetAllFundsYeldAsync();
+            var result = await fundsYieldService.GetAllFundsDividendsAsync();
 
             result.Should().HaveCount(30, "Must be 30");
 
@@ -77,7 +77,7 @@ namespace Investments.Tests.Test
 
             Setup();
 
-            var yelds = await fundsYieldService.GetFundYeldByCodeAsync("AAZQ11");
+            var yelds = await fundsYieldService.GetFundDividendsByCodeAsync("AAZQ11");
             
             yelds.ElementAt(0).FundCode.Should().Be("AAZQ11", "Must be AAZQ11");
             yelds.Should().HaveCountGreaterThan(0, "Must be greater than 0");

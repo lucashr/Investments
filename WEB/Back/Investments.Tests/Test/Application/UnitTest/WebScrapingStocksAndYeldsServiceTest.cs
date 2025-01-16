@@ -19,7 +19,7 @@ namespace Investments.Tests.Test.Application.UnitTest
     {
 
         private readonly Mock<IDetailedStocksPersist> _mockDetailedStocksPersist;
-        private readonly Mock<IStocksYeldPersist> _mockStocksYeldPersist;
+        private readonly Mock<IStockDividendPersist> _mockStocksYeldPersist;
         private readonly WebScrapingStocksAndDividendsService _service;
         private InvestmentsContext _context;
         private const string DatabasePath = @"C:\Users\lucas\Desktop\Repositorios\meus_repositorios\Book_projeto_Investments\Angular\Investments\WEB\Back\src\Investments.API\Investments.db";
@@ -29,7 +29,7 @@ namespace Investments.Tests.Test.Application.UnitTest
         public WebScrapingStocksAndDividendsServiceTest()
         {
             _mockDetailedStocksPersist = new Mock<IDetailedStocksPersist>();
-            _mockStocksYeldPersist = new Mock<IStocksYeldPersist>();
+            _mockStocksYeldPersist = new Mock<IStockDividendPersist>();
             _service = new WebScrapingStocksAndDividendsService(
                 _mockDetailedStocksPersist.Object,
                 _mockStocksYeldPersist.Object,

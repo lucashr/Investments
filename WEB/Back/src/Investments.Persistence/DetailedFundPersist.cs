@@ -43,10 +43,10 @@ namespace Investments.Persistence
             return true;
         }
 
-        public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundDividend> fundsYelds)
+        public async Task<bool> AddFundsYieldsAsync(IEnumerable<FundDividend> fundsDividends)
         {
             _context.Database.EnsureDeleted();
-            _context.AddRange(fundsYelds);
+            _context.AddRange(fundsDividends);
             await _context.SaveChangesAsync();
 
             return true;

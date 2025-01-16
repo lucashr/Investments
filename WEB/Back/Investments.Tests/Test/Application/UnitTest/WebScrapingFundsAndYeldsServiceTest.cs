@@ -48,13 +48,13 @@ namespace Investments.Tests.Test
                 return Task.FromResult(fund);
             });
 
-            mockFundsYeldPersist.Setup(x => x.AddFundsYieldsAsync(It.IsAny<IEnumerable<FundDividend>>())).Returns(Task.FromResult(true));
+            mockFundsYeldPersist.Setup(x => x.AddFundsDividendsAsync(It.IsAny<IEnumerable<FundDividend>>())).Returns(Task.FromResult(true));
             
-            mockFundsYeldPersist.Setup(x => x.GetAllFundsYeldAsync()).Returns(() => {
+            mockFundsYeldPersist.Setup(x => x.GetAllFundsDividendsAsync()).Returns(() => {
                         return Task.FromResult((IEnumerable<FundDividend>)dummyFundsYieldService);
             });
 
-            mockFundsYeldPersist.Setup(x => x.GetFundYeldByCodeAsync(It.IsAny<string>())).Returns((string fundCode) => {
+            mockFundsYeldPersist.Setup(x => x.GetFundDividendsByCodeAsync(It.IsAny<string>())).Returns((string fundCode) => {
                 var result = dummyFundsYieldService.Where(x => x.FundCode == fundCode);
                 return Task.FromResult(result);
             });
@@ -109,7 +109,7 @@ namespace Investments.Tests.Test
             var ct = new CancellationTokenSource();
 
             var webScraping = new WebScrapingFundsAndDividendsService(detailedFundPersist.Object, mockFundsYeldPersist.Object, logger);
-            yelds = (List<FundDividend>)await webScraping.GetYeldsFundsAsync(detailedFunds, ct);
+            yelds = (List<FundDividend>)await webScraping.GetFundDividendsAsync(detailedFunds, ct);
 
             yelds.Should().HaveCountGreaterThan(0);
 

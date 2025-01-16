@@ -24,7 +24,7 @@ namespace Investments.Application
     {
 
         const string WEBPAGE_STOCKS = "https://www.fundamentus.com.br/resultado.php";
-        const string WEBPAGE_YELDS = "https://www.fundamentus.com.br/proventos.php?papel";
+        const string WEBPAGE_DIVIDENDS = "https://www.fundamentus.com.br/proventos.php?papel";
         IWebDriver _driver;
         IDetailedStocksPersist _detailedStocksPersist;
         IStockDividendPersist _stockDividendsPersist;
@@ -33,11 +33,11 @@ namespace Investments.Application
         CancellationTokenSource _cancellationTokenSource;
 
         public WebScrapingStocksAndDividendsService(IDetailedStocksPersist detailedStocksPersist,
-                                                    IStockDividendPersist stocksYeldPersist,
+                                                    IStockDividendPersist stocksDividendsPersist,
                                                     ILogger<WebScrapingStocksAndDividendsService> logger)
         {
             _detailedStocksPersist = detailedStocksPersist;
-            _stockDividendsPersist = stocksYeldPersist;
+            _stockDividendsPersist = stocksDividendsPersist;
             _logger = logger;
             _driver = WebDriverSelenium.ConfigDriver();
         }
@@ -116,7 +116,7 @@ namespace Investments.Application
                     if(AbortarProcesso())
                         return Enumerable.Empty<StockDividend>();
                     
-                    bool navigateOK = await GoToPage($"{WEBPAGE_YELDS}={fund.FundCode}&tipo=2");
+                    bool navigateOK = await GoToPage($"{WEBPAGE_DIVIDENDS}={fund.FundCode}&tipo=2");
 
                     if (!navigateOK)
                         return Enumerable.Empty<StockDividend>();

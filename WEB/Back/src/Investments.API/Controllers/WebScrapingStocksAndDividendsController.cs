@@ -63,15 +63,15 @@ namespace Investments.API.Controllers
 
             var detailedFunds = await _detailedStockService.GetAllDetailedStocksAsync();
 
-            var fundYelds = await _webScrapingStocksAndDividendsService.GetStocksDividendsAsync(detailedFunds, _cancellationTokenSource);
+            var fundDividends = await _webScrapingStocksAndDividendsService.GetStocksDividendsAsync(detailedFunds, _cancellationTokenSource);
             
-            if(fundYelds.Count() > 0)
+            if(fundDividends.Count() > 0)
             {
 
                 var rankingOfTheBestFunds = await _rankOfTheBestStocksService.GetRankOfTheBestStocksAsync();
                 await _rankOfTheBestStocksService.AddRankOfTheBestStocksAsync(rankingOfTheBestFunds);
                 
-                return Ok(fundYelds);
+                return Ok(fundDividends);
 
             }
             else

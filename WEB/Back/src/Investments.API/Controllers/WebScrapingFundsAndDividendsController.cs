@@ -15,25 +15,22 @@ namespace Investments.API.Controllers
     [Route("api/v1/[controller]")]
     public class WebScrapingFundsAndDividendsController : ControllerBase
     {
-        private readonly IWebScrapingFundsAndDividendsService _webScrapingFundsAndYelds;
+        private readonly IWebScrapingFundsAndDividendsService _webScrapingFundsAndDividends;
         private readonly IRankOfTheBestFundsService _rankOfTheBestFundsService;
         private readonly WebScrapingSocketManager _socketManager;
         private readonly IDetailedFundService _detailedFundService;
-        private readonly IFundDividendsService _fundsYieldService;
         private static CancellationTokenSource? _cancellationTokenSource;
         private static bool _isRunning = false;
 
-        public WebScrapingFundsAndDividendsController(IWebScrapingFundsAndDividendsService webScrapingFundsAndYelds,
+        public WebScrapingFundsAndDividendsController(IWebScrapingFundsAndDividendsService webScrapingFundsAndDividends,
                                                   IRankOfTheBestFundsService rankOfTheBestFundsService,
                                                   WebScrapingSocketManager socketManager,
-                                                  IDetailedFundService detailedFundService,
-                                                  IFundDividendsService fundsYieldService)
+                                                  IDetailedFundService detailedFundService)
         {
-            _webScrapingFundsAndYelds = webScrapingFundsAndYelds;
+            _webScrapingFundsAndDividends = webScrapingFundsAndDividends;
             _rankOfTheBestFundsService = rankOfTheBestFundsService;
             _socketManager = socketManager;
             _detailedFundService = detailedFundService;
-            _fundsYieldService = fundsYieldService;
         }
 
         [HttpGet("GetFunds")]
@@ -45,7 +42,7 @@ namespace Investments.API.Controllers
 
             _socketManager.GetAll();
 
-            var result = await _webScrapingFundsAndYelds.GetFundsAsync(_cancellationTokenSource);
+            var result = await _webScrapingFundsAndDividends.GetFundsAsync(_cancellationTokenSource);
 
             return result.Count() > 0 ? Ok(result) : NotFound("No funds found.");
 
@@ -62,13 +59,13 @@ namespace Investments.API.Controllers
 
             var detailedFunds = await _detailedFundService.GetAllDetailedFundsAsync();
 
-            var fundYelds = await _webScrapingFundsAndYelds.GetYeldsFundsAsync(detailedFunds, _cancellationTokenSource);
+            var dividends = await _webScrapingFundsAndDividends.GetFundDividendsAsync(detailedFunds, _cancellationTokenSource);
             
-            if(fundYelds.Count() > 0)
+            if(dividends.Count() > 0)
             {
                 var rankingOfTheBestFunds = await _rankOfTheBestFundsService.GetCalculationRankOfTheBestFundsAsync();
                 await _rankOfTheBestFundsService.AddRankOfTheBestFundsAsync(rankingOfTheBestFunds);
-                return Ok(fundYelds);
+                return Ok(dividends);
             }
             else
                 return NotFound("No funds dividends found.");

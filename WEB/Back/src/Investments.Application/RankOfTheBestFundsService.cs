@@ -14,17 +14,17 @@ namespace Investments.Application
 
         private readonly IRankOfTheBestFundsPersist _rankOfTheBestFundsPersist;
         private readonly IDetailedFundService _detailedFundService;
-        private readonly IFundDividendsService _fundsYeldService;
+        private readonly IFundDividendsService _fundsDividendsService;
         private readonly IMapper _mapper;
 
         public RankOfTheBestFundsService(IRankOfTheBestFundsPersist rankOfTheBestFundsPersist,
                                          IDetailedFundService detailedFundService,
-                                         IFundDividendsService fundsYeldService,
+                                         IFundDividendsService fundsDividendsService,
                                          IMapper mapper)
         {
             _rankOfTheBestFundsPersist = rankOfTheBestFundsPersist;
             _detailedFundService = detailedFundService;
-            _fundsYeldService = fundsYeldService;
+            _fundsDividendsService = fundsDividendsService;
             _mapper = mapper;
         }
 
@@ -38,9 +38,9 @@ namespace Investments.Application
 
             1) filter: "Liquidity" lower than 1,000,000.00 is then removed from the analysis.
             2) filter: Sort "Dividend Yield" column from  highest to lowest.
-            3) After sorting create a column named "Rank Dividend Yeld" and enter a count for each row generated in this new column.
+            3) After sorting create a column named "Rank Dividend" and enter a count for each row generated in this new column.
             4) Then add a column named "Rank Preco" and sort column "PriceEquityValue" from cheapest to most expensive and enter a count for each row generated in this new column.
-            5) Finally add a column called "Rank Multiplier". Add the column "Rank Dividend Yeld" and the column "Rank Price". Then order column "Rank Multiplier"from smallest to largest.
+            5) Finally add a column called "Rank Multiplier". Add the column "Rank Dividend" and the column "Rank Price". Then order column "Rank Multiplier"from smallest to largest.
 
             Calculation coefficient of variation
 
@@ -97,7 +97,7 @@ namespace Investments.Application
             for (int i = 0; i < bestFunds.Count(); i++)
             {
 
-                var result = await _fundsYeldService.GetFundYeldByCodeAsync(bestFunds.ElementAt(i).FundCode);
+                var result = await _fundsDividendsService.GetFundDividendsByCodeAsync(bestFunds.ElementAt(i).FundCode);
 
                 result = result.OrderByDescending(x => x.LastComputedDate).Take(12);
 

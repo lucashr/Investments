@@ -16,24 +16,24 @@ namespace Investments.API.Controllers
     public class StockDividendsController : ControllerBase
     {
 
-        private readonly IStocksDividendService _stocksYeldService;
+        private readonly IStocksDividendService _stocksDividendsService;
         
-        public StockDividendsController(IStocksDividendService fundsYeldService)
+        public StockDividendsController(IStocksDividendService stockDividendsService)
         {
-            _stocksYeldService = fundsYeldService;
+            _stocksDividendsService = stockDividendsService;
         }
 
         [HttpGet("GetFundDividendsByCode/{fundCode}")]
         public async Task<IActionResult> GetFundDividendsByCode(string fundCode)
         {
-            var dividends = await _stocksYeldService.GetStockYeldByCodeAsync(fundCode);
+            var dividends = await _stocksDividendsService.GetStockDividendsByCodeAsync(fundCode);
             return dividends.Any() ? Ok(dividends) : NotFound("No fund dividends found");
         }
 
         [HttpGet("GetAllFundsDividends")]
         public async Task<IActionResult> GetAllFundsDividends()
         {
-            var dividends = await _stocksYeldService.GetAllStocksYeldAsync();
+            var dividends = await _stocksDividendsService.GetAllStocksDividendsAsync();
             return dividends.Any() ? Ok(dividends) : NotFound("No funds dividends found");
         }
 

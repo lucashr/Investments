@@ -23,7 +23,7 @@ namespace Investments.Application
     {
 
         const string WEBPAGE_FUNDS = "https://www.fundamentus.com.br/fii_resultado.php";
-        const string WEBPAGE_YELDS = "https://www.fundamentus.com.br/fii_proventos.php?papel";
+        const string WEBPAGE_DIVIDENDS = "https://www.fundamentus.com.br/fii_proventos.php?papel";
         IWebDriver _driver;
         IDetailedFundPersist _detailedFundPersist;
         IFundDividendPersist _fundDividendPersist;
@@ -31,11 +31,11 @@ namespace Investments.Application
         ILogger _logger;
 
         public WebScrapingFundsAndDividendsService(IDetailedFundPersist detailedFundPersist,
-                                                   IFundDividendPersist fundsYeldPersist,
+                                                   IFundDividendPersist fundsDividendsPersist,
                                                    ILogger<WebScrapingFundsAndDividendsService> logger)
         {
             _detailedFundPersist = detailedFundPersist;
-            _fundDividendPersist = fundsYeldPersist;
+            _fundDividendPersist = fundsDividendsPersist;
             _logger = logger;
             _driver = WebDriverSelenium.ConfigDriver();
         }
@@ -62,23 +62,23 @@ namespace Investments.Application
             return result;
 
         }
-        public async Task<IEnumerable<FundDividend>> GetYeldsFundsAsync(IEnumerable<DetailedFund> detailedFunds, CancellationTokenSource cancellationTokenSource)
+        public async Task<IEnumerable<FundDividend>> GetFundDividendsAsync(IEnumerable<DetailedFund> detailedFunds, CancellationTokenSource cancellationTokenSource)
         {
 
             _cancellationTokenSource = cancellationTokenSource;
 
-            var result = await DriverGetYeldsFundsAsync(detailedFunds);
+            var result = await DriverGetFundsDividendsAsync(detailedFunds);
 
             if (_cancellationTokenSource.IsCancellationRequested)
             {
                 return result;
             }
 
-            var bIsOk = await _fundDividendPersist.AddFundsYieldsAsync(result.ToList());
+            var bIsOk = await _fundDividendPersist.AddFundsDividendsAsync(result.ToList());
 
             if (bIsOk == false)
             {
-                _logger.LogError("GetYeldsFundsAsync::Error SaveChangesAsync");
+                _logger.LogError("GetFundDividendsAsync::Error SaveChangesAsync");
             }
 
             return result;
@@ -216,7 +216,7 @@ namespace Investments.Application
                 
             }
         }
-        public async Task<IEnumerable<FundDividend>> DriverGetYeldsFundsAsync(IEnumerable<DetailedFund> detailedFunds)
+        public async Task<IEnumerable<FundDividend>> DriverGetFundsDividendsAsync(IEnumerable<DetailedFund> detailedFunds)
         {
 
             
@@ -235,10 +235,10 @@ namespace Investments.Application
             try
             {
 
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Started: Capture Yelds Funds"));
+                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Started: Capture Dividends Funds"));
 
-                var fundsYeldsTmp = new List<FundDividend>();
-                var fundsYelds = new List<FundDividend>();
+                var fundsDividendsTmp = new List<FundDividend>();
+                var fundsDividends = new List<FundDividend>();
 
                 foreach (var fund in detailedFunds)
                 {
@@ -246,7 +246,7 @@ namespace Investments.Application
                     if(AbortarProcesso())
                         return Enumerable.Empty<FundDividend>();
                     
-                    bool navigateOK = await GoToPage($"{WEBPAGE_YELDS}={fund.FundCode}");
+                    bool navigateOK = await GoToPage($"{WEBPAGE_DIVIDENDS}={fund.FundCode}");
 
                     if (!navigateOK)
                         return Enumerable.Empty<FundDividend>();
@@ -313,21 +313,21 @@ namespace Investments.Application
                         };
 
                         await LogUtils.LogActions(fundDividends);
-                        fundsYeldsTmp.Add(fundDividends);
+                        fundsDividendsTmp.Add(fundDividends);
 
                     }
 
                 }
 
-                if (fundsYeldsTmp.Count() == 0)
-                    return await Task.FromResult<IEnumerable<FundDividend>>(fundsYelds);
+                if (fundsDividendsTmp.Count() == 0)
+                    return await Task.FromResult<IEnumerable<FundDividend>>(fundsDividends);
 
-                fundsYelds.AddRange(fundsYeldsTmp);
-                fundsYeldsTmp.Clear();
+                fundsDividends.AddRange(fundsDividendsTmp);
+                fundsDividendsTmp.Clear();
 
                 await LogUtils.LogActions("Completed: Capture of funds dividends");
 
-                return await Task.FromResult<IEnumerable<FundDividend>>(fundsYelds);
+                return await Task.FromResult<IEnumerable<FundDividend>>(fundsDividends);
 
             }
             catch (Exception ex)

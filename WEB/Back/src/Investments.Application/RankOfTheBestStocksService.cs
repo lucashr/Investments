@@ -17,17 +17,17 @@ namespace Investments.Application
     {
         private readonly IRankOfTheBestStocksPersist _rankOfTheBestStocksPersist;
         private readonly IDetailedStockService _detailedStocksService;
-        private readonly IStocksDividendService _stocksYeldService;
+        private readonly IStocksDividendService _stocksDividendsService;
         private readonly IMapper _mapper;
 
         public RankOfTheBestStocksService(IRankOfTheBestStocksPersist rankOfTheBestStocksPersist,
                                           IDetailedStockService detailedStocksService,
-                                          IStocksDividendService stocksYeldService,
+                                          IStocksDividendService stocksDividendsService,
                                           IMapper mapper)
         {
             _rankOfTheBestStocksPersist = rankOfTheBestStocksPersist;
             _detailedStocksService = detailedStocksService;
-            _stocksYeldService = stocksYeldService;
+            _stocksDividendsService = stocksDividendsService;
             _mapper = mapper;
         }
 
@@ -128,7 +128,7 @@ namespace Investments.Application
             score += Normalize(stock.LiquidityMargin, 1, 3) * 0.05;                  // Margem de Liquidez (5%)
             score += Normalize(stock.GrossEquityDebt / stock.NetWorth, 0.5, 2) * 0.1; // Alavancagem patrimonial (10%)
 
-            var dividends = await _stocksYeldService.GetStockYeldByCodeAsync(stock.FundCode);
+            var dividends = await _stocksDividendsService.GetStockDividendsByCodeAsync(stock.FundCode);
             
             if(dividends.Count() > 0)
             {
