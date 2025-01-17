@@ -22,7 +22,7 @@ namespace Investments.Tests.Test.Application
         static Mock<IDetailedFundPersist> mockDetailedFundPersist = null;
         static List<DetailedFund> dummyDetailedFunds = null;
         static Mock<FundsDividendsService> fundsYieldService = null;
-        static Mock<IFundDividendPersist> mockFundsYeldPersist = null;
+        static Mock<IFundDividendPersist> mockFundsDividendsPersist = null;
         static List<FundDividend> dummyFundsYieldService = null;
 
         public void Setup()
@@ -36,7 +36,7 @@ namespace Investments.Tests.Test.Application
             dummyRankOfTheBestFunds = new List<BestFundRank>();
             dummyRankOfTheBestFunds = ((List<BestFundRank>)DummyTest.BestFundRank().ElementAt(0).ElementAt(0));
             
-            mockFundsYeldPersist = new Mock<IFundDividendPersist>();
+            mockFundsDividendsPersist = new Mock<IFundDividendPersist>();
             dummyFundsYieldService = new List<FundDividend>();
             dummyFundsYieldService = ((List<FundDividend>)DummyTest.FundDividend().ElementAt(0).ElementAt(0));
 
@@ -50,13 +50,13 @@ namespace Investments.Tests.Test.Application
                                 return Task.FromResult(result);
             });
 
-            mockFundsYeldPersist.Setup(x => x.AddFundsDividendsAsync(It.IsAny<IEnumerable<FundDividend>>())).Returns(Task.FromResult(true));
+            mockFundsDividendsPersist.Setup(x => x.AddFundsDividendsAsync(It.IsAny<IEnumerable<FundDividend>>())).Returns(Task.FromResult(true));
             
-            mockFundsYeldPersist.Setup(x => x.GetAllFundsDividendsAsync()).Returns(() => {
+            mockFundsDividendsPersist.Setup(x => x.GetAllFundsDividendsAsync()).Returns(() => {
                         return Task.FromResult((IEnumerable<FundDividend>)dummyFundsYieldService);
             });
 
-            mockFundsYeldPersist.Setup(x => x.GetFundDividendsByCodeAsync(It.IsAny<string>())).Returns((string fundCode) => {
+            mockFundsDividendsPersist.Setup(x => x.GetFundDividendsByCodeAsync(It.IsAny<string>())).Returns((string fundCode) => {
                 var result = dummyFundsYieldService.Where(x => x.FundCode == fundCode);
                 return Task.FromResult(result);
             });
@@ -73,7 +73,7 @@ namespace Investments.Tests.Test.Application
 
             detailedFundService = new Mock<DetailedFundService>(mockDetailedFundPersist.Object);
             
-            fundsYieldService = new Mock<FundsDividendsService>(mockFundsYeldPersist.Object);
+            fundsYieldService = new Mock<FundsDividendsService>(mockFundsDividendsPersist.Object);
 
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {

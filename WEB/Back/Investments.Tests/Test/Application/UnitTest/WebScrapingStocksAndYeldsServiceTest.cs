@@ -19,7 +19,7 @@ namespace Investments.Tests.Test.Application.UnitTest
     {
 
         private readonly Mock<IDetailedStocksPersist> _mockDetailedStocksPersist;
-        private readonly Mock<IStockDividendPersist> _mockStocksYeldPersist;
+        private readonly Mock<IStockDividendPersist> _mockStocksDividendsPersist;
         private readonly WebScrapingStocksAndDividendsService _service;
         private InvestmentsContext _context;
         private const string DatabasePath = @"C:\Users\lucas\Desktop\Repositorios\meus_repositorios\Book_projeto_Investments\Angular\Investments\WEB\Back\src\Investments.API\Investments.db";
@@ -29,10 +29,10 @@ namespace Investments.Tests.Test.Application.UnitTest
         public WebScrapingStocksAndDividendsServiceTest()
         {
             _mockDetailedStocksPersist = new Mock<IDetailedStocksPersist>();
-            _mockStocksYeldPersist = new Mock<IStockDividendPersist>();
+            _mockStocksDividendsPersist = new Mock<IStockDividendPersist>();
             _service = new WebScrapingStocksAndDividendsService(
                 _mockDetailedStocksPersist.Object,
-                _mockStocksYeldPersist.Object,
+                _mockStocksDividendsPersist.Object,
                 logger
             );
 
@@ -63,7 +63,7 @@ namespace Investments.Tests.Test.Application.UnitTest
         }
 
         [Fact]
-        public async Task GetYeldsFundsAsync_ShouldReturnStocksDividends_WhenSuccessful()
+        public async Task GetFundsDividendsAsync_ShouldReturnStocksDividends_WhenSuccessful()
         {
             // Arrange
             var cancellationTokenSource = new CancellationTokenSource();

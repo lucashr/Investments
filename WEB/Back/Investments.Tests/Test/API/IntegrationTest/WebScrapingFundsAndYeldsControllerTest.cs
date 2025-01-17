@@ -87,13 +87,13 @@ namespace Investments.Tests.Test.IntegrationTest
             client.DefaultRequestHeaders.Accept.Add( 
                     new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             
-            string url = $"api/WebScrapingFundsAndYelds/Funds";
+            string url = $"api/WebScrapingFundsAndDividends/Funds";
 
             var response = await client.GetAsync(url);
 
             string result = await response.Content.ReadAsStringAsync();
 
-            List<DetailedFund> fundsYeld = JsonConvert.DeserializeObject<List<DetailedFund>>(result);
+            List<DetailedFund> funds = JsonConvert.DeserializeObject<List<DetailedFund>>(result);
 
             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
                 System.Net.HttpStatusCode.OK);
@@ -116,13 +116,13 @@ namespace Investments.Tests.Test.IntegrationTest
             client.DefaultRequestHeaders.Accept.Add( 
                     new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             
-            string url = $"api/WebScrapingFundsAndYelds/Yelds";
+            string url = $"api/WebScrapingFundsAndDividends/Dividends";
 
             var response = await client.GetAsync(url);
 
             string result = await response.Content.ReadAsStringAsync();
 
-            List<FundDividend> fundsYeld = JsonConvert.DeserializeObject<List<FundDividend>>(result);
+            List<FundDividend> fundsDividends = JsonConvert.DeserializeObject<List<FundDividend>>(result);
 
             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
                 System.Net.HttpStatusCode.OK);

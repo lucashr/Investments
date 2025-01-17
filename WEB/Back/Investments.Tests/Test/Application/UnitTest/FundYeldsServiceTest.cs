@@ -44,12 +44,12 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.FundDividend), MemberType = typeof(DummyTest))]
         // [ConfigureTest]
-        public async Task MustEnterThirtyFundsYeldsAndReturnTrue(List<FundDividend> fundsYelds)
+        public async Task MustEnterThirtyFundsDividendsAndReturnTrue(List<FundDividend> fundsDividend)
         {
 
             Setup();
 
-            var resut = await fundsYieldService.AddFundDividendsAsync(fundsYelds);
+            var resut = await fundsYieldService.AddFundDividendsAsync(fundsDividend);
 
             resut.Should().Be(true, "Must be True");
 
@@ -58,7 +58,7 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.FundDividend), MemberType = typeof(DummyTest))]
         // [ConfigureTest]
-        public async Task MustReturnThirtyFundsYelds(List<FundDividend> fundsYelds)
+        public async Task MustReturnThirtyFundsDividends(List<FundDividend> fundsDividends)
         {
 
             Setup();
@@ -72,15 +72,15 @@ namespace Investments.Tests.Test
         [Theory]
         [MemberData(nameof(DummyTest.FundDividend), MemberType = typeof(DummyTest))]
         // [ConfigureTest]
-        public async Task MustReturnFundYeldByCode(List<FundDividend> fundsYelds)
+        public async Task MustReturnFundDividendsByCode(List<FundDividend> fundsDividends)
         {
 
             Setup();
 
-            var yelds = await fundsYieldService.GetFundDividendsByCodeAsync("AAZQ11");
+            var dividends = await fundsYieldService.GetFundDividendsByCodeAsync("AAZQ11");
             
-            yelds.ElementAt(0).FundCode.Should().Be("AAZQ11", "Must be AAZQ11");
-            yelds.Should().HaveCountGreaterThan(0, "Must be greater than 0");
+            dividends.ElementAt(0).FundCode.Should().Be("AAZQ11", "Must be AAZQ11");
+            dividends.Should().HaveCountGreaterThan(0, "Must be greater than 0");
 
         }
 

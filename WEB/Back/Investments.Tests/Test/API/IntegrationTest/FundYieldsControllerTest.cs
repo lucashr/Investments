@@ -67,12 +67,12 @@ namespace Investments.Tests.Test.IntegrationTest
         public async Task SeedDB()
         {
             
-            dynamic fundsYeld = DummyTest.FundDividend().ElementAt(0).ElementAt(0);
+            dynamic fundsDividends = DummyTest.FundDividend().ElementAt(0).ElementAt(0);
 
             using (InvestmentsContext ctx = new(optionsBuilder.Options))
             {
                 
-                await ctx.AddRangeAsync(fundsYeld.ToArray());
+                await ctx.AddRangeAsync(fundsDividends.ToArray());
                 ctx.SaveChanges();
             }
 
@@ -81,7 +81,7 @@ namespace Investments.Tests.Test.IntegrationTest
         [Theory]
         [ConfigureTest]
         [InlineData("AGRX11")]
-        public async void MustGetFundYeldByCode(string fundCode)
+        public async void MustGetFundDividendsByCode(string fundCode)
         {
             
             await Setup();
@@ -95,13 +95,13 @@ namespace Investments.Tests.Test.IntegrationTest
             client.DefaultRequestHeaders.Accept.Add( 
                     new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             
-            string url = $"api/FundYelds/{fundCode}";
+            string url = $"api/FundDividends/{fundCode}";
 
             var response = await client.GetAsync(url);
 
             string result = await response.Content.ReadAsStringAsync();
 
-            List<FundDividend> fundsYeld = JsonConvert.DeserializeObject<List<FundDividend>>(result);
+            List<FundDividend> fundsDividends = JsonConvert.DeserializeObject<List<FundDividend>>(result);
 
             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
                 System.Net.HttpStatusCode.OK);
@@ -110,7 +110,7 @@ namespace Investments.Tests.Test.IntegrationTest
 
         [Fact]
         [ConfigureTest]
-        public async void MustReturnAllFundsYelds()
+        public async void MustReturnAllFundsDividends()
         {
 
             await Setup();
@@ -124,13 +124,13 @@ namespace Investments.Tests.Test.IntegrationTest
             client.DefaultRequestHeaders.Accept.Add( 
                     new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             
-            string url = $"api/FundYelds/AllFundsYeld";
+            string url = $"api/FundDividends/AllFundsDividends";
 
             var response = await client.GetAsync(url);
 
             string result = await response.Content.ReadAsStringAsync();
 
-            List<FundDividend> fundsYeld = JsonConvert.DeserializeObject<List<FundDividend>>(result);
+            List<FundDividend> fundsDividends = JsonConvert.DeserializeObject<List<FundDividend>>(result);
 
             Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
                 System.Net.HttpStatusCode.OK);
@@ -139,7 +139,7 @@ namespace Investments.Tests.Test.IntegrationTest
 
         [Theory]
         [MemberData(nameof(DummyTest.FundDividend), MemberType = typeof(DummyTest))]
-        public async void MustEnterFundsYeldsAndReturnTrue(List<FundDividend> FundsYelds)
+        public async void MustEnterFundsDividendsAndReturnTrue(List<FundDividend> FundsDividends)
         {
 
             await Setup();
@@ -152,10 +152,10 @@ namespace Investments.Tests.Test.IntegrationTest
             client.DefaultRequestHeaders.Accept.Add( 
                     new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json-patch+json"));
             
-            var jsonContent = JsonConvert.SerializeObject(FundsYelds); 
+            var jsonContent = JsonConvert.SerializeObject(FundsDividends); 
             var contentString  = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json-patch+json");
             
-            string url = $"api/FundYelds/Registration";
+            string url = $"api/FundDividends/Registration";
 
             var response = await client.PostAsync(url, contentString);
 
