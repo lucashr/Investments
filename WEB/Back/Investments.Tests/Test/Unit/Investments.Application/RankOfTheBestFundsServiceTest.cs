@@ -10,7 +10,7 @@ using Investments.Tests.Helpers;
 using Moq;
 using Xunit;
 
-namespace Investments.Tests.Test.Application
+namespace Investments.Tests
 {
     public class RankOfTheBestFundsServiceTest
     {
@@ -90,7 +90,6 @@ namespace Investments.Tests.Test.Application
 
         [Theory]
         [MemberData(nameof(DummyTest.BestFundRank), MemberType = typeof(DummyTest))]
-        // [ConfigureTest]
         public async Task MustStoreAndReturnTrue(List<BestFundRank> rankOfTheBestFunds)
         {
             
@@ -104,7 +103,6 @@ namespace Investments.Tests.Test.Application
 
         [Theory]
         [MemberData(nameof(DummyTest.BestFundRank), MemberType = typeof(DummyTest))]
-        // [ConfigureTest]
         public async Task MustCalculateAndReturnNotNull(List<BestFundRank> rankOfTheBestFunds)
         {
             
@@ -120,7 +118,6 @@ namespace Investments.Tests.Test.Application
 
         [Theory]
         [MemberData(nameof(DummyTest.BestFundRank), MemberType = typeof(DummyTest))]
-        // [ConfigureTest]
         public async Task MustReturnAllRankOfTheBestFunds(List<BestFundRank> rankOfTheBestFunds)
         {
             
@@ -138,7 +135,6 @@ namespace Investments.Tests.Test.Application
 
         [Theory]
         [MemberData(nameof(DummyTest.BestFundRank), MemberType = typeof(DummyTest))]
-        // [ConfigureTest]
         public async Task MustReturnNumberOfElementsRankOfTheBestFunds(List<BestFundRank> rankOfTheBestFunds)
         {
             

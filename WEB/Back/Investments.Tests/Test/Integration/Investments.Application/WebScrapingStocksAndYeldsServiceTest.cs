@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Investments.Application;
-using Investments.Domain;
-using Investments.Persistence;
 using Investments.Persistence.Contexts;
 using Investments.Persistence.Contracts;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace Investments.Tests.Test.Application.UnitTest
+namespace Investments.Tests
 {
     public class WebScrapingStocksAndDividendsServiceTest
     {
@@ -22,7 +19,7 @@ namespace Investments.Tests.Test.Application.UnitTest
         private readonly Mock<IStockDividendPersist> _mockStocksDividendsPersist;
         private readonly WebScrapingStocksAndDividendsService _service;
         private InvestmentsContext _context;
-        private const string DatabasePath = @"C:\Users\lucas\Desktop\Repositorios\meus_repositorios\Book_projeto_Investments\Angular\Investments\WEB\Back\src\Investments.API\Investments.db";
+        private string DatabasePath = $"{AppDomain.CurrentDomain.BaseDirectory}/Investments.db";
         ILogger<WebScrapingStocksAndDividendsService> logger = null;
         private DbContextOptions<InvestmentsContext> options;
 

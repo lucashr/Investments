@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace Investments.Tests.Test
+namespace Investments.Tests
 {
     public class WebScrapingFundsAndDividendsServiceTest
     {
@@ -81,7 +81,6 @@ namespace Investments.Tests.Test
         }
 
         [Fact]
-        // [ConfigureTest]
         public async Task MustGetTenFunds()
         {
 
@@ -99,7 +98,6 @@ namespace Investments.Tests.Test
 
         [Theory]
         [MemberData(nameof(DummyTest.DetailedFund), MemberType = typeof(DummyTest))]
-        // [ConfigureTest]
         public async Task MustGetFundsDividendAndShouldNotNull(List<DetailedFund> detailedFunds)
         {
 

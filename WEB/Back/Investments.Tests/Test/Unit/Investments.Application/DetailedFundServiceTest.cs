@@ -10,7 +10,7 @@ using Investments.Tests.Helpers;
 using System.Threading.Tasks;
 using FluentAssertions;
 
-namespace Investments.Tests.Test
+namespace Investments.Tests
 {
 
     public class DetailedFundServiceTest 
@@ -59,7 +59,6 @@ namespace Investments.Tests.Test
 
         [Theory]
         [InlineData("ABCP11")]
-        // [ConfigureTest]
         public async Task MustReturnOneFund(string fundCode)
         {
             

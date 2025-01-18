@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,7 +5,6 @@ using Investments.Application;
 using Investments.Application.Contracts;
 using Investments.VariablesManager;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Investments.API.Controllers
@@ -17,7 +15,7 @@ namespace Investments.API.Controllers
     public class WebScrapingStocksAndDividendsController : ControllerBase
     {
         private readonly IWebScrapingStocksAndDividendsService _webScrapingStocksAndDividendsService;
-        private readonly RankOfTheBestStocksService _rankOfTheBestStocksService;
+        private readonly IRankOfTheBestStocksService _rankOfTheBestStocksService;
         private readonly WebScrapingSocketManager _socketManager;
         private readonly IDetailedStockService _detailedStockService;
         private readonly IStocksDividendService _stocksDividendService;
@@ -25,7 +23,7 @@ namespace Investments.API.Controllers
         private static bool _isRunning = false;
 
         public WebScrapingStocksAndDividendsController(IWebScrapingStocksAndDividendsService webScrapingStocksAndDividendsService,
-                                                       RankOfTheBestStocksService rankOfTheBestStocksService,
+                                                       IRankOfTheBestStocksService rankOfTheBestStocksService,
                                                        WebScrapingSocketManager socketManager,
                                                        IDetailedStockService detailedStockService,
                                                        IStocksDividendService stocksDividendService)
@@ -57,6 +55,7 @@ namespace Investments.API.Controllers
         public async Task<IActionResult> GetStockDividendsAsync()
         {
             _socketManager.GetAll();
+            _cancellationTokenSource = new CancellationTokenSource();
 
             if (_cancellationTokenSource.IsCancellationRequested)
                 return Ok();

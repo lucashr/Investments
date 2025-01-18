@@ -1,12 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Investments.Application.Contracts;
-using Investments.Domain;
-using Investments.Domain.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Investments.API.Controllers
@@ -23,18 +17,18 @@ namespace Investments.API.Controllers
             _stocksDividendsService = stockDividendsService;
         }
 
-        [HttpGet("GetFundDividendsByCode/{fundCode}")]
-        public async Task<IActionResult> GetFundDividendsByCode(string fundCode)
+        [HttpGet("GetstockDividendsByCode/{stockCode}")]
+        public async Task<IActionResult> GetStockDividendsByCode(string StockCode)
         {
-            var dividends = await _stocksDividendsService.GetStockDividendsByCodeAsync(fundCode);
-            return dividends.Any() ? Ok(dividends) : NotFound("No fund dividends found");
+            var dividends = await _stocksDividendsService.GetStockDividendsByCodeAsync(StockCode);
+            return dividends.Any() ? Ok(dividends) : NotFound("No stock dividends found");
         }
 
-        [HttpGet("GetAllFundsDividends")]
-        public async Task<IActionResult> GetAllFundsDividends()
+        [HttpGet("GetAllStockDividends")]
+        public async Task<IActionResult> GetAllStockDividends()
         {
             var dividends = await _stocksDividendsService.GetAllStocksDividendsAsync();
-            return dividends.Any() ? Ok(dividends) : NotFound("No funds dividends found");
+            return dividends.Any() ? Ok(dividends) : NotFound("No stock dividends found");
         }
 
     }

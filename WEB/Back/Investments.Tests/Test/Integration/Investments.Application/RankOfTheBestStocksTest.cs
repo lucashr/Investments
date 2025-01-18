@@ -14,12 +14,13 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
-namespace Investments.Tests.Test.Application.UnitTest
+namespace Investments.Tests
 {
     public class RankOfTheBestStocksTest
     {
 
-        private const string DatabasePath = @"C:\Users\lucas\Desktop\Repositorios\meus_repositorios\Book_projeto_Investments\Angular\Investments\WEB\Back\src\Investments.API\Investments.db";
+        // private const string DatabasePath = @"C:\Users\lucas\Desktop\Repositorios\meus_repositorios\Book_projeto_Investments\Angular\Investments\WEB\Back\src\Investments.API\Investments.db";
+        private string DatabasePath = $"{AppDomain.CurrentDomain.BaseDirectory}/Investments.db";
         private InvestmentsContext _context;
 
         public RankOfTheBestStocksTest()

@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Investments.Tests.Test.IntegrationTest
+namespace Investments.Tests
 {
     public class RankOfTheBestFundsControllerTest
     {
@@ -99,7 +99,6 @@ namespace Investments.Tests.Test.IntegrationTest
         }
 
         [Theory]
-        // [ConfigureTest]
         [InlineData(5)]
         public async void MustReturnRank5Funds(int? totalFundsInRank = null)
         {

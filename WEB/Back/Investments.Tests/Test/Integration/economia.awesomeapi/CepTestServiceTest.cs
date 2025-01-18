@@ -6,7 +6,7 @@ using FluentAssertions;
 using Investments.Domain;
 using Xunit;
 
-namespace Investments.Tests.Test.Cep.awesomeapi.UnitTest
+namespace Investments.Tests
 {
     public class CepTestServiceTest
     {

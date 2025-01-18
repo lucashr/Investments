@@ -43,7 +43,6 @@ namespace Investments.Tests.Test
 
         [Theory]
         [MemberData(nameof(DummyTest.FundDividend), MemberType = typeof(DummyTest))]
-        // [ConfigureTest]
         public async Task MustEnterThirtyFundsDividendsAndReturnTrue(List<FundDividend> fundsDividend)
         {
 
