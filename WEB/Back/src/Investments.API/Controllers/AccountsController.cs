@@ -92,13 +92,12 @@ namespace Investments.API.Controllers
 
             var user = await _accountService.GetUserByUserNameAsync(usrDto.UserName);
 
-            return Ok(new
+            return Ok(new RegisterResponse
             {
-                username = user.UserName,
-                firstName = user.FirstName,
-                token = _tokenService.CreateToken(user).Result
-            }
-            );
+                Username = user.UserName,
+                FirstName = user.FirstName,
+                Token = _tokenService.CreateToken(user).Result
+            });
 
         }
 
@@ -113,11 +112,11 @@ namespace Investments.API.Controllers
 
             if(!result.Succeeded) return Unauthorized();
 
-            return Ok(new 
+            return Ok(new RegisterResponse 
                 {
-                    username = user.UserName,
-                    firstName = user.FirstName,
-                    token = _tokenService.CreateToken(user).Result
+                    Username = user.UserName,
+                    FirstName = user.FirstName,
+                    Token = _tokenService.CreateToken(user).Result
                 }
             );
         }

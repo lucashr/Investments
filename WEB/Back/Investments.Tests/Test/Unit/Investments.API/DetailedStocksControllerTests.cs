@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bogus;
+using FluentAssertions;
 using Investments.API.Controllers;
 using Investments.Application.Contracts;
 using Investments.Domain;
@@ -22,15 +24,20 @@ namespace Investments.Tests.Test.Unit.Investments.API
             _controller = new DetailedStocksController(_detailedStockServiceMock.Object);
         }
 
+        private List<DetailedStock> GenerateFakeStocks(int count)
+        {
+            var faker = new Faker<DetailedStock>()
+                .RuleFor(s => s.Id, f => Guid.NewGuid().ToString("D"))
+                .RuleFor(s => s.FundCode, f => f.Finance.Account(8)); // Gera um código de ação simulando contas financeiras
+
+            return faker.Generate(count);
+        }
+
         [Fact]
-        public async Task GetAllStocks_ShouldReturnOk_WhenStocksExist()
+        public async Task GetAllStocksShouldReturnOkWhenStocksExist()
         {
             // Arrange
-            var stocks = new List<DetailedStock>
-            {
-                new DetailedStock { Id = "1", FundCode = "STK001" },
-                new DetailedStock { Id = "2", FundCode = "STK002" }
-            };
+            var stocks = GenerateFakeStocks(3);
 
             _detailedStockServiceMock.Setup(s => s.GetAllDetailedStocksAsync())
                 .ReturnsAsync(stocks);
@@ -41,11 +48,11 @@ namespace Investments.Tests.Test.Unit.Investments.API
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedStocks = Assert.IsAssignableFrom<IEnumerable<DetailedStock>>(okResult.Value);
-            Assert.Equal(2, returnedStocks.Count());
+            returnedStocks.Count().Should().Be(3);
         }
 
         [Fact]
-        public async Task GetAllStocks_ShouldReturnNotFound_WhenNoStocksExist()
+        public async Task GetAllStocksShouldReturnNotFoundWhenNoStocksExist()
         {
             // Arrange
             _detailedStockServiceMock.Setup(s => s.GetAllDetailedStocksAsync())
@@ -56,7 +63,7 @@ namespace Investments.Tests.Test.Unit.Investments.API
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("No stocks found", notFoundResult.Value);
+            notFoundResult.Value.Should().Be("No stocks found");
         }
     }
 }

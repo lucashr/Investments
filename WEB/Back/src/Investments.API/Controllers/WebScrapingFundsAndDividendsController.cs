@@ -29,6 +29,7 @@ namespace Investments.API.Controllers
             _rankOfTheBestFundsService = rankOfTheBestFundsService;
             _socketManager = socketManager;
             _detailedFundService = detailedFundService;
+   
         }
 
         [HttpGet("GetFunds")]
@@ -37,7 +38,7 @@ namespace Investments.API.Controllers
         {
             _isRunning = true;
             _cancellationTokenSource = new CancellationTokenSource();
-
+  
             _socketManager.GetAll();
 
             var result = await _webScrapingFundsAndDividends.GetFundsAsync(_cancellationTokenSource);
@@ -51,6 +52,7 @@ namespace Investments.API.Controllers
         public async Task<IActionResult> GetFundDividendsAsync()
         {
             _socketManager.GetAll();
+            _cancellationTokenSource = new CancellationTokenSource();
 
             if (_cancellationTokenSource.IsCancellationRequested)
                 return Ok();

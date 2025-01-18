@@ -1,22 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Bogus;
+using FluentAssertions;
 using Investments.API.Controllers;
 using Investments.Application.Contracts;
 using Investments.Domain.Models;
-using Investments.Persistence.Contexts;
-using Investments.Tests.Helpers;
 using Investments.VariablesManager;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Moq;
-using Newtonsoft.Json;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Investments.Tests
 {
@@ -34,23 +30,46 @@ namespace Investments.Tests
             _rankOfTheBestFundsServiceMock = new Mock<IRankOfTheBestFundsService>();
             _detailedFundServiceMock = new Mock<IDetailedFundService>();
             _socketManagerMock = new Mock<WebScrapingSocketManager>();
+
             _controller = new WebScrapingFundsAndDividendsController(
                 _webScrapingFundsAndDividendsMock.Object,
                 _rankOfTheBestFundsServiceMock.Object,
                 _socketManagerMock.Object,
                 _detailedFundServiceMock.Object
             );
+
+        }
+
+        private IEnumerable<DetailedFund> GenerateFakeDetailedFunds(int count)
+        {
+            return new Faker<DetailedFund>()
+                .RuleFor(f => f.FundCode, f => f.Finance.Account(8))
+                .Generate(count);
+        }
+
+        private IEnumerable<FundDividend> GenerateFakeFundDividends(int count, string fundCode)
+        {
+            return new Faker<FundDividend>()
+                .RuleFor(d => d.Id, f => Guid.NewGuid().ToString())
+                .RuleFor(d => d.FundCode, _ => fundCode)
+                .RuleFor(d => d.Value, f => f.Random.Double(10, 1000))
+                .Generate(count);
+        }
+
+        private IEnumerable<BestFundRank> GenerateFakeBestFundRanks(int count)
+        {
+            return new Faker<BestFundRank>()
+                .RuleFor(r => r.Id, f => Guid.NewGuid().ToString())
+                .RuleFor(r => r.FundCode, f => f.Finance.Account(8))
+                .RuleFor(r => r.RankPrice, f => f.Random.Int(1, count))
+                .Generate(count);
         }
 
         [Fact]
-        public async Task GetFundsAsync_ShouldReturnOk_WhenFundsExist()
+        public async Task GetFundsAsyncShouldReturnOkWhenFundsExist()
         {
             // Arrange
-            var funds = new List<DetailedFund>
-            {
-                new DetailedFund { FundCode = "FND001" },
-                new DetailedFund { FundCode = "FND002" }
-            };
+            var funds = GenerateFakeDetailedFunds(2).ToList();
             _webScrapingFundsAndDividendsMock
                 .Setup(w => w.GetFundsAsync(It.IsAny<CancellationTokenSource>()))
                 .ReturnsAsync(funds);
@@ -61,11 +80,11 @@ namespace Investments.Tests
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedFunds = Assert.IsAssignableFrom<IEnumerable<DetailedFund>>(okResult.Value);
-            Assert.Equal(2, returnedFunds.Count());
+            returnedFunds.Count().Should().Be(2);
         }
 
         [Fact]
-        public async Task GetFundsAsync_ShouldReturnNotFound_WhenNoFundsExist()
+        public async Task GetFundsAsyncShouldReturnNotFoundWhenNoFundsExist()
         {
             // Arrange
             _webScrapingFundsAndDividendsMock
@@ -77,21 +96,17 @@ namespace Investments.Tests
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("No funds found.", notFoundResult.Value);
+            notFoundResult.Should().Be("No funds found.");
         }
 
         [Fact]
-        public async Task GetFundDividendsAsync_ShouldReturnOk_WhenDividendsExist()
+        public async Task GetFundDividendsAsyncShouldReturnOkWhenDividendsExist()
         {
             // Arrange
-            var detailedFunds = new List<DetailedFund> { new DetailedFund { FundCode = "FND001" } };
-            var dividends = new List<FundDividend> { new FundDividend { Id = "1", FundCode = "FND001", Value = 100 } };
-            var ranking = new List<BestFundRank> 
-            { 
-                new BestFundRank { FundCode = "FND001", Id = "1", RankPrice = 1 },
-                new BestFundRank { FundCode = "FND002", Id = "2", RankPrice = 2 },
-                new BestFundRank { FundCode = "FND003", Id = "3", RankPrice = 3 }
-            };
+            var detailedFunds = GenerateFakeDetailedFunds(1).ToList();
+            var fundCode = detailedFunds.First().FundCode;
+            var dividends = GenerateFakeFundDividends(1, fundCode).ToList();
+            var ranking = GenerateFakeBestFundRanks(3).ToList();
 
             _detailedFundServiceMock
                 .Setup(d => d.GetAllDetailedFundsAsync())
@@ -111,14 +126,16 @@ namespace Investments.Tests
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedDividends = Assert.IsAssignableFrom<IEnumerable<FundDividend>>(okResult.Value);
-            Assert.Single(returnedDividends);
+
+            returnedDividends.Should().OnlyContain(d => d.FundCode == fundCode);
         }
 
         [Fact]
-        public async Task GetFundDividendsAsync_ShouldReturnNotFound_WhenNoDividendsExist()
+        public async Task GetFundDividendsAsyncShouldReturnNotFoundWhenNoDividendsExist()
         {
             // Arrange
-            var detailedFunds = new List<DetailedFund>();
+            var detailedFunds = GenerateFakeDetailedFunds(20);
+
             _detailedFundServiceMock
                 .Setup(d => d.GetAllDetailedFundsAsync())
                 .ReturnsAsync(detailedFunds);
@@ -132,28 +149,30 @@ namespace Investments.Tests
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("No funds dividends found.", notFoundResult.Value);
+            notFoundResult.Value.Should().Be("No funds dividends found.");
         }
 
         [Fact]
-        public void Pause_ShouldReturnOk_WhenNoProcessIsRunning()
+        public void PauseShouldReturnOkWhenNoProcessIsRunning()
         {
+            _controller.GetType().GetField("_isRunning", BindingFlags.NonPublic | BindingFlags.Static)
+                ?.SetValue(null, false);
             // Act
             var result = _controller.Pause();
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal("No process is running.", okResult.Value);
+            okResult.Value.Should().Be("No process is running.");
         }
 
         [Fact]
-        public void Pause_ShouldReturnOk_WhenProcessIsStopped()
+        public void PauseShouldReturnOkWhenProcessIsStopped()
         {
             // Arrange
             var cancellationTokenSource = new CancellationTokenSource();
-            _controller.GetType().GetField("_cancellationTokenSource", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+            _controller.GetType().GetField("_cancellationTokenSource", BindingFlags.NonPublic | BindingFlags.Static)
                 ?.SetValue(null, cancellationTokenSource);
-            _controller.GetType().GetField("_isRunning", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+            _controller.GetType().GetField("_isRunning", BindingFlags.NonPublic | BindingFlags.Static)
                 ?.SetValue(null, true);
 
             // Act
@@ -161,7 +180,7 @@ namespace Investments.Tests
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal("Process stopped.", okResult.Value);
+            okResult.Value.Should().Be("Process stopped.");
         }
     }
 }

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bogus;
+using FluentAssertions;
 using Investments.API.Controllers;
 using Investments.Application.Contracts;
 using Investments.Domain.Models;
@@ -22,15 +24,20 @@ namespace Investments.Tests.Test.Unit.Investments.API
             _controller = new DetailedFundsController(_detailedFundServiceMock.Object);
         }
 
+        private List<DetailedFund> GenerateFakeFunds(int count)
+        {
+            var faker = new Faker<DetailedFund>()
+                .RuleFor(f => f.Id, f => Guid.NewGuid().ToString("D"))
+                .RuleFor(f => f.FundCode, f => f.Finance.Account(8)); // Gera códigos simulando contas financeiras
+
+            return faker.Generate(count);
+        }
+
         [Fact]
-        public async Task GetAllFunds_ShouldReturnOk_WhenFundsExist()
+        public async Task GetAllFundsShouldReturnOkWhenFundsExist()
         {
             // Arrange
-            var funds = new List<DetailedFund>
-            {
-                new DetailedFund { Id = "1", FundCode = "FND001" },
-                new DetailedFund { Id = "2", FundCode = "FFND002" }
-            };
+            var funds = GenerateFakeFunds(5);
 
             _detailedFundServiceMock.Setup(s => s.GetAllDetailedFundsAsync())
                 .ReturnsAsync(funds);
@@ -41,11 +48,12 @@ namespace Investments.Tests.Test.Unit.Investments.API
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedFunds = Assert.IsAssignableFrom<IEnumerable<DetailedFund>>(okResult.Value);
-            Assert.Equal(2, returnedFunds.Count());
+            returnedFunds.Count().Should().Be(5);
+
         }
 
         [Fact]
-        public async Task GetAllFunds_ShouldReturnNotFound_WhenNoFundsExist()
+        public async Task GetAllFundsShouldReturnNotFoundWhenNoFundsExist()
         {
             // Arrange
             _detailedFundServiceMock.Setup(s => s.GetAllDetailedFundsAsync())
@@ -56,7 +64,7 @@ namespace Investments.Tests.Test.Unit.Investments.API
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("No funds found", notFoundResult.Value);
+            notFoundResult.Value.Should().Be("No funds found");
         }
     }
 }

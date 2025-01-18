@@ -1,132 +1,106 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
-using AutoMapper;
-using Investments.Application;
+using Bogus;
+using FluentAssertions;
+using Investments.API.Controllers;
 using Investments.Application.Contracts;
 using Investments.Domain.Models;
-using Investments.Persistence;
-using Investments.Persistence.Contexts;
-using Investments.Tests.Helpers;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
 using Xunit;
-using Xunit.Abstractions;
 
-namespace Investments.Tests
+namespace Investments.Tests.Test.Unit.Investments.API
 {
-    public class RankOfTheBestFundsControllerTest
+    public class RankOfTheBestFundsControllerTests
     {
+        private readonly Mock<IRankOfTheBestFundsService> _rankOfTheBestFundsServiceMock;
+        private readonly RankOfTheBestFundsController _controller;
 
-        private static CustomWebApplicationFactory<Investments.API.Startup> _factory;
-        private static DbContextOptionsBuilder<InvestmentsContext> optionsBuilder = null;
-        private static InvestmentsContext ctx = null;
-        private static RankOfTheBestFundsPersist rankOfTheBestFundsPersist = null;
-        private static RankOfTheBestFundsService rankOfTheBestFundsService = null;
-        private static DetailedFundPersist detailedFundPersist = null;
-        private static DetailedFundService detailedFundService = null;
-        private static FundDividendPersist fundDividendsPersist = null;
-        private static FundsDividendsService fundsDividendsService = null;
-        private static string dbName = null;
-
-        public RankOfTheBestFundsControllerTest(ITestOutputHelper output)
+        public RankOfTheBestFundsControllerTests()
         {
-            var type = output.GetType();
-            var testMember = type.GetField("test", BindingFlags.Instance | BindingFlags.NonPublic);
-            var test = (ITest)testMember.GetValue(output);
-            dbName = test.TestCase.TestMethod.Method.Name;
+            _rankOfTheBestFundsServiceMock = new Mock<IRankOfTheBestFundsService>();
+            _controller = new RankOfTheBestFundsController(_rankOfTheBestFundsServiceMock.Object);
         }
 
-        static dynamic clientOptions = new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryClientOptions()
+        // Helper method to generate fake rankings
+        private List<BestFundRank> GenerateFakeBestFundRanks(int count)
         {
-            HandleCookies = false,
-            BaseAddress = new Uri("https://localhost:5001"),
-            AllowAutoRedirect = true,
-            MaxAutomaticRedirections = 7,
-        };
+            var rankFaker = new Faker<BestFundRank>()
+                .RuleFor(r => r.FundCode, f => f.Random.AlphaNumeric(6))
+                .RuleFor(r => r.RankPrice, f => f.Random.Int(1, 100));
 
-        public static async Task CreateContext()
-        {
-
-            optionsBuilder = new();
-            optionsBuilder.UseInMemoryDatabase(dbName);
-
-            ctx = new InvestmentsContext(optionsBuilder.Options);
-            ctx.Database.EnsureCreated();
-
-            await Task.CompletedTask;
-
+            return rankFaker.Generate(count);
         }
 
-        public async Task Setup()
+        [Fact]
+        public async Task GetRankShouldReturnOkWhenRanksExist()
         {
+            // Arrange
+            var ranks = GenerateFakeBestFundRanks(5); // Generate 5 fake rankings
 
-            await CreateContext();
+            _rankOfTheBestFundsServiceMock
+                .Setup(s => s.GetRankOfTheBestFundsAsync(It.IsAny<int?>()))
+                .ReturnsAsync(ranks);
 
-            rankOfTheBestFundsPersist = new RankOfTheBestFundsPersist(ctx);
+            // Act
+            var result = await _controller.GetRank(5); // Pass a quantity to the controller
 
-            var config = new AutoMapper.MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<BestFundRank, DetailedFund>().ReverseMap();
-            });
-
-            IMapper mapper = config.CreateMapper();
-
-            fundDividendsPersist = new FundDividendPersist(ctx);
-            detailedFundPersist = new DetailedFundPersist(ctx);
-
-            detailedFundService = new DetailedFundService(detailedFundPersist);
-            fundsDividendsService = new FundsDividendsService(fundDividendsPersist);
-
-            rankOfTheBestFundsService = new RankOfTheBestFundsService(rankOfTheBestFundsPersist, detailedFundService, fundsDividendsService, mapper);
-
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnedRanks = Assert.IsAssignableFrom<IEnumerable<BestFundRank>>(okResult.Value);
+            returnedRanks.Count().Should().Be(5);
         }
 
-        public async Task SeedDB()
+        [Fact]
+        public async Task GetRankShouldReturnNotFoundWhenNoRanksExist()
         {
+            // Arrange
+            _rankOfTheBestFundsServiceMock
+                .Setup(s => s.GetRankOfTheBestFundsAsync(It.IsAny<int?>()))
+                .ReturnsAsync(new List<BestFundRank>()); // Empty list
 
-            dynamic rankFunds = DummyTest.BestFundRank().ElementAt(0).ElementAt(0);
+            // Act
+            var result = await _controller.GetRank(5);
 
-            using (InvestmentsContext ctx = new(optionsBuilder.Options))
-            {
-                await ctx.AddRangeAsync(rankFunds.ToArray());
-                ctx.SaveChanges();
-            }
-
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            notFoundResult.Value.Should().Be("No rank found");
         }
 
-        [Theory]
-        [InlineData(5)]
-        public async void MustReturnRank5Funds(int? totalFundsInRank = null)
+        [Fact]
+        public async Task GetRankShouldReturnOkWhenRankExistsForDefaultQuantity()
         {
+            // Arrange
+            var ranks = GenerateFakeBestFundRanks(3); // Generate 3 fake rankings
 
-            await Setup();
-            await SeedDB();
+            _rankOfTheBestFundsServiceMock
+                .Setup(s => s.GetRankOfTheBestFundsAsync(It.IsAny<int?>()))
+                .ReturnsAsync(ranks);
 
-            _factory = new CustomWebApplicationFactory<Investments.API.Startup>(dbName);
+            // Act
+            var result = await _controller.GetRank(null); // Pass null for default quantity
 
-            HttpClient client = _factory.CreateClient(clientOptions);
-            
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add( 
-                    new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-            
-            string url = $"api/RankOfTheBestFunds/ListBestFunds/{totalFundsInRank}";
-
-            var response = await client.GetAsync(url);
-
-            string result = await response.Content.ReadAsStringAsync();
-
-            List<BestFundRank> fundsRank = JsonConvert.DeserializeObject<List<BestFundRank>>(result);
-
-            Assert.Equal(response.EnsureSuccessStatusCode().StatusCode, 
-                System.Net.HttpStatusCode.OK);
-
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnedRanks = Assert.IsAssignableFrom<IEnumerable<BestFundRank>>(okResult.Value);
+            returnedRanks.Count().Should().Be(3);
         }
 
+        [Fact]
+        public async Task GetRankShouldReturnNotFoundWhenNoRanksExistForDefaultQuantity()
+        {
+            // Arrange
+            _rankOfTheBestFundsServiceMock
+                .Setup(s => s.GetRankOfTheBestFundsAsync(It.IsAny<int?>()))
+                .ReturnsAsync(new List<BestFundRank>()); // Empty list
 
+            // Act
+            var result = await _controller.GetRank(null); // Pass null for default quantity
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            notFoundResult.Value.Should().Be("No rank found");
+        }
     }
 }

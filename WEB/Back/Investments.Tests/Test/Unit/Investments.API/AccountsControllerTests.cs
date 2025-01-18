@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Bogus;
+using FluentAssertions;
 using Investments.API.Controllers;
 using Investments.Application.Contracts;
 using Investments.Application.Dtos;
 using Investments.Domain;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
@@ -25,6 +23,7 @@ namespace Investments.Tests.Test.Unit.Investments.API
             _accountServiceMock = new Mock<IAccountService>();
             _enderecoUsuarioServiceMock = new Mock<IEnderecoUsuarioService>();
             _tokenServiceMock = new Mock<ITokenService>();
+
             _controller = new AccountsController(
                 _accountServiceMock.Object,
                 _enderecoUsuarioServiceMock.Object,
@@ -32,16 +31,63 @@ namespace Investments.Tests.Test.Unit.Investments.API
             );
         }
 
+        private UserDto GenerateRandomUserDto()
+        {
+            var faker = new Faker<UserDto>()
+                .RuleFor(u => u.Id, f => f.Internet.Random.GetHashCode().ToString())
+                .RuleFor(u => u.UserName, f => f.Internet.UserName())
+                .RuleFor(u => u.FirstName, f => f.Name.FirstName())
+                .RuleFor(u => u.LastName, f => f.Name.LastName())
+                .RuleFor(u => u.Email, f => f.Internet.Email())
+                .RuleFor(u => u.Password, f => f.Internet.Password())
+                .RuleFor(u => u.ZipCode, f => f.Address.ZipCode())
+                .RuleFor(u => u.City, f => f.Address.City())
+                .RuleFor(u => u.Address, f => f.Address.StreetAddress())
+                .RuleFor(u => u.District, f => f.Address.County())
+                .RuleFor(u => u.State, f => f.Address.State())
+                .RuleFor(u => u.Function, f => f.Name.JobTitle());
+
+            return faker.Generate();
+        }
+
+        private UserUpdateDto GenerateRandomUserUpdateDto()
+        {
+            var faker = new Faker<UserUpdateDto>()
+                .RuleFor(u => u.Id, f => f.Internet.Random.GetHashCode().ToString())
+                .RuleFor(u => u.UserName, f => f.Internet.UserName())
+                .RuleFor(u => u.FirstName, f => f.Name.FirstName())
+                .RuleFor(u => u.LastName, f => f.Name.LastName())
+                .RuleFor(u => u.Email, f => f.Internet.Email())
+                .RuleFor(u => u.Password, f => f.Internet.Password())
+                .RuleFor(u => u.ZipCode, f => f.Address.ZipCode())
+                .RuleFor(u => u.City, f => f.Address.City())
+                .RuleFor(u => u.Address, f => f.Address.StreetAddress())
+                .RuleFor(u => u.District, f => f.Address.County())
+                .RuleFor(u => u.State, f => f.Address.State())
+                .RuleFor(u => u.Function, f => f.Name.JobTitle());
+
+            return faker.Generate();
+        }
+
+        private UserLoginDto GenerateRandomUserLoginDto()
+        {
+            var faker = new Faker<UserLoginDto>()
+                .RuleFor(u => u.UserName, f => f.Internet.UserName())
+                .RuleFor(u => u.Password, f => f.Internet.Password());
+
+            return faker.Generate();
+        }
+
         [Fact]
-        public async Task UpdateUser_ShouldReturnOk_WhenRoleIsUpdated()
+        public async Task UpdateUserShouldReturnOkWhenRoleIsUpdated()
         {
             // Arrange
-            var username = "testuser";
-            var role = "Admin";
-            var user = new UserDto { Id = "1", UserName = username };
+            var user = GenerateRandomUserDto();
+            var username = user.UserName;
+            var role = user.Function;
 
             _accountServiceMock.Setup(s => s.GetUserByUserNameAsync(username))
-                .ReturnsAsync(new UserUpdateDto { UserName = user.UserName });
+                .ReturnsAsync(GenerateRandomUserUpdateDto());
             _accountServiceMock.Setup(s => s.UpdateUserRoleAsync(user.Id, role))
                 .ReturnsAsync(true);
 
@@ -50,11 +96,11 @@ namespace Investments.Tests.Test.Unit.Investments.API
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal("Role atualizada com sucesso!", okResult.Value);
+            okResult.Value.Should().Be("Role atualizada com sucesso!");
         }
 
         [Fact]
-        public async Task UpdateUser_ShouldReturnBadRequest_WhenUserNotFound()
+        public async Task UpdateUserShouldReturnBadRequestWhenUserNotFound()
         {
             // Arrange
             var username = "invaliduser";
@@ -68,27 +114,14 @@ namespace Investments.Tests.Test.Unit.Investments.API
 
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Falha ao tentar obter usuario pelo username!", badRequestResult.Value);
+            badRequestResult.Value.Should().Be("Falha ao tentar obter usuario pelo username!");
         }
 
         [Fact]
-        public async Task Register_ShouldReturnOk_WhenUserIsCreated()
+        public async Task RegisterShouldReturnOkWhenUserIsCreated()
         {
             // Arrange
-            var model = new UserDto
-            {
-                FirstName = "Teste",
-                LastName = "Super",
-                Email = "Teste@Teste.com",
-                Password = "password",
-                UserName = "Teste",
-                ZipCode = "12345",
-                City = "City",
-                Address = "Address",
-                District = "District",
-                State = "State",
-                Function = "User"
-            };
+            var model = GenerateRandomUserDto();
 
             var createdUser = new UserDto { UserName = model.UserName };
             _accountServiceMock.Setup(s => s.CreateAccountAsync(It.IsAny<UserDto>()))
@@ -105,24 +138,25 @@ namespace Investments.Tests.Test.Unit.Investments.API
                 });
 
             _tokenServiceMock.Setup(s => s.CreateToken(It.IsAny<UserUpdateDto>()))
-                .ReturnsAsync("token123");
+                .ReturnsAsync("AJHSAd545616!!@$");
 
             // Act
             var result = await _controller.Register(model);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var response = Assert.IsType<dynamic>(okResult.Value);
-            Assert.Equal(model.UserName, response.username);
-            Assert.Equal(model.FirstName, response.firstName);
-            Assert.Equal("token123", response.token);
+            var response = okResult.Value as RegisterResponse;
+            
+            model.UserName.Should().Be(response.Username);
+            model.FirstName.Should().Be(response.FirstName);
+            response.Token.Should().Be("AJHSAd545616!!@$");
         }
 
         [Fact]
-        public async Task Register_ShouldReturnBadRequest_WhenUserCreationFails()
+        public async Task RegisterShouldReturnBadRequestWhenUserCreationFails()
         {
             // Arrange
-            var model = new UserDto { UserName = "johndoe" };
+            var model = GenerateRandomUserDto();
 
             _accountServiceMock.Setup(s => s.CreateAccountAsync(It.IsAny<UserDto>()))
                 .ReturnsAsync(new UserDto { UserName = null });
@@ -132,15 +166,15 @@ namespace Investments.Tests.Test.Unit.Investments.API
 
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Falha ao tentar criar uma conta!", badRequestResult.Value);
+            badRequestResult.Value.Should().Be("Falha ao tentar criar uma conta!");
         }
 
         [Fact]
-        public async Task Login_ShouldReturnOk_WhenCredentialsAreValid()
+        public async Task LoginShouldReturnOkWhenCredentialsAreValid()
         {
             // Arrange
-            var loginDto = new UserLoginDto { UserName = "johndoe", Password = "password" };
-            var user = new UserUpdateDto { UserName = loginDto.UserName, FirstName = "John" };
+            var loginDto = GenerateRandomUserLoginDto();
+            var user = new UserUpdateDto { UserName = loginDto.UserName, FirstName = "Karen" };
 
             _accountServiceMock.Setup(s => s.GetUserByUserNameAsync(loginDto.UserName))
                 .ReturnsAsync(user);
@@ -148,24 +182,25 @@ namespace Investments.Tests.Test.Unit.Investments.API
                 .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
 
             _tokenServiceMock.Setup(s => s.CreateToken(It.IsAny<UserUpdateDto>()))
-                .ReturnsAsync("token123");
+                .ReturnsAsync("AJHSAd545616!!@$");
 
             // Act
             var result = await _controller.Login(loginDto);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var response = Assert.IsType<dynamic>(okResult.Value);
-            Assert.Equal(user.UserName, response.username);
-            Assert.Equal(user.FirstName, response.firstName);
-            Assert.Equal("token123", response.token);
+            var response = okResult.Value as RegisterResponse;
+            
+            user.UserName.Should().Be(response.Username);
+            user.FirstName.Should().Be(response.FirstName);
+            response.Token.Should().Be("AJHSAd545616!!@$");
         }
 
         [Fact]
-        public async Task Login_ShouldReturnUnauthorized_WhenCredentialsAreInvalid()
+        public async Task LoginShouldReturnUnauthorizedWhenCredentialsAreInvalid()
         {
             // Arrange
-            var loginDto = new UserLoginDto { UserName = "johndoe", Password = "wrongpassword" };
+            var loginDto = GenerateRandomUserLoginDto();
 
             _accountServiceMock.Setup(s => s.GetUserByUserNameAsync(loginDto.UserName))
                 .ReturnsAsync((UserUpdateDto)null);
@@ -175,7 +210,7 @@ namespace Investments.Tests.Test.Unit.Investments.API
 
             // Assert
             var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
-            Assert.Equal("Usuário ou senha está inválido!", unauthorizedResult.Value);
+            unauthorizedResult.Value.Should().Be("Usuário ou senha está inválido!");
         }
     }
 }

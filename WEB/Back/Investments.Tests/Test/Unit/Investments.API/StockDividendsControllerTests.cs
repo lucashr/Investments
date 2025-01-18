@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bogus;
+using FluentAssertions;
 using Investments.API.Controllers;
 using Investments.Application.Contracts;
 using Investments.Domain;
@@ -22,53 +24,53 @@ namespace Investments.Tests.Test.Unit.Investments.API
             _controller = new StockDividendsController(_stocksDividendServiceMock.Object);
         }
 
+        private IEnumerable<StockDividend> GenerateFakeStockDividends(int count)
+        {
+            var faker = new Faker<StockDividend>()
+                .RuleFor(s => s.Id, f => Guid.NewGuid().ToString())
+                .RuleFor(s => s.FundCode, f => f.Finance.Account(8))
+                .RuleFor(s => s.Value, f => f.Random.Double(1, 1000));
+
+            return faker.Generate(count);
+        }
+
         [Fact]
-        public async Task GetStockDividendsByCode_ShouldReturnOk_WhenDividendsExist()
+        public async Task GetStockDividendsByCodeShouldReturnOkWhenDividendsExist()
         {
             // Arrange
-            var dividends = new List<StockDividend>
-            {
-                new StockDividend { Id = "1", FundCode = "STK001", Value = 100.50 },
-                new StockDividend { Id = "2", FundCode = "STK002", Value = 200.75 }
-            };
-
-            _stocksDividendServiceMock.Setup(s => s.GetStockDividendsByCodeAsync("STK001"))
+            var dividends = GenerateFakeStockDividends(2).ToList();
+            _stocksDividendServiceMock.Setup(s => s.GetStockDividendsByCodeAsync("CXLS11"))
                 .ReturnsAsync(dividends);
 
             // Act
-            var result = await _controller.GetStockDividendsByCode("STK001");
+            var result = await _controller.GetStockDividendsByCode("CXLS11");
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedDividends = Assert.IsAssignableFrom<IEnumerable<StockDividend>>(okResult.Value);
-            Assert.Equal(2, returnedDividends.Count());
+            returnedDividends.Count().Should().Be(2);
         }
 
         [Fact]
-        public async Task GetStockDividendsByCode_ShouldReturnNotFound_WhenNoDividendsExist()
+        public async Task GetStockDividendsByCodeShouldReturnNotFoundWhenNoDividendsExist()
         {
             // Arrange
-            _stocksDividendServiceMock.Setup(s => s.GetStockDividendsByCodeAsync("STK002"))
+            _stocksDividendServiceMock.Setup(s => s.GetStockDividendsByCodeAsync("CXLS11"))
                 .ReturnsAsync(new List<StockDividend>());
 
             // Act
-            var result = await _controller.GetStockDividendsByCode("STK002");
+            var result = await _controller.GetStockDividendsByCode("CXLS11");
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("No stock dividends found", notFoundResult.Value);
+            notFoundResult.Value.Should().Be("No stock dividends found");
         }
 
         [Fact]
-        public async Task GetAllStockDividends_ShouldReturnOk_WhenDividendsExist()
+        public async Task GetAllStockDividendsShouldReturnOkWhenDividendsExist()
         {
             // Arrange
-            var dividends = new List<StockDividend>
-            {
-                new StockDividend { Id = "1", FundCode = "STK001", Value = 100.50 },
-                new StockDividend { Id = "2", FundCode = "STK002", Value = 200.75 }
-            };
-
+            var dividends = GenerateFakeStockDividends(2).ToList();
             _stocksDividendServiceMock.Setup(s => s.GetAllStocksDividendsAsync())
                 .ReturnsAsync(dividends);
 
@@ -78,11 +80,11 @@ namespace Investments.Tests.Test.Unit.Investments.API
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedDividends = Assert.IsAssignableFrom<IEnumerable<StockDividend>>(okResult.Value);
-            Assert.Equal(2, returnedDividends.Count());
+            returnedDividends.Count().Should().Be(2);
         }
 
         [Fact]
-        public async Task GetAllStockDividends_ShouldReturnNotFound_WhenNoDividendsExist()
+        public async Task GetAllStockDividendsShouldReturnNotFoundWhenNoDividendsExist()
         {
             // Arrange
             _stocksDividendServiceMock.Setup(s => s.GetAllStocksDividendsAsync())
@@ -93,7 +95,7 @@ namespace Investments.Tests.Test.Unit.Investments.API
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("No stock dividends found", notFoundResult.Value);
+            notFoundResult.Value.Should().Be("No stock dividends found");
         }
     }
 }
