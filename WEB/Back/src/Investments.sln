@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Investments.Persistence", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Investments.VariablesManager", "Investments.VariablesManager\Investments.VariablesManager.csproj", "{80109694-E2BF-496B-95A1-BF99FF3170F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Investments.Tests", "..\Investments.Tests\Investments.Tests.csproj", "{3B044A99-AFA0-4FEE-916B-4F157D5A9E13}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Investments.Tests", "..\InvestmentsTests\Investments.Tests.csproj", "{3B044A99-AFA0-4FEE-916B-4F157D5A9E13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
