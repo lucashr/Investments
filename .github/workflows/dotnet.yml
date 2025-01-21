@@ -1,4 +1,4 @@
-name: Build and Test .NET
+name: Build and Test Investments
 
 on:
   push:
@@ -13,24 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Baixar o código do repositório
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Configurar .NET
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 5.0 # Altere para a versão que você está usando
+        dotnet-version: 5.0 # Altere para a versão do seu projeto
 
-    # Restaurar dependências
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ./WEB/Back/src/Investments.sln
 
-    # Build do projeto
     - name: Build project
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build ./WEB/Back/src/Investments.sln --no-restore --configuration Release
 
-    # Rodar os testes
     - name: Run tests
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ./WEB/Back/src/Investments.sln --no-build --verbosity detailed --nologo --parallel none
