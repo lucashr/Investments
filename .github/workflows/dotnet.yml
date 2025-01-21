@@ -1,4 +1,4 @@
-name: Build and Test Investments
+name: .NET
 
 on:
   push:
@@ -13,19 +13,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Check out code
       uses: actions/checkout@v3
 
-    - name: Setup .NET 5
+    - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '6.0.408'
+        dotnet-version: '6.0.x'
 
     - name: Restore dependencies
       run: dotnet restore ./WEB/Back/src/Investments.sln
 
-    - name: Build project
-      run: dotnet build ./WEB/Back/src/Investments.sln --no-restore --configuration Release
+    - name: Build
+      run: dotnet build ./WEB/Back/src/Investments.sln --configuration Release --no-restore
 
     - name: Run tests
-      run: dotnet test ./WEB/Back/src/Investments.sln --no-build --verbosity detailed --nologo
+      run: dotnet test ./WEB/Back/src/Investments.sln --no-build --verbosity normal
+
+    - name: Publish artifacts (optional)
+      if: success()
+      run: dotnet publish ./WEB/Back/src/Investments.sln --configuration Release --output ./output
