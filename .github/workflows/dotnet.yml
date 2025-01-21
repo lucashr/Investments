@@ -33,4 +33,4 @@ jobs:
       run: ls -R ./source/WEB/Back/Investments.Tests/
 
     - name: Run tests
-      run: dotnet test ./source/WEB/Back/Investments.Tests/Investments.Tests.csproj --no-build --configuration Debug --verbosity normal
+      run: dotnet test ./source/WEB/Back/InvestmentsTests/Investments.Tests.csproj --no-build --configuration Debug --verbosity normal
