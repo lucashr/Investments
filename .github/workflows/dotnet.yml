@@ -1,0 +1,36 @@
+name: Build and Test .NET
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Baixar o código do repositório
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Configurar .NET
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 5.0 # Altere para a versão que você está usando
+
+    # Restaurar dependências
+    - name: Restore dependencies
+      run: dotnet restore
+
+    # Build do projeto
+    - name: Build project
+      run: dotnet build --no-restore --configuration Release
+
+    # Rodar os testes
+    - name: Run tests
+      run: dotnet test --no-build --verbosity normal

@@ -111,7 +111,6 @@ namespace Investments.Application
                 throw new Exception("Usuário não encontrado.");
             }
 
-            // Verifica se a nova role existe, caso contrário, cria a role
             var roleExists = await _roleManager.RoleExistsAsync(newRole);
 
             if (!roleExists)

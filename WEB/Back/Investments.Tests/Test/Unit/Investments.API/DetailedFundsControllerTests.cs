@@ -28,7 +28,7 @@ namespace Investments.Tests.Test.Unit.Investments.API
         {
             var faker = new Faker<DetailedFund>()
                 .RuleFor(f => f.Id, f => Guid.NewGuid().ToString("D"))
-                .RuleFor(f => f.FundCode, f => f.Finance.Account(8)); // Gera códigos simulando contas financeiras
+                .RuleFor(f => f.FundCode, f => f.Finance.Account(8));
 
             return faker.Generate(count);
         }

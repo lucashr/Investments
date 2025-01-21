@@ -41,7 +41,6 @@ namespace Investments.Tests.Test.Unit.Investments.API
             );
         }
 
-        // Helper method to create fake stocks
         private List<DetailedStock> GenerateFakeStocks(int count)
         {
             var stockFaker = new Faker<DetailedStock>()
@@ -52,7 +51,6 @@ namespace Investments.Tests.Test.Unit.Investments.API
             return stockFaker.Generate(count);
         }
 
-        // Helper method to create fake dividends
         private List<StockDividend> GenerateFakeDividends(int count)
         {
             var dividendFaker = new Faker<StockDividend>()
@@ -63,7 +61,6 @@ namespace Investments.Tests.Test.Unit.Investments.API
             return dividendFaker.Generate(count);
         }
 
-        // Helper method to create fake rankings
         private List<BestStockRank> GenerateFakeBestStockRanks(int count)
         {
             var rankFaker = new Faker<BestStockRank>()
@@ -77,7 +74,7 @@ namespace Investments.Tests.Test.Unit.Investments.API
         public async Task GetStocksAsyncShouldReturnOkWhenStocksExist()
         {
             // Arrange
-            var stocks = GenerateFakeStocks(2); // Use Bogus to generate fake stocks
+            var stocks = GenerateFakeStocks(2);
 
             _webScrapingStocksAndDividendsServiceMock
                 .Setup(w => w.GetStocksAsync(It.IsAny<CancellationTokenSource>()))
@@ -112,9 +109,9 @@ namespace Investments.Tests.Test.Unit.Investments.API
         public async Task GetStockDividendsAsyncShouldReturnOkWhenDividendsExist()
         {
             // Arrange
-            var detailedStocks = GenerateFakeStocks(1); // Use Bogus to generate fake stocks
-            var dividends = GenerateFakeDividends(1); // Use Bogus to generate fake dividends
-            var ranking = GenerateFakeBestStockRanks(1); // Use Bogus to generate fake rankings
+            var detailedStocks = GenerateFakeStocks(1);
+            var dividends = GenerateFakeDividends(1);
+            var ranking = GenerateFakeBestStockRanks(1);
 
             _detailedStockServiceMock
                 .Setup(d => d.GetAllDetailedStocksAsync())

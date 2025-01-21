@@ -23,7 +23,6 @@ namespace Investments.Tests.Test.Unit.Investments.API
             _controller = new RankOfTheBestFundsController(_rankOfTheBestFundsServiceMock.Object);
         }
 
-        // Helper method to generate fake rankings
         private List<BestFundRank> GenerateFakeBestFundRanks(int count)
         {
             var rankFaker = new Faker<BestFundRank>()
@@ -37,14 +36,14 @@ namespace Investments.Tests.Test.Unit.Investments.API
         public async Task GetRankShouldReturnOkWhenRanksExist()
         {
             // Arrange
-            var ranks = GenerateFakeBestFundRanks(5); // Generate 5 fake rankings
+            var ranks = GenerateFakeBestFundRanks(5);
 
             _rankOfTheBestFundsServiceMock
                 .Setup(s => s.GetRankOfTheBestFundsAsync(It.IsAny<int?>()))
                 .ReturnsAsync(ranks);
 
             // Act
-            var result = await _controller.GetRank(5); // Pass a quantity to the controller
+            var result = await _controller.GetRank(5);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
@@ -58,7 +57,7 @@ namespace Investments.Tests.Test.Unit.Investments.API
             // Arrange
             _rankOfTheBestFundsServiceMock
                 .Setup(s => s.GetRankOfTheBestFundsAsync(It.IsAny<int?>()))
-                .ReturnsAsync(new List<BestFundRank>()); // Empty list
+                .ReturnsAsync(new List<BestFundRank>());
 
             // Act
             var result = await _controller.GetRank(5);
@@ -72,14 +71,14 @@ namespace Investments.Tests.Test.Unit.Investments.API
         public async Task GetRankShouldReturnOkWhenRankExistsForDefaultQuantity()
         {
             // Arrange
-            var ranks = GenerateFakeBestFundRanks(3); // Generate 3 fake rankings
+            var ranks = GenerateFakeBestFundRanks(3);
 
             _rankOfTheBestFundsServiceMock
                 .Setup(s => s.GetRankOfTheBestFundsAsync(It.IsAny<int?>()))
                 .ReturnsAsync(ranks);
 
             // Act
-            var result = await _controller.GetRank(null); // Pass null for default quantity
+            var result = await _controller.GetRank(null);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
@@ -93,10 +92,10 @@ namespace Investments.Tests.Test.Unit.Investments.API
             // Arrange
             _rankOfTheBestFundsServiceMock
                 .Setup(s => s.GetRankOfTheBestFundsAsync(It.IsAny<int?>()))
-                .ReturnsAsync(new List<BestFundRank>()); // Empty list
+                .ReturnsAsync(new List<BestFundRank>());
 
             // Act
-            var result = await _controller.GetRank(null); // Pass null for default quantity
+            var result = await _controller.GetRank(null);
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
