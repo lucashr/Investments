@@ -10,16 +10,16 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04  # Usando o Ubuntu 20.04
+    runs-on: ubuntu-20.04  # ou a versão que você preferir
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Setup .NET
+    - name: Setup .NET 5
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 5.0  # Substitua pela versão do seu projeto
+        dotnet-version: '5.0.x'
 
     - name: Restore dependencies
       run: dotnet restore ./WEB/Back/src/Investments.sln
@@ -27,8 +27,5 @@ jobs:
     - name: Build project
       run: dotnet build ./WEB/Back/src/Investments.sln --no-restore --configuration Release
 
-    - name: Run tests with limited parallelism
-      run: dotnet test ./WEB/Back/src/Investments.sln --no-build --verbosity detailed --nologo --parallel 4
-    
-    
-
+    - name: Run tests
+      run: dotnet test ./WEB/Back/src/Investments.sln --no-build --verbosity detailed --nologo
