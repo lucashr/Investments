@@ -30,7 +30,7 @@ jobs:
       run: dotnet build ./source/WEB/Back/src/Investments.sln --configuration Release --no-restore
 
     - name: Inspect directories
-      run: ls -R ./source/WEB/Back/Investments.Tests/
+      run: ls -R ./source/WEB/Back/InvestmentsTests/
 
     - name: Run tests
       run: dotnet test ./source/WEB/Back/InvestmentsTests/Investments.Tests.csproj --no-build --configuration Debug --verbosity normal
