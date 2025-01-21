@@ -27,7 +27,8 @@ jobs:
     - name: Build project
       run: dotnet build ./WEB/Back/src/Investments.sln --no-restore --configuration Release
 
-    - name: Run tests
-      run: dotnet test ./WEB/Back/src/Investments.sln --no-build --verbosity detailed --nologo --max-parallel 4
+    - name: Run tests with limited parallelism
+      run: dotnet test ./WEB/Back/src/Investments.sln --no-build --verbosity detailed --nologo --parallel 4
+    
     
 
