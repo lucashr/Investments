@@ -24,7 +24,7 @@ jobs:
     - name: Install OpenSSL
       run: |
         sudo apt-get update
-        sudo apt-get install -y libssl3
+        sudo apt-get install -y libssl-dev
     
     - name: Restore dependencies
       run: dotnet restore ./WEB/Back/src/Investments.sln
