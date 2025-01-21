@@ -1,3 +1,13 @@
+name: Build and Test Investments
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,7 +19,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 5.0 # Altere para a versão que você está usando
+        dotnet-version: 5.0 # Altere para a versão do seu projeto
 
     - name: Install OpenSSL
       run: |
