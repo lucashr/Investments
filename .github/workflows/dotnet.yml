@@ -15,6 +15,8 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
+      with:
+        path: ./source
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -22,17 +24,22 @@ jobs:
         dotnet-version: '6.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore ./WEB/Back/src/Investments.sln
+      run: dotnet restore ./source/WEB/Back/src/Investments.sln
 
     - name: Clean project
-      run: dotnet clean ./WEB/Back/src/Investments.sln
+      run: dotnet clean ./source/WEB/Back/src/Investments.sln
 
     - name: Build
-      run: dotnet build ./WEB/Back/src/Investments.sln --configuration Release --no-restore
+      run: dotnet build ./source/WEB/Back/src/Investments.sln --configuration Release --no-restore
+
+    - name: Debug paths
+      run: |
+        echo "Working directory: $PWD"
+        ls -la ./source/WEB/Back/
 
     - name: Run tests
-      run: dotnet test ./WEB/Back/Investments.Tests/Investments.Tests.csproj --no-build --configuration Debug --verbosity normal
+      run: dotnet test ./source/WEB/Back/Investments.Tests/Investments.Tests.csproj --no-build --configuration Debug --verbosity normal
 
     - name: Publish artifacts (optional)
       if: success()
-      run: dotnet publish ./WEB/Back/src/Investments.sln --configuration Release --output ./output
+      run: dotnet publish ./source/WEB/Back/src/Investments.sln --configuration Release --output ./output
