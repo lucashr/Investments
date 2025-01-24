@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace Investments.Tests.Test.Unit.Investments.API
+namespace Investments.Tests
 {
     public class WebScrapingStocksAndDividendsControllerTests
     {
@@ -22,7 +22,7 @@ namespace Investments.Tests.Test.Unit.Investments.API
         private readonly Mock<IDetailedStockService> _detailedStockServiceMock;
         private readonly Mock<IStocksDividendService> _stocksDividendServiceMock;
         private readonly Mock<WebScrapingSocketManager> _socketManagerMock;
-        private readonly WebScrapingStocksAndDividendsController _controller;
+        private readonly StocksAndDividendsWebScrapingController _controller;
 
         public WebScrapingStocksAndDividendsControllerTests()
         {
@@ -32,7 +32,7 @@ namespace Investments.Tests.Test.Unit.Investments.API
             _stocksDividendServiceMock = new Mock<IStocksDividendService>();
             _socketManagerMock = new Mock<WebScrapingSocketManager>();
 
-            _controller = new WebScrapingStocksAndDividendsController(
+            _controller = new StocksAndDividendsWebScrapingController(
                 _webScrapingStocksAndDividendsServiceMock.Object,
                 _rankOfTheBestStocksServiceMock.Object,
                 _socketManagerMock.Object,

@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Bogus;
@@ -10,11 +8,10 @@ using Investments.Application.Dtos;
 using Investments.Domain.Identity;
 using Investments.Persistence.Contracts;
 using Microsoft.AspNetCore.Identity;
-using MockQueryable.Moq;
 using Moq;
 using Xunit;
 
-namespace Investments.Tests.Unit.Application
+namespace Investments.Tests
 {
     public class AccountServiceTests
     {
@@ -73,10 +70,6 @@ namespace Investments.Tests.Unit.Application
         {
             // Arrange
             var userDto = GenerateFakeUserDto();
-            // var user = new User { UserName = userDto.UserName, Email = userDto.Email };
-            // _mapperMock.Setup(m => m.Map<User>(userDto)).Returns(user);
-            // // _userManagerMock.Setup(u => u.CreateAsync(user, userDto.Password)).ReturnsAsync(IdentityResult.Success);
-            // _mapperMock.Setup(m => m.Map<UserDto>(user)).Returns(userDto);
 
             // Act
             var result = await _accountService.CreateAccountAsync(userDto);
@@ -93,11 +86,6 @@ namespace Investments.Tests.Unit.Application
             // Arrange
             var userUpdateDto = GenerateFakeUserUpdateDto();
             var password = "Password123!";
-            var user = new User { UserName = userUpdateDto.UserName };
-            
-            // _userManagerMock.Setup(u => u.Users).Returns(new List<User> { user }.AsQueryable().BuildMock());
-            // _signInManagerMock.Setup(s => s.CheckPasswordSignInAsync(user, password, false))
-            //                   .ReturnsAsync(SignInResult.Success);
 
             // Act
             var result = await _accountService.CheckUserPasswordAsync(userUpdateDto, password);
@@ -130,15 +118,10 @@ namespace Investments.Tests.Unit.Application
             // Arrange
             var userUpdateDto = GenerateFakeUserUpdateDto();
             var user = new User { UserName = userUpdateDto.UserName };
-            var token = "reset-token";
             
             _userPersistMock.Setup(u => u.GetUserByUserNameAsync(userUpdateDto.UserName)).ReturnsAsync(user);
             _mapperMock.Setup(m => m.Map(userUpdateDto, user));
             
-            // _userManagerMock.Setup(u => u.GeneratePasswordResetTokenAsync(user)).ReturnsAsync(token);
-            // _userManagerMock.Setup(u => u.ResetPasswordAsync(user, token, userUpdateDto.Password))
-            //                 .ReturnsAsync(IdentityResult.Success);
-
             _userPersistMock.Setup(u => u.Update<User>(user));
             _userPersistMock.Setup(u => u.SaveChangesAsync()).ReturnsAsync(true);
 
@@ -158,11 +141,6 @@ namespace Investments.Tests.Unit.Application
             // Arrange
             var userId = Guid.NewGuid().ToString();
             var newRole = "Admin";
-            var user = new User { Id = userId };
-            // _userManagerMock.Setup(u => u.FindByIdAsync(userId)).ReturnsAsync(user);
-            // _roleManagerMock.Setup(r => r.RoleExistsAsync(newRole)).ReturnsAsync(true);
-            // _userManagerMock.Setup(u => u.GetRolesAsync(user)).ReturnsAsync(new List<string>());
-            // _userManagerMock.Setup(u => u.AddToRoleAsync(user, newRole)).ReturnsAsync(IdentityResult.Success);
 
             // Act
             var result = await _accountService.UpdateUserRoleAsync(userId, newRole);
@@ -176,7 +154,6 @@ namespace Investments.Tests.Unit.Application
         {
             // Arrange
             var userName = "existinguser";
-            // _userManagerMock.Setup(u => u.FindByNameAsync(userName)).ReturnsAsync(new User { UserName = userName });
 
             // Act
             var result = await _accountService.UserExists(userName);

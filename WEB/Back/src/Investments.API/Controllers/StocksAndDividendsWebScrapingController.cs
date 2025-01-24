@@ -12,7 +12,7 @@ namespace Investments.API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class WebScrapingStocksAndDividendsController : ControllerBase
+    public class StocksAndDividendsWebScrapingController : ControllerBase
     {
         private readonly IWebScrapingStocksAndDividendsService _webScrapingStocksAndDividendsService;
         private readonly IRankOfTheBestStocksService _rankOfTheBestStocksService;
@@ -22,7 +22,7 @@ namespace Investments.API.Controllers
         private static CancellationTokenSource? _cancellationTokenSource;
         private static bool _isRunning = false;
 
-        public WebScrapingStocksAndDividendsController(IWebScrapingStocksAndDividendsService webScrapingStocksAndDividendsService,
+        public StocksAndDividendsWebScrapingController(IWebScrapingStocksAndDividendsService webScrapingStocksAndDividendsService,
                                                        IRankOfTheBestStocksService rankOfTheBestStocksService,
                                                        WebScrapingSocketManager socketManager,
                                                        IDetailedStockService detailedStockService,

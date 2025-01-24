@@ -10,12 +10,12 @@ namespace Investments.API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class RankOfTheBestFundsController : ControllerBase
+    public class BestFundsRankController : ControllerBase
     {
         
         private readonly IRankOfTheBestFundsService _rankOfTheBestFundsService;
 
-        public RankOfTheBestFundsController(IRankOfTheBestFundsService rankOfTheBestFundsService)
+        public BestFundsRankController(IRankOfTheBestFundsService rankOfTheBestFundsService)
         {
             _rankOfTheBestFundsService = rankOfTheBestFundsService;
         }

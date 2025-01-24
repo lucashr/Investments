@@ -22,7 +22,6 @@ namespace Investments.Persistence
         {
             _context.BestStockRanks.RemoveRange(_context.BestStockRanks.ToList());
             await _context.SaveChangesAsync();
-
             await _context.AddRangeAsync(rankOfTheBestStocks);
             await _context.SaveChangesAsync();
 

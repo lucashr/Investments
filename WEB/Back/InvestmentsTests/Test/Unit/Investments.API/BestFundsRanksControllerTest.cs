@@ -10,17 +10,17 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace Investments.Tests.Test.Unit.Investments.API
+namespace Investments.Tests
 {
-    public class RankOfTheBestFundsControllerTests
+    public class BestFundsRanksControllerTest
     {
         private readonly Mock<IRankOfTheBestFundsService> _rankOfTheBestFundsServiceMock;
-        private readonly RankOfTheBestFundsController _controller;
+        private readonly BestFundsRankController _controller;
 
-        public RankOfTheBestFundsControllerTests()
+        public BestFundsRanksControllerTest()
         {
             _rankOfTheBestFundsServiceMock = new Mock<IRankOfTheBestFundsService>();
-            _controller = new RankOfTheBestFundsController(_rankOfTheBestFundsServiceMock.Object);
+            _controller = new BestFundsRankController(_rankOfTheBestFundsServiceMock.Object);
         }
 
         private List<BestFundRank> GenerateFakeBestFundRanks(int count)

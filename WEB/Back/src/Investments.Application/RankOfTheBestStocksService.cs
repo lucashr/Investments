@@ -105,17 +105,16 @@ namespace Investments.Application
 
         }
 
-        public Task<bool> AddRankOfTheBestStocksAsync(IEnumerable<BestStockRank> rankOfTheBestStocks)
+        public async Task<bool> AddRankOfTheBestStocksAsync(IEnumerable<BestStockRank> rankOfTheBestStocks)
         {
-            throw new NotImplementedException();
+            return await _rankOfTheBestStocksPersist.AddRankOfTheBestStocksAsync(rankOfTheBestStocks);
         }
 
-        public async Task<double> CalculateScore(DetailedStock stock)
+        private async Task<double> CalculateScore(DetailedStock stock)
         {
 
             double score = 0;
 
-            // Critérios de pontuação
             score += Normalize(stock.DivYield, 5, 10) * 0.3;         // Dividend Yield (30%)
             score += Normalize(stock.LiquidityTwoMonths, 10000, 100000) * 0.2; // Liquidez (20%)
             score += Normalize(1 / stock.PL, 0.05, 0.15) * 0.1;      // Preço sobre Lucro (10%)
@@ -151,7 +150,7 @@ namespace Investments.Application
             return score;
         }
 
-        public string NormalizeString(string input)
+        private string NormalizeString(string input)
         {
             if (string.IsNullOrEmpty(input))
                 return input;
@@ -167,7 +166,7 @@ namespace Investments.Application
         }
 
         // Calcular a consistência dos dividendos ao longo dos anos
-        public double CalculateDividendConsistency(IEnumerable<StockDividend> dividends)
+        private double CalculateDividendConsistency(IEnumerable<StockDividend> dividends)
         {
 
             int totalYears = dividends
@@ -184,7 +183,7 @@ namespace Investments.Application
         }
 
         // Calcular o crescimento anual composto (CAGR) dos dividendos
-        public double CalculateDividendCAGR(IEnumerable<StockDividend> dividends)
+        private double CalculateDividendCAGR(IEnumerable<StockDividend> dividends)
         {
 
             var groupedDividends = dividends
@@ -203,7 +202,7 @@ namespace Investments.Application
 
         }
 
-        public double Normalize(double value, double min, double max)
+        private double Normalize(double value, double min, double max)
         {
 
             double score = 0;
@@ -220,7 +219,7 @@ namespace Investments.Application
                 
         }
 
-        public IEnumerable<DetailedStock> FilterStocks(IEnumerable<DetailedStock> stocks)
+        private IEnumerable<DetailedStock> FilterStocks(IEnumerable<DetailedStock> stocks)
         {
             return stocks.Where(stock => 
                 stock.DivYield >= 3 &&  // Dividend Yield mínimo

@@ -22,7 +22,7 @@ namespace Investments.Tests
         private readonly Mock<IRankOfTheBestFundsService> _rankOfTheBestFundsServiceMock;
         private readonly Mock<IDetailedFundService> _detailedFundServiceMock;
         private readonly Mock<WebScrapingSocketManager> _socketManagerMock;
-        private readonly WebScrapingFundsAndDividendsController _controller;
+        private readonly FundsAndDividendsWebScrapingController _controller;
 
         public WebScrapingFundsAndDividendsControllerTests()
         {
@@ -31,7 +31,7 @@ namespace Investments.Tests
             _detailedFundServiceMock = new Mock<IDetailedFundService>();
             _socketManagerMock = new Mock<WebScrapingSocketManager>();
 
-            _controller = new WebScrapingFundsAndDividendsController(
+            _controller = new FundsAndDividendsWebScrapingController(
                 _webScrapingFundsAndDividendsMock.Object,
                 _rankOfTheBestFundsServiceMock.Object,
                 _socketManagerMock.Object,

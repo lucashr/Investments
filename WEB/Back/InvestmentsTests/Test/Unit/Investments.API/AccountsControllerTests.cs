@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace Investments.Tests.Test.Unit.Investments.API
+namespace Investments.Tests
 {
     public class AccountsControllerTests
     {
