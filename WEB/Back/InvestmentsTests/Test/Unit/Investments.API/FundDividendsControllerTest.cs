@@ -35,7 +35,6 @@ namespace Investments.Tests
         [Fact]
         public async Task GetFundDividendsByCodeShouldReturnOkWhenDividendsExist()
         {
-            // Arrange
             var fundCode = "ZWBC11";
             var mockDividends = GenerateFakeDividends(3, fundCode);
 
@@ -43,10 +42,8 @@ namespace Investments.Tests
                 .Setup(service => service.GetFundDividendsByCodeAsync(fundCode))
                 .ReturnsAsync(mockDividends);
 
-            // Act
             var result = await _controller.GetFundDividendsByCode(fundCode);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<List<FundDividend>>(okResult.Value);
 
@@ -58,16 +55,13 @@ namespace Investments.Tests
         [Fact]
         public async Task GetFundDividendsByCodeShouldReturnNotFoundWhenNoDividendsExist()
         {
-            // Arrange
             var fundCode = "ABCD11";
             _fundDividendsServiceMock
                 .Setup(service => service.GetFundDividendsByCodeAsync(fundCode))
                 .ReturnsAsync(new List<FundDividend>());
 
-            // Act
             var result = await _controller.GetFundDividendsByCode(fundCode);
 
-            // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             notFoundResult.Value.Should().Be("No fund dividends found");
         }
@@ -75,17 +69,14 @@ namespace Investments.Tests
         [Fact]
         public async Task GetAllFundsDividendsShouldReturnOkWhenDividendsExist()
         {
-            // Arrange
             var mockDividends = GenerateFakeDividends(5);
 
             _fundDividendsServiceMock
                 .Setup(service => service.GetAllFundsDividendsAsync())
                 .ReturnsAsync(mockDividends);
 
-            // Act
             var result = await _controller.GetAllFundsDividends();
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<List<FundDividend>>(okResult.Value);
             returnValue.Count.Should().Be(5);
@@ -94,15 +85,12 @@ namespace Investments.Tests
         [Fact]
         public async Task GetAllFundsDividendsShouldReturnNotFoundWhenNoDividendsExist()
         {
-            // Arrange
             _fundDividendsServiceMock
                 .Setup(service => service.GetAllFundsDividendsAsync())
                 .ReturnsAsync(new List<FundDividend>());
 
-            // Act
             var result = await _controller.GetAllFundsDividends();
 
-            // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             notFoundResult.Value.Should().Be("No funds dividends found");
         }

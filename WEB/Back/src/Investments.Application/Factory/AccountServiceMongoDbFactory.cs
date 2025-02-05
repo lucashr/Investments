@@ -1,106 +1,100 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Investments.Application.Contracts;
 using Investments.Application.Dtos;
+using Investments.Domain;
 using Investments.Domain.Identity;
 using Investments.Persistence.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Investments.Application
+namespace Investments.Application.Factory
 {
-    public class AccountService : IAccountService
+    public class AccountServiceMongoDbFactory : IAccountServiceFactory
     {
 
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<Role> _roleManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IMapper _mapper;
         private readonly IUserPersist _userPersist;
 
-        public AccountService(UserManager<User> userManager,
-                              SignInManager<User> signInManager,
-                              RoleManager<Role> roleManager,
-                              IMapper mapper,
-                              IUserPersist userPersist)
+        public AccountServiceMongoDbFactory(UserManager<ApplicationUser> userManager,
+                                           SignInManager<ApplicationUser> signInManager,
+                                           RoleManager<ApplicationRole> roleManager,
+                                           IMapper mapper,
+                                           IUserPersist userPersist)
         {
-            _signInManager = signInManager;
             _mapper = mapper;
             _userPersist = userPersist;
+            _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
         }
-
+        
         public async Task<SignInResult> CheckUserPasswordAsync(UserUpdateDto userUpdateDto, string password)
         {
-            var user = await _userManager.Users
-                                            .SingleOrDefaultAsync(user => user.UserName == userUpdateDto.UserName.ToLower());
+            Task<SignInResult> signInResult = null;
+            var user = await _userManager.FindByNameAsync(userUpdateDto.UserName);
+            signInResult = _signInManager.CheckPasswordSignInAsync(user, password, false);
 
-            return await _signInManager.CheckPasswordSignInAsync(user, password, false);
-
+            return await signInResult;
         }
 
         public async Task<UserDto> CreateAccountAsync(UserDto userDto)
         {
-            var user = _mapper.Map<User>(userDto);
+            UserDto userToReturn = null;
+
+            var user = _mapper.Map<ApplicationUser>(userDto);
             var result = await _userManager.CreateAsync(user, userDto.Password);
-                
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
-
-                var userToReturn = _mapper.Map<UserDto>(user);
-
-                return userToReturn;
-
+                userToReturn = _mapper.Map<UserDto>(user);
             }
 
-            return new UserDto();
-
+            return userToReturn;
         }
 
         public async Task<UserUpdateDto> GetUserByUserNameAsync(string userName)
         {
-            var user = await _userPersist.GetUserByUserNameAsync(userName);
+            UserUpdateDto userUpdateDto = null;
 
-            if(user == null) return null;
-
-            var userUpdateDto = _mapper.Map<UserUpdateDto>(user);
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null) return null;
+            userUpdateDto = new UserUpdateDto { Id = user.Id, UserName = user.UserName, Email = user.Email };
 
             return userUpdateDto;
-                    
         }
 
         public async Task<UserUpdateDto> UpdateAccount(UserUpdateDto userUpdateDto)
         {
+            UserUpdateDto userUpdateDto1 = null;
 
-            var user = await _userPersist.GetUserByUserNameAsync(userUpdateDto.UserName);
-
-            if(user == null) return null;
+            var user = await _userManager.FindByNameAsync(userUpdateDto.UserName);
+            if (user == null) return null;
 
             _mapper.Map(userUpdateDto, user);
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
             var result = await _userManager.ResetPasswordAsync(user, token, userUpdateDto.Password);
 
-            _userPersist.Update<User>(user);
+            var ret = await _userManager.UpdateAsync(user);
 
-            if(await _userPersist.SaveChangesAsync())
+            if (ret.Succeeded)
             {
-
-                var userReturn = await _userPersist.GetUserByUserNameAsync(user.UserName);
-
-                return _mapper.Map<UserUpdateDto>(userReturn);
-
+                var userReturn = await _userManager.FindByNameAsync(user.UserName);
+                userUpdateDto = _mapper.Map<UserUpdateDto>(userReturn);
             }
 
-            return new UserUpdateDto();
-
+            return userUpdateDto;
         }
 
         public async Task<bool> UpdateUserRoleAsync(string userId, string newRole)
         {
+            bool result = false;
 
             var user = await _userManager.FindByIdAsync(userId);
 
@@ -113,7 +107,7 @@ namespace Investments.Application
 
             if (!roleExists)
             {
-                var createRoleResult = await _roleManager.CreateAsync(new Role { Id = Guid.NewGuid().ToString(), Name = newRole});
+                var createRoleResult = await _roleManager.CreateAsync(new ApplicationRole { Id = Guid.NewGuid().ToString(), Name = newRole });
                 if (!createRoleResult.Succeeded)
                 {
                     throw new Exception("Erro ao criar a nova role.");
@@ -121,29 +115,32 @@ namespace Investments.Application
             }
 
             var currentRoles = await _userManager.GetRolesAsync(user);
-
             var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
-            
+
             if (!removeResult.Succeeded)
             {
                 throw new Exception("Erro ao remover as roles atuais do usuário.");
             }
 
             var addResult = await _userManager.AddToRoleAsync(user, newRole);
-           
+
             if (!addResult.Succeeded)
             {
                 throw new Exception("Erro ao adicionar a nova role ao usuário.");
             }
 
-            return true;
+            result = true;
 
+            return result;
         }
 
         public async Task<bool> UserExists(string userName)
         {
-                return await _userManager.Users
+            bool result = false;
+
+                result = await _userManager.Users
                                          .AnyAsync(user => user.UserName == userName.ToLower());
+            return result;
         }
     }
 }

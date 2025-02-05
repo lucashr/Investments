@@ -4,6 +4,7 @@ using AutoMapper;
 using Bogus;
 using FluentAssertions;
 using Investments.Application;
+using Investments.Application.Contracts;
 using Investments.Application.Dtos;
 using Investments.Domain.Identity;
 using Investments.Persistence.Contracts;
@@ -20,7 +21,8 @@ namespace Investments.Tests
         private readonly Mock<RoleManager<Role>> _roleManagerMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<IUserPersist> _userPersistMock;
-        private readonly AccountService _accountService;
+        private readonly AccountServiceFactory _accountService;
+        private readonly IAccountServiceFactory _accountServiceFactory;
 
         public AccountServiceTests()
         {
@@ -32,16 +34,13 @@ namespace Investments.Tests
                 Mock.Of<IRoleStore<Role>>(), 
                 null, null, null, null
             );
-
+            
+            _accountServiceFactory = new Mock<IAccountServiceFactory>().Object;
             _mapperMock = new Mock<IMapper>();
             _userPersistMock = new Mock<IUserPersist>();
 
-            _accountService = new AccountService(
-                _userManagerMock, 
-                _signInManagerMock, 
-                _roleManagerMock.Object, 
-                _mapperMock.Object, 
-                _userPersistMock.Object
+            _accountService = new AccountServiceFactory(
+                _accountServiceFactory
             );
 
         }
@@ -68,13 +67,10 @@ namespace Investments.Tests
         [Fact]
         public async Task CreateAccountAsyncShouldReturnUserDtoWhenAccountIsCreated()
         {
-            // Arrange
             var userDto = GenerateFakeUserDto();
 
-            // Act
             var result = await _accountService.CreateAccountAsync(userDto);
 
-            // Assert
             result.Should().NotBeNull();
             result.UserName.Should().Be(userDto.UserName);
             result.Email.Should().Be(userDto.Email);
@@ -83,31 +79,25 @@ namespace Investments.Tests
         [Fact]
         public async Task CheckUserPasswordAsyncShouldReturnSignInResultWhenPasswordIsCorrect()
         {
-            // Arrange
             var userUpdateDto = GenerateFakeUserUpdateDto();
             var password = "Password123!";
 
-            // Act
             var result = await _accountService.CheckUserPasswordAsync(userUpdateDto, password);
 
-            // Assert
             result.Should().Be(SignInResult.Success);
         }
 
         [Fact]
         public async Task GetUserByUserNameAsyncShouldReturnUserUpdateDtoWhenUserExists()
         {
-            // Arrange
             var userName = "testuser";
             var user = new User { UserName = userName };
             var userUpdateDto = GenerateFakeUserUpdateDto();
             _userPersistMock.Setup(u => u.GetUserByUserNameAsync(userName)).ReturnsAsync(user);
             _mapperMock.Setup(m => m.Map<UserUpdateDto>(user)).Returns(userUpdateDto);
 
-            // Act
             var result = await _accountService.GetUserByUserNameAsync(userName);
 
-            // Assert
             result.Should().NotBeNull();
             result.UserName.Should().Be(userName);
         }
@@ -115,7 +105,6 @@ namespace Investments.Tests
         [Fact]
         public async Task UpdateAccountShouldReturnUserUpdateDtoWhenAccountIsUpdated()
         {
-            // Arrange
             var userUpdateDto = GenerateFakeUserUpdateDto();
             var user = new User { UserName = userUpdateDto.UserName };
             
@@ -127,10 +116,8 @@ namespace Investments.Tests
 
             _mapperMock.Setup(m => m.Map<UserUpdateDto>(user)).Returns(userUpdateDto);
 
-            // Act
             var result = await _accountService.UpdateAccount(userUpdateDto);
 
-            // Assert
             result.Should().NotBeNull();
             result.UserName.Should().Be(userUpdateDto.UserName);
         }
@@ -152,13 +139,10 @@ namespace Investments.Tests
         [Fact]
         public async Task UserExistsShouldReturnTrueWhenUserExists()
         {
-            // Arrange
             var userName = "existinguser";
 
-            // Act
             var result = await _accountService.UserExists(userName);
 
-            // Assert
             result.Should().BeTrue();
         }
     }

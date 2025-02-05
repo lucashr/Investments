@@ -6,7 +6,7 @@ using Investments.Domain.Identity;
 
 namespace Investments.Persistence.Contracts
 {
-    public interface IUserPersist : IGeneralPersist
+    public interface IUserPersist : IRepositoryPersist
     {
         Task<IEnumerable<User>> GetUsersAsync();
         Task<User> GetUserByIdAsync(int id);

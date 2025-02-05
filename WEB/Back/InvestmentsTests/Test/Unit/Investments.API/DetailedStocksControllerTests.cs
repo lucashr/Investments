@@ -36,16 +36,13 @@ namespace Investments.Tests
         [Fact]
         public async Task GetAllStocksShouldReturnOkWhenStocksExist()
         {
-            // Arrange
             var stocks = GenerateFakeStocks(3);
 
             _detailedStockServiceMock.Setup(s => s.GetAllDetailedStocksAsync())
                 .ReturnsAsync(stocks);
 
-            // Act
             var result = await _controller.GetAllStocks();
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedStocks = Assert.IsAssignableFrom<IEnumerable<DetailedStock>>(okResult.Value);
             returnedStocks.Count().Should().Be(3);
@@ -54,14 +51,11 @@ namespace Investments.Tests
         [Fact]
         public async Task GetAllStocksShouldReturnNotFoundWhenNoStocksExist()
         {
-            // Arrange
             _detailedStockServiceMock.Setup(s => s.GetAllDetailedStocksAsync())
                 .ReturnsAsync(new List<DetailedStock>());
 
-            // Act
             var result = await _controller.GetAllStocks();
 
-            // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             notFoundResult.Value.Should().Be("No stocks found");
         }

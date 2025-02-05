@@ -19,14 +19,12 @@ namespace Investments.Tests.Test.Cep.awesomeapi.UnitTest
         public async Task DeveretornarCotacaoAtualDaMoedaUsd(string moeda)
         {
 
-            // Act
             var result = await GetCepInfoAsync(moeda);
             string dctCodigoMoeda = moeda.Replace("-", "");
 
             result.Item2.Should().NotBeNull();
             result.Item2.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
             result.Item1.Should().NotBeNull();
 
             result.Item1[dctCodigoMoeda].code.Should().Be("USD");
@@ -41,7 +39,6 @@ namespace Investments.Tests.Test.Cep.awesomeapi.UnitTest
         public async Task DeveretornarCotacaoAtualDeUsdEurBtc(string moeda)
         {
 
-            // Act
             var result = await GetCepInfoAsync(moeda);
 
             List<string> moedas = new List<string>();
@@ -50,7 +47,6 @@ namespace Investments.Tests.Test.Cep.awesomeapi.UnitTest
             result.Item2.Should().NotBeNull();
             result.Item2.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
             result.Item1.Should().NotBeNull();
             result.Item1.Should().HaveCount(3);
 

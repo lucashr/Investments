@@ -16,7 +16,7 @@ using Xunit;
 
 namespace Investments.Tests
 {
-    public class WebScrapingFundsAndDividendsControllerTests
+    public class FundsAndDividendsWebScrapingControllerTests
     {
         private readonly Mock<IWebScrapingFundsAndDividendsService> _webScrapingFundsAndDividendsMock;
         private readonly Mock<IRankOfTheBestFundsService> _rankOfTheBestFundsServiceMock;
@@ -24,7 +24,7 @@ namespace Investments.Tests
         private readonly Mock<WebScrapingSocketManager> _socketManagerMock;
         private readonly FundsAndDividendsWebScrapingController _controller;
 
-        public WebScrapingFundsAndDividendsControllerTests()
+        public FundsAndDividendsWebScrapingControllerTests()
         {
             _webScrapingFundsAndDividendsMock = new Mock<IWebScrapingFundsAndDividendsService>();
             _rankOfTheBestFundsServiceMock = new Mock<IRankOfTheBestFundsService>();
@@ -68,16 +68,13 @@ namespace Investments.Tests
         [Fact]
         public async Task GetFundsAsyncShouldReturnOkWhenFundsExist()
         {
-            // Arrange
             var funds = GenerateFakeDetailedFunds(2).ToList();
             _webScrapingFundsAndDividendsMock
                 .Setup(w => w.GetFundsAsync(It.IsAny<CancellationTokenSource>()))
                 .ReturnsAsync(funds);
 
-            // Act
             var result = await _controller.GetFundsAsync();
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedFunds = Assert.IsAssignableFrom<IEnumerable<DetailedFund>>(okResult.Value);
             returnedFunds.Count().Should().Be(2);
@@ -86,15 +83,12 @@ namespace Investments.Tests
         [Fact]
         public async Task GetFundsAsyncShouldReturnNotFoundWhenNoFundsExist()
         {
-            // Arrange
             _webScrapingFundsAndDividendsMock
                 .Setup(w => w.GetFundsAsync(It.IsAny<CancellationTokenSource>()))
                 .ReturnsAsync(new List<DetailedFund>());
 
-            // Act
             var result = await _controller.GetFundsAsync();
 
-            // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             notFoundResult.Should().Be("No funds found.");
         }
@@ -102,7 +96,6 @@ namespace Investments.Tests
         [Fact]
         public async Task GetFundDividendsAsyncShouldReturnOkWhenDividendsExist()
         {
-            // Arrange
             var detailedFunds = GenerateFakeDetailedFunds(1).ToList();
             var fundCode = detailedFunds.First().FundCode;
             var dividends = GenerateFakeFundDividends(1, fundCode).ToList();
@@ -120,10 +113,8 @@ namespace Investments.Tests
                 .Setup(r => r.GetCalculationRankOfTheBestFundsAsync())
                 .ReturnsAsync(ranking);
 
-            // Act
             var result = await _controller.GetFundDividendsAsync();
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedDividends = Assert.IsAssignableFrom<IEnumerable<FundDividend>>(okResult.Value);
 
@@ -133,7 +124,6 @@ namespace Investments.Tests
         [Fact]
         public async Task GetFundDividendsAsyncShouldReturnNotFoundWhenNoDividendsExist()
         {
-            // Arrange
             var detailedFunds = GenerateFakeDetailedFunds(20);
 
             _detailedFundServiceMock
@@ -144,10 +134,8 @@ namespace Investments.Tests
                 .Setup(w => w.GetFundDividendsAsync(It.IsAny<IEnumerable<DetailedFund>>(), It.IsAny<CancellationTokenSource>()))
                 .ReturnsAsync(new List<FundDividend>());
 
-            // Act
             var result = await _controller.GetFundDividendsAsync();
 
-            // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             notFoundResult.Value.Should().Be("No funds dividends found.");
         }
@@ -157,10 +145,8 @@ namespace Investments.Tests
         {
             _controller.GetType().GetField("_isRunning", BindingFlags.NonPublic | BindingFlags.Static)
                 ?.SetValue(null, false);
-            // Act
             var result = _controller.Pause();
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             okResult.Value.Should().Be("No process is running.");
         }
@@ -168,17 +154,14 @@ namespace Investments.Tests
         [Fact]
         public void PauseShouldReturnOkWhenProcessIsStopped()
         {
-            // Arrange
             var cancellationTokenSource = new CancellationTokenSource();
             _controller.GetType().GetField("_cancellationTokenSource", BindingFlags.NonPublic | BindingFlags.Static)
                 ?.SetValue(null, cancellationTokenSource);
             _controller.GetType().GetField("_isRunning", BindingFlags.NonPublic | BindingFlags.Static)
                 ?.SetValue(null, true);
 
-            // Act
             var result = _controller.Pause();
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             okResult.Value.Should().Be("Process stopped.");
         }

@@ -3,22 +3,35 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Investments.Domain.Enum;
 using Newtonsoft.Json;
 
 namespace Investments.Application.Utils
 {
     public static class LogUtils
     {
-        public static async Task LogActions(object message)
+        public static async Task LogActions(PageIdentification page,
+                                            object data, 
+                                            string sessionId = "", 
+                                            bool toAllSessions = false)
         {
 
-            message = $"{JsonConvert.SerializeObject(message)}";
-
-            Console.WriteLine(message);
-            Debug.WriteLine(message);
+            var message = new 
+                            { 
+                                pageIdentification = page,
+                                data = JsonConvert.SerializeObject(data)
+                            };
             
-            await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync($"{message}");
+            var jsonMessage = JsonConvert.SerializeObject(message);
 
+            Console.WriteLine(jsonMessage);
+            Debug.WriteLine(jsonMessage);
+            
+            if(toAllSessions)
+                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(sessionId, $"{jsonMessage}");
+            else
+                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageAsync(sessionId, jsonMessage);
+            
         }
     }
 }

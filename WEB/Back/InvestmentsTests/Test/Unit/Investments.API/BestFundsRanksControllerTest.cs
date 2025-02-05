@@ -35,17 +35,14 @@ namespace Investments.Tests
         [Fact]
         public async Task GetRankShouldReturnOkWhenRanksExist()
         {
-            // Arrange
             var ranks = GenerateFakeBestFundRanks(5);
 
             _rankOfTheBestFundsServiceMock
                 .Setup(s => s.GetRankOfTheBestFundsAsync(It.IsAny<int?>()))
                 .ReturnsAsync(ranks);
 
-            // Act
             var result = await _controller.GetRank(5);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedRanks = Assert.IsAssignableFrom<IEnumerable<BestFundRank>>(okResult.Value);
             returnedRanks.Count().Should().Be(5);
@@ -54,15 +51,12 @@ namespace Investments.Tests
         [Fact]
         public async Task GetRankShouldReturnNotFoundWhenNoRanksExist()
         {
-            // Arrange
             _rankOfTheBestFundsServiceMock
                 .Setup(s => s.GetRankOfTheBestFundsAsync(It.IsAny<int?>()))
                 .ReturnsAsync(new List<BestFundRank>());
 
-            // Act
             var result = await _controller.GetRank(5);
 
-            // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             notFoundResult.Value.Should().Be("No rank found");
         }
@@ -70,17 +64,14 @@ namespace Investments.Tests
         [Fact]
         public async Task GetRankShouldReturnOkWhenRankExistsForDefaultQuantity()
         {
-            // Arrange
             var ranks = GenerateFakeBestFundRanks(3);
 
             _rankOfTheBestFundsServiceMock
                 .Setup(s => s.GetRankOfTheBestFundsAsync(It.IsAny<int?>()))
                 .ReturnsAsync(ranks);
 
-            // Act
             var result = await _controller.GetRank(null);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedRanks = Assert.IsAssignableFrom<IEnumerable<BestFundRank>>(okResult.Value);
             returnedRanks.Count().Should().Be(3);
@@ -89,15 +80,12 @@ namespace Investments.Tests
         [Fact]
         public async Task GetRankShouldReturnNotFoundWhenNoRanksExistForDefaultQuantity()
         {
-            // Arrange
             _rankOfTheBestFundsServiceMock
                 .Setup(s => s.GetRankOfTheBestFundsAsync(It.IsAny<int?>()))
                 .ReturnsAsync(new List<BestFundRank>());
 
-            // Act
             var result = await _controller.GetRank(null);
 
-            // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             notFoundResult.Value.Should().Be("No rank found");
         }

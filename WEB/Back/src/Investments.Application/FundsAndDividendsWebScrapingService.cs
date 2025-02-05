@@ -1,25 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Investments.Application.Contracts;
 using Investments.Application.helpers;
 using Investments.Application.Utils;
+using Investments.Domain.Enum;
 using Investments.Domain.Models;
 using Investments.Persistence.Contracts;
+using Investments.VariablesManager;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 
 namespace Investments.Application
 {
-    public class WebScrapingFundsAndDividendsService : IWebScrapingFundsAndDividendsService
+    public class FundsAndDividendsWebScrapingService : IWebScrapingFundsAndDividendsService
     {
 
         const string WEBPAGE_FUNDS = "https://www.fundamentus.com.br/fii_resultado.php";
@@ -29,15 +28,20 @@ namespace Investments.Application
         IFundDividendPersist _fundDividendPersist;
         CancellationTokenSource _cancellationTokenSource;
         ILogger _logger;
+        SessionContext _sessionContext;
+        string _sessionId;
 
-        public WebScrapingFundsAndDividendsService(IDetailedFundPersist detailedFundPersist,
+        public FundsAndDividendsWebScrapingService(IDetailedFundPersist detailedFundPersist,
                                                    IFundDividendPersist fundsDividendsPersist,
-                                                   ILogger<WebScrapingFundsAndDividendsService> logger)
+                                                   ILogger<FundsAndDividendsWebScrapingService> logger,
+                                                   SessionContext sessionContext)
         {
+            _sessionContext = sessionContext;
             _detailedFundPersist = detailedFundPersist;
             _fundDividendPersist = fundsDividendsPersist;
             _logger = logger;
             _driver = WebDriverSelenium.ConfigDriver();
+            _sessionId = _sessionContext.SessionId;
         }
 
         public async Task<IEnumerable<DetailedFund>> GetFundsAsync(CancellationTokenSource cancellationTokenSource)
@@ -90,7 +94,7 @@ namespace Investments.Application
             var clock = new Stopwatch();
             clock.Start();
 
-            await LogUtils.LogActions("Started: Capture of FIIs");
+            await LogUtils.LogActions(PageIdentification.FundsAndDividends, "Started: Capture of FIIs", _sessionId);
 
             bool navigateOK = await GoToPage(WEBPAGE_FUNDS);
 
@@ -121,11 +125,11 @@ namespace Investments.Application
 
                 var rows = _driver.FindElements(By.XPath("//*[@id='tabelaResultado']/tbody/tr"));
 
-                // #if DEBUG
-                //     int numberOfLines = 10;
-                // #else
+                #if DEBUG
+                    int numberOfLines = 10;
+                #else
                 int numberOfLines = rows.Count;
-                // #endif
+                #endif
 
                 Console.WriteLine($"Total de linhas {numberOfLines}");
 
@@ -137,7 +141,7 @@ namespace Investments.Application
 
                 if (totalOfColumnExpected != numberOfColumn)
                 {
-                    await LogUtils.LogActions($"Total of columns expected invalid {numberOfColumn}");
+                    await LogUtils.LogActions(PageIdentification.FundsAndDividends, $"Total of columns expected invalid {numberOfColumn}", _sessionId);
                     _logger.LogError($"Total of columns expected invalid {numberOfColumn}");
                     return await Task.FromResult<IEnumerable<DetailedFund>>(Enumerable.Empty<DetailedFund>());
                 }
@@ -149,7 +153,7 @@ namespace Investments.Application
 
                     if (orderColumnTableOfFunds[j - 1] != campo)
                     {
-                        await LogUtils.LogActions($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
+                        await LogUtils.LogActions(PageIdentification.FundsAndDividends, $"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}", _sessionId);
                         _logger.LogError($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
                         return await Task.FromResult<IEnumerable<DetailedFund>>(detailedFunds);
                     }
@@ -190,20 +194,20 @@ namespace Investments.Application
                         AverageVacancy = Convert.ToDouble(obj[13].Replace("%", ""))
                     };
 
-                    await LogUtils.LogActions(fund);
+                    await LogUtils.LogActions(PageIdentification.FundsAndDividends, fund, _sessionId);
                     _logger.LogInformation("{@fund}", fund);
 
                     detailedFunds.Add(fund);
 
                 }
 
-                await LogUtils.LogActions("Completed: Capture of FIIs");
+                await LogUtils.LogActions(PageIdentification.FundsAndDividends, "Completed: Capture of FIIs", _sessionId);
                 return await Task.FromResult<IEnumerable<DetailedFund>>(detailedFunds);
 
             }
             catch (System.Exception ex)
             {
-                await LogUtils.LogActions($"Error: Capture of FIIs -> {ex.Message}");
+                await LogUtils.LogActions(PageIdentification.FundsAndDividends, $"Error: Capture of FIIs -> {ex.Message}", _sessionId);
                 _logger.LogError($"Error: Capture of FIIs -> {ex.Message}");
                 return await Task.FromResult<IEnumerable<DetailedFund>>(detailedFunds);
             }
@@ -212,7 +216,7 @@ namespace Investments.Application
 
                 var elapsed = clock.Elapsed;
                 var elapsedTime = string.Format("Tempo decorrido: {0:00}:{1:00}:{2:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
-                await LogUtils.LogActions(elapsedTime);
+                await LogUtils.LogActions(PageIdentification.FundsAndDividends, elapsedTime, _sessionId);
                 
             }
         }
@@ -223,7 +227,7 @@ namespace Investments.Application
             var clock = new Stopwatch();
             clock.Start();
 
-            await LogUtils.LogActions("Started: Capture of funds dividends");
+            await LogUtils.LogActions(PageIdentification.FundsAndDividends, "Started: Capture of funds dividends", _sessionId);
 
             List<string> orderColumnTableOfFunds = new List<string>
             {
@@ -234,8 +238,7 @@ namespace Investments.Application
 
             try
             {
-
-                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Started: Capture Dividends Funds"));
+                await VariablesManager.ConectionsWebSocket.socketManager.SendMessageAsync(_sessionId, JsonConvert.SerializeObject("Started: Capture Dividends Funds"));
 
                 var fundsDividendsTmp = new List<FundDividend>();
                 var fundsDividends = new List<FundDividend>();
@@ -251,7 +254,13 @@ namespace Investments.Application
                     if (!navigateOK)
                         return Enumerable.Empty<FundDividend>();
 
-                    var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+                    var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+
+                    var tableResultadoExists = _driver.FindElements(By.Id("resultado"));
+
+                    if (tableResultadoExists == null || tableResultadoExists.Count == 0)
+                        continue;
+
                     wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='resultado']/tbody/tr")));
 
                     var rows = _driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr"));
@@ -266,7 +275,7 @@ namespace Investments.Application
 
                     if (totalOfColumnExpected != numberOfColumn)
                     {
-                        await LogUtils.LogActions($"Total of columns expected invalid {numberOfColumn}");
+                        await LogUtils.LogActions(PageIdentification.FundsAndDividends, $"Total of columns expected invalid {numberOfColumn}", _sessionId);
                         _logger.LogError($"Total of columns expected invalid {numberOfColumn}");
                         return await Task.FromResult<IEnumerable<FundDividend>>(Enumerable.Empty<FundDividend>());
                     }
@@ -312,7 +321,7 @@ namespace Investments.Application
                             Value = Convert.ToDouble(obj[3])
                         };
 
-                        await LogUtils.LogActions(fundDividends);
+                        await LogUtils.LogActions(PageIdentification.FundsAndDividends, fundDividends, _sessionId);
                         fundsDividendsTmp.Add(fundDividends);
 
                     }
@@ -325,7 +334,7 @@ namespace Investments.Application
                 fundsDividends.AddRange(fundsDividendsTmp);
                 fundsDividendsTmp.Clear();
 
-                await LogUtils.LogActions("Completed: Capture of funds dividends");
+                await LogUtils.LogActions(PageIdentification.FundsAndDividends, "Completed: Capture of funds dividends", _sessionId);
 
                 return await Task.FromResult<IEnumerable<FundDividend>>(fundsDividends);
 
@@ -333,7 +342,7 @@ namespace Investments.Application
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                await LogUtils.LogActions("Error: Capture of funds dividends");
+                await LogUtils.LogActions(PageIdentification.FundsAndDividends, "Error: Capture of funds dividends", _sessionId);
                 _logger.LogError("Error: Capture of funds dividends");
                 return await Task.FromResult<IEnumerable<FundDividend>>(Enumerable.Empty<FundDividend>());
             }
@@ -344,7 +353,7 @@ namespace Investments.Application
                 var elapsed = clock.Elapsed;
                 var elapsedTime = string.Format("Tempo decorrido: {0:00}:{1:00}:{2:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
 
-                await LogUtils.LogActions(elapsedTime);
+                await LogUtils.LogActions(PageIdentification.FundsAndDividends, elapsedTime, _sessionId);
 
             }
         }
@@ -364,7 +373,7 @@ namespace Investments.Application
 
                 if (attempts > 10)
                 {
-                    await LogUtils.LogActions($"Error: GoToPage {ex.Message}");
+                    await LogUtils.LogActions(PageIdentification.FundsAndDividends, $"Error: GoToPage {ex.Message}", _sessionId);
                     _logger.LogError($"Error: GoToPage {ex.Message}");
                     return false;
                 }
@@ -377,11 +386,17 @@ namespace Investments.Application
         }
 
         private bool AbortarProcesso(){
+            
+            if (_cancellationTokenSource is CancellationTokenSource cancellation)
+            {
+                if (cancellation.IsCancellationRequested)
+                    return true;
+                else
+                    return false;
+            }
 
-            if (_cancellationTokenSource.IsCancellationRequested)
-                return true;
-            else
-                return false;
+            return false;
+            
         }
     }
 }

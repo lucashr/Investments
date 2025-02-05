@@ -1,10 +1,13 @@
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Investments.Application.Contracts;
+using Investments.Domain.Identity;
 using Investments.VariablesManager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson.IO;
 
 namespace Investments.API.Controllers
 {
@@ -33,22 +36,24 @@ namespace Investments.API.Controllers
         }
 
         [HttpGet("GetFunds")]
+        //[AllowAnonymous]
         [Authorize(policy: "AdminOrUser")]
         public async Task<IActionResult> GetFundsAsync()
         {
             _isRunning = true;
+
             _cancellationTokenSource = new CancellationTokenSource();
   
             _socketManager.GetAll();
 
             var result = await _webScrapingFundsAndDividends.GetFundsAsync(_cancellationTokenSource);
 
-            return result.Count() > 0 ? Ok(result) : NotFound("No funds found.");
+            return result.Count() > 0 ? Ok(result) : NotFound(new { message = "No funds found." });
 
         }
 
         [HttpGet("GetFundDividends")]
-        [Authorize(policy: "Admin")]
+        [Authorize(policy: "AdminOrUser")]
         public async Task<IActionResult> GetFundDividendsAsync()
         {
             _socketManager.GetAll();
@@ -68,7 +73,7 @@ namespace Investments.API.Controllers
                 return Ok(dividends);
             }
             else
-                return NotFound("No funds dividends found.");
+                return NotFound(new { message ="No funds dividends found." });
 
         }
 

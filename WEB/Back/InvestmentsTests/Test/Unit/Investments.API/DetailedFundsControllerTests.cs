@@ -36,16 +36,13 @@ namespace Investments.Tests
         [Fact]
         public async Task GetAllFundsShouldReturnOkWhenFundsExist()
         {
-            // Arrange
             var funds = GenerateFakeFunds(5);
 
             _detailedFundServiceMock.Setup(s => s.GetAllDetailedFundsAsync())
                 .ReturnsAsync(funds);
 
-            // Act
             var result = await _controller.GetAllFunds();
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedFunds = Assert.IsAssignableFrom<IEnumerable<DetailedFund>>(okResult.Value);
             returnedFunds.Count().Should().Be(5);
@@ -55,14 +52,11 @@ namespace Investments.Tests
         [Fact]
         public async Task GetAllFundsShouldReturnNotFoundWhenNoFundsExist()
         {
-            // Arrange
             _detailedFundServiceMock.Setup(s => s.GetAllDetailedFundsAsync())
                 .ReturnsAsync(new List<DetailedFund>());
 
-            // Act
             var result = await _controller.GetAllFunds();
 
-            // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             notFoundResult.Value.Should().Be("No funds found");
         }

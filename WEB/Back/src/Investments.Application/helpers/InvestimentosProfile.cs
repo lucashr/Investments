@@ -16,6 +16,9 @@ namespace Investments.Application.helpers
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, UserLoginDto>().ReverseMap();
             CreateMap<User, UserUpdateDto>().ReverseMap();
+            CreateMap<ApplicationUser, UserDto>().ReverseMap();
+            CreateMap<ApplicationUser, UserLoginDto>().ReverseMap();
+            CreateMap<ApplicationUser, UserUpdateDto>().ReverseMap();
         }
     }
 }

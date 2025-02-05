@@ -15,13 +15,13 @@ namespace Investments.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class AccountsController : ControllerBase
+    public class AccountController : ControllerBase
     {
         private readonly IEnderecoUsuarioService _enderecoUsuarioService;
-        private readonly IAccountService _accountService;
+        private readonly IAccountServiceFactory _accountService;
         private readonly ITokenService _tokenService;
 
-        public AccountsController(IAccountService accountService,
+        public AccountController(IAccountServiceFactory accountService,
                                  IEnderecoUsuarioService enderecoUsuarioService,
                                  ITokenService tokenService)
         {
@@ -30,7 +30,7 @@ namespace Investments.API.Controllers
             _tokenService = tokenService;
         }
 
-        [HttpPost("update-user")]
+        [HttpPost("UpdateUser")]
         [Authorize(policy: "Admin")]
         public async Task<IActionResult> UpdateUser([Required]string username, [Required]string role)
         {
@@ -49,7 +49,7 @@ namespace Investments.API.Controllers
             
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] UserDto model)
         {
 
@@ -101,7 +101,7 @@ namespace Investments.API.Controllers
 
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDto userLogin)
         {
             var user = await _accountService.GetUserByUserNameAsync(userLogin.UserName);

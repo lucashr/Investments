@@ -13,17 +13,17 @@ using Investments.Persistence.Contracts;
 
 namespace Investments.Application
 {
-    public class RankOfTheBestStocksService : IRankOfTheBestStocksService
+    public class BestStockRankService : IRankOfTheBestStocksService
     {
         private readonly IRankOfTheBestStocksPersist _rankOfTheBestStocksPersist;
         private readonly IDetailedStockService _detailedStocksService;
         private readonly IStocksDividendService _stocksDividendsService;
         private readonly IMapper _mapper;
 
-        public RankOfTheBestStocksService(IRankOfTheBestStocksPersist rankOfTheBestStocksPersist,
-                                          IDetailedStockService detailedStocksService,
-                                          IStocksDividendService stocksDividendsService,
-                                          IMapper mapper)
+        public BestStockRankService(IRankOfTheBestStocksPersist rankOfTheBestStocksPersist,
+                                    IDetailedStockService detailedStocksService,
+                                    IStocksDividendService stocksDividendsService,
+                                    IMapper mapper)
         {
             _rankOfTheBestStocksPersist = rankOfTheBestStocksPersist;
             _detailedStocksService = detailedStocksService;
@@ -97,7 +97,8 @@ namespace Investments.Application
             }
 
             var rankedStocks = stockScores.OrderByDescending(stock => stock.Score)
-                                          .Select(stock => stock.Stock);
+                                          .Select(stock => stock.Stock)
+                                          .Take(totalStocksRank > 0 ? totalStocksRank : stockScores.Count());
 
             var result = _mapper.Map<IEnumerable<BestStockRank>>(rankedStocks);  
                     

@@ -4,7 +4,7 @@ using Investments.Domain.Models;
 
 namespace Investments.Persistence.Contracts
 {
-    public interface IFundDividendPersist
+    public interface IFundDividendPersist : IRepositoryPersist
     {
         Task<IEnumerable<FundDividend>> GetFundDividendsByCodeAsync(string fundCode);
         Task<IEnumerable<FundDividend>> GetAllFundsDividendsAsync();

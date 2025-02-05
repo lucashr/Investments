@@ -4,7 +4,7 @@ using Investments.Domain.Models;
 
 namespace Investments.Persistence.Contracts
 {
-    public interface IRankOfTheBestStocksPersist
+    public interface IRankOfTheBestStocksPersist : IRepositoryPersist
     {
         Task<IEnumerable<BestStockRank>> GetRankOfTheBestStocksAsync(int? totalFundsInRank = null);
         Task<bool> AddRankOfTheBestStocksAsync(IEnumerable<BestStockRank> rankOfTheBestFunds);

@@ -17,13 +17,11 @@ namespace Investments.Tests
         public async Task DeveretornarInformacoesDeUmCepValido(string cep)
         {
 
-            // Act
             var result = await GetCepInfoAsync(cep);
 
             result.Item2.Should().NotBeNull();
             result.Item2.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
             result.Item1.Should().NotBeNull();
             result.Item1.ZipCode.Should().Be("05513300");
             result.Item1.Address.Should().Be("Avenida Professor Francisco Morato");
@@ -38,10 +36,8 @@ namespace Investments.Tests
         public async Task DeveretornarStatusCode404(string cep)
         {
 
-            // Act
             var result = await GetCepInfoAsync(cep);
 
-            // Assert
             result.Item2.Should().NotBeNull();
             result.Item2.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
@@ -52,10 +48,8 @@ namespace Investments.Tests
         public async Task DeveretornarStatusCode400(string cep)
         {
 
-            // Act
             var result = await GetCepInfoAsync(cep);
 
-            // Assert
             result.Item2.Should().NotBeNull();
             result.Item2.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 

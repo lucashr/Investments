@@ -1,17 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Investments.Application;
-using Investments.Application.Contracts;
 using Investments.Application.helpers;
 using Investments.Persistence;
 using Investments.Persistence.Contexts;
-using Investments.Persistence.Contracts;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using Xunit;
 
 namespace Investments.Tests
@@ -46,7 +40,7 @@ namespace Investments.Tests
             });
             
             var mapper = new Mapper(config);
-            var rank = new RankOfTheBestStocksService(mockRankPersist, mockDetailedStockService, mockStocksYieldService, mapper);
+            var rank = new BestStockRankService(mockRankPersist, mockDetailedStockService, mockStocksYieldService, mapper);
             
             var result = await rank.GetRankOfTheBestStocksAsync(10);
 

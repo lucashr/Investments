@@ -11,16 +11,18 @@ using Investments.Application.Contracts;
 using Investments.Application.helpers;
 using Investments.Application.Utils;
 using Investments.Domain;
+using Investments.Domain.Enum;
 using Investments.Persistence.Contracts;
+using Investments.VariablesManager;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 
 namespace Investments.Application
 {
-    public class WebScrapingStocksAndDividendsService : IWebScrapingStocksAndDividendsService
+    public class StocksAndDividendsWebScrapingService : IWebScrapingStocksAndDividendsService
     {
 
         const string WEBPAGE_STOCKS = "https://www.fundamentus.com.br/resultado.php";
@@ -28,18 +30,23 @@ namespace Investments.Application
         IWebDriver _driver;
         IDetailedStocksPersist _detailedStocksPersist;
         IStockDividendPersist _stockDividendsPersist;
-        ILogger<WebScrapingStocksAndDividendsService> _logger;
-        
+        ILogger<StocksAndDividendsWebScrapingService> _logger;
         CancellationTokenSource _cancellationTokenSource;
+        IHttpContextAccessor _httpContextAccessor;
+        SessionContext _sessionContext;
+        string _sessionId;
 
-        public WebScrapingStocksAndDividendsService(IDetailedStocksPersist detailedStocksPersist,
+        public StocksAndDividendsWebScrapingService(IDetailedStocksPersist detailedStocksPersist,
                                                     IStockDividendPersist stocksDividendsPersist,
-                                                    ILogger<WebScrapingStocksAndDividendsService> logger)
+                                                    ILogger<StocksAndDividendsWebScrapingService> logger,
+                                                    SessionContext sessionContext)
         {
+            _sessionContext = sessionContext;
             _detailedStocksPersist = detailedStocksPersist;
             _stockDividendsPersist = stocksDividendsPersist;
             _logger = logger;
             _driver = WebDriverSelenium.ConfigDriver();
+            _sessionId = _sessionContext.SessionId;
         }
 
         public async Task<IEnumerable<DetailedStock>> GetStocksAsync(CancellationTokenSource cancellationTokenSource)
@@ -65,7 +72,8 @@ namespace Investments.Application
 
         }
 
-        public async Task<IEnumerable<StockDividend>> GetStocksDividendsAsync(IEnumerable<DetailedStock> detailedStocks, CancellationTokenSource cancellationTokenSource)
+        public async Task<IEnumerable<StockDividend>> GetStocksDividendsAsync(IEnumerable<DetailedStock> detailedStocks, 
+                                                                              CancellationTokenSource cancellationTokenSource)
         {
 
             _cancellationTokenSource = cancellationTokenSource;
@@ -105,7 +113,7 @@ namespace Investments.Application
             try
             {
 
-                await LogUtils.LogActions("Started: Capture Dividends Stocks");
+                await LogUtils.LogActions(PageIdentification.StocksAndDividends, "Started: Capture Dividends Stocks", _sessionId);
 
                 var stocksDividends = new List<StockDividend>();
                 var stocksDividendsTmp = new List<StockDividend>();
@@ -140,7 +148,7 @@ namespace Investments.Application
 
                     if (totalOfColumnExpected != numberOfColumn)
                     {
-                        await LogUtils.LogActions($"Total of columns expected invalid {numberOfColumn}");
+                        await LogUtils.LogActions(PageIdentification.StocksAndDividends, $"Total of columns expected invalid {numberOfColumn}", _sessionId);
                         _logger.LogError($"Total of columns expected invalid {numberOfColumn}");
                         return await Task.FromResult<IEnumerable<StockDividend>>(Enumerable.Empty<StockDividend>());
                     }
@@ -153,7 +161,7 @@ namespace Investments.Application
 
                         if (orderColumnTableOfFunds[j - 1] != campo)
                         {
-                            await LogUtils.LogActions($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
+                            await LogUtils.LogActions(PageIdentification.StocksAndDividends, $"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}", _sessionId);
                             _logger.LogError($"Ordem inválida! {orderColumnTableOfFunds[j - 1]} esperado {campo}");
                             return await Task.FromResult<IEnumerable<StockDividend>>(Enumerable.Empty<StockDividend>());
                         }
@@ -189,7 +197,7 @@ namespace Investments.Application
                             ForHowManyShares = Convert.ToInt16(obj[4]),
                         };
 
-                        await LogUtils.LogActions(stockDividends);
+                        await LogUtils.LogActions(PageIdentification.StocksAndDividends, stockDividends, _sessionId);
 
                         stocksDividendsTmp.Add(stockDividends);
 
@@ -203,7 +211,7 @@ namespace Investments.Application
                 stocksDividends.AddRange(stocksDividendsTmp);
                 stocksDividendsTmp.Clear();
 
-                await LogUtils.LogActions("Completed: Capture of stocks dividends");
+                await LogUtils.LogActions(PageIdentification.StocksAndDividends, "Completed: Capture of stocks dividends", _sessionId);
 
                 return await Task.FromResult<IEnumerable<StockDividend>>(stocksDividends);
 
@@ -211,7 +219,7 @@ namespace Investments.Application
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                await LogUtils.LogActions($"Error: Capture of stocks dividends -> {ex.Message}");
+                await LogUtils.LogActions(PageIdentification.StocksAndDividends, $"Error: Capture of stocks dividends -> {ex.Message}", _sessionId);
                 _logger.LogError($"Error: Capture of stocks dividends -> {ex.Message}");
                 return await Task.FromResult<IEnumerable<StockDividend>>(Enumerable.Empty<StockDividend>());
             }
@@ -222,7 +230,7 @@ namespace Investments.Application
                 var elapsed = clock.Elapsed;
                 var elapsedTime = string.Format("Tempo decorrido: {0:00}:{1:00}:{2:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
 
-                await LogUtils.LogActions(elapsedTime);
+                await LogUtils.LogActions(PageIdentification.StocksAndDividends, elapsedTime, _sessionId);
 
             }
         }
@@ -234,7 +242,7 @@ namespace Investments.Application
 
             clock.Start();
 
-            await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(JsonConvert.SerializeObject("Started: Capture of Stocks"));
+            await VariablesManager.ConectionsWebSocket.socketManager.SendMessageAsync(_sessionId, JsonConvert.SerializeObject("Started: Capture of Stocks"));
             
             var totalRows = new ReadOnlyCollection<IWebElement>(new List<IWebElement>());
             
@@ -284,7 +292,7 @@ namespace Investments.Application
 
                 if (headerColumns.Count != totalOfColumnExpected)
                 {
-                    await LogUtils.LogActions("ScrapeStockData::Error: The number of columns in the table is different from the expected number of columns");
+                    await LogUtils.LogActions(PageIdentification.StocksAndDividends, "ScrapeStockData::Error: The number of columns in the table is different from the expected number of columns", _sessionId);
                     _logger.LogError("ScrapeStockData::Error: The number of columns in the table is different from the expected number of columns");
                     return Enumerable.Empty<DetailedStock>();
                 }
@@ -293,7 +301,7 @@ namespace Investments.Application
                 {
                     if (headerColumns[i].Text.Trim() != orderColumnTableOfFunds[i])
                     {
-                        await LogUtils.LogActions("ScrapeStockData::Error: The order of the columns in the table is different from the expected order");
+                        await LogUtils.LogActions(PageIdentification.StocksAndDividends, "ScrapeStockData::Error: The order of the columns in the table is different from the expected order", _sessionId);
                         _logger.LogError("ScrapeStockData::Error: The order of the columns in the table is different from the expected order");
                         return Enumerable.Empty<DetailedStock>();
                     }
@@ -335,22 +343,22 @@ namespace Investments.Application
                             RevenueGrowthFiveYears = double.TryParse(cells[20].Text.Replace("%", "").Trim(), out double crescRec5a) ? crescRec5a : 0                        
                         };
 
-                        await LogUtils.LogActions(stock);
+                        await LogUtils.LogActions(PageIdentification.StocksAndDividends, stock, _sessionId);
 
                         stockList.Add(stock);
 
                     }
                 }
 
-                 await LogUtils.LogActions("Completed: Capture of stocks");
+                 await LogUtils.LogActions(PageIdentification.StocksAndDividends, "Completed: Capture of stocks", _sessionId);
 
-                 return stockList;
+                 return stockList.DistinctBy(x=> x.FundCode).ToList();
 
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error: Capture of stocks -> {ex.Message}");
-                await LogUtils.LogActions($"Error: Capture of stocks -> {ex.Message}");
+                await LogUtils.LogActions(PageIdentification.StocksAndDividends, $"Error: Capture of stocks -> {ex.Message}", _sessionId);
                 return await Task.FromResult<IEnumerable<DetailedStock>>(stockList);
             }
             finally{
@@ -360,7 +368,7 @@ namespace Investments.Application
                 var elapsed = clock.Elapsed;
                 var elapsedTime = string.Format("Tempo decorrido: {0:00}:{1:00}:{2:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
 
-                await LogUtils.LogActions(elapsedTime);
+                await LogUtils.LogActions(PageIdentification.StocksAndDividends, elapsedTime, _sessionId);
                 
             }
 
@@ -381,7 +389,7 @@ namespace Investments.Application
 
                 if (attempts > 10)
                 {
-                    await LogUtils.LogActions($"Error: GoToPage {ex.Message}");
+                    await LogUtils.LogActions(PageIdentification.StocksAndDividends, $"Error: GoToPage {ex.Message}", _sessionId);
                     _logger.LogError($"Error: GoToPage {ex.Message}");
                     return false;
                 }

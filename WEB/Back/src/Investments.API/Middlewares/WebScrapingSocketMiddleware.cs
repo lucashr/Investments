@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Investments.VariablesManager;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Investments.API
 {
@@ -28,17 +29,23 @@ namespace Investments.API
                 return;
             }
 
+            string sessionId = context.Request.Query["sessionId"];
+
+            var sessionContext = context.RequestServices.GetRequiredService<SessionContext>();
+            sessionContext.SessionId = sessionId;
+
             var socket = await context.WebSockets.AcceptWebSocketAsync();
-            var id = _socketManager.AddSocket(socket);
+            _socketManager.AddSocket(sessionId, socket);
 
             await Receive(socket, async (result, buffer) =>
             {
                 if (result.MessageType == WebSocketMessageType.Close)
                 {
-                    await _socketManager.RemoveSocket(id);
+                    await _socketManager.RemoveSocket(sessionId, socket);
                     return;
                 }
             });
+            
         }
 
         private async Task Receive(WebSocket socket, Action<WebSocketReceiveResult, byte[]> handleMessage)

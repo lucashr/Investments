@@ -9,5 +9,6 @@ namespace Investments.Application.Contracts
     public interface ITokenService
     {
         Task<string> CreateToken(UserUpdateDto userUpdateDto);
+        string GetUsernameFromToken(string token);
     }
 }

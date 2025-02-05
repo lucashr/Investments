@@ -4,7 +4,7 @@ using Investments.Domain.Models;
 
 namespace Investments.Persistence.Contracts
 {
-    public interface IDetailedFundPersist
+    public interface IDetailedFundPersist : IRepositoryPersist
     {
         Task<DetailedFund> GetDetailedFundByCodeAsync(string fundCode);
         Task<IEnumerable<DetailedFund>> GetAllDetailedFundsAsync();

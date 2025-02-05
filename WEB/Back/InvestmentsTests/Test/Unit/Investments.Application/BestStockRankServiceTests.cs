@@ -14,22 +14,22 @@ using Xunit;
 
 namespace InvestmentsTests.Test
 {
-    public class RankOfTheBestStocksServiceTests
+    public class BestStockRankServiceTests
     {
         private readonly Mock<IRankOfTheBestStocksPersist> _mockRankPersist;
         private readonly Mock<IDetailedStockService> _mockDetailedStockService;
         private readonly Mock<IStocksDividendService> _mockStocksDividendService;
         private readonly Mock<IMapper> _mockMapper;
-        private readonly RankOfTheBestStocksService _service;
+        private readonly BestStockRankService _service;
 
-        public RankOfTheBestStocksServiceTests()
+        public BestStockRankServiceTests()
         {
             _mockRankPersist = new Mock<IRankOfTheBestStocksPersist>();
             _mockDetailedStockService = new Mock<IDetailedStockService>();
             _mockStocksDividendService = new Mock<IStocksDividendService>();
             _mockMapper = new Mock<IMapper>();
 
-            _service = new RankOfTheBestStocksService(
+            _service = new BestStockRankService(
                 _mockRankPersist.Object,
                 _mockDetailedStockService.Object,
                 _mockStocksDividendService.Object,
@@ -71,26 +71,22 @@ namespace InvestmentsTests.Test
         [Fact]
         public async Task AddRankOfTheBestStocksAsyncShouldReturnTrue()
         {
-            // Arrange
             var detailedStocks = GetDetailedStocks(5);
-            var rankedStocks = detailedStocks.OrderByDescending(s => s.DivYield); // Simplificado para o teste
+            var rankedStocks = detailedStocks.OrderByDescending(s => s.DivYield);
 
             _mockRankPersist.Setup(s => s.AddRankOfTheBestStocksAsync(It.IsAny<IEnumerable<BestStockRank>>())).ReturnsAsync(true);
             _mockRankPersist.Setup(s => s.GetRankOfTheBestStocksAsync(15));
             _mockMapper.Setup(m => m.Map<IEnumerable<BestStockRank>>(It.IsAny<IEnumerable<DetailedStock>>()))
                     .Returns((IEnumerable<DetailedStock> stocks) => stocks.Select(s => new BestStockRank { FundCode = s.FundCode }));
 
-            // Act
             var result = await _service.AddRankOfTheBestStocksAsync(CreateBestStockRank(10));
 
-            // Assert
             result.Should().BeTrue();
         }
 
         [Fact]
         public async Task GetRankOfTheBestStocksAsyncShouldReturnRankedStocks()
         {
-            // Arrange
             var detailedStocks = GetDetailedStocks(5);
             var rankedStocks = detailedStocks.OrderByDescending(s => s.DivYield); // Simplificado para o teste
 
@@ -98,10 +94,8 @@ namespace InvestmentsTests.Test
             _mockMapper.Setup(m => m.Map<IEnumerable<BestStockRank>>(It.IsAny<IEnumerable<DetailedStock>>()))
                     .Returns((IEnumerable<DetailedStock> stocks) => stocks.Select(s => new BestStockRank { FundCode = s.FundCode }));
 
-            // Act
             var result = await _service.GetRankOfTheBestStocksAsync();
 
-            // Assert
             result.Count().Should().BeGreaterThan(0);
         }
 

@@ -34,17 +34,14 @@ namespace Investments.Tests
         [Fact]
         public async Task GetRankShouldReturnOkWhenRanksExist()
         {
-            // Arrange
             var ranks = GenerateFakeBestStockRank(25);
 
             _rankOfTheBestFundsServiceMock
                 .Setup(s => s.GetRankOfTheBestStocksAsync(25))
                 .ReturnsAsync(ranks);
 
-            // Act
             var result = await _controller.GetRank(25);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedRanks = Assert.IsAssignableFrom<IEnumerable<BestStockRank>>(okResult.Value);
             returnedRanks.Count().Should().Be(25);

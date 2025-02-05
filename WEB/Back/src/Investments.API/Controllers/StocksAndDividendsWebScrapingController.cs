@@ -46,7 +46,7 @@ namespace Investments.API.Controllers
 
             var result = await _webScrapingStocksAndDividendsService.GetStocksAsync(_cancellationTokenSource);
 
-            return result.Count() > 0 ? Ok(result) : NotFound("No stocks found.");
+            return result.Count() > 0 ? Ok(result) : NotFound(new { message = "No stocks found." });
 
         }
 
@@ -74,7 +74,7 @@ namespace Investments.API.Controllers
 
             }
             else
-                return NotFound("No stocks dividends found.");
+                return NotFound(new { message ="No stocks dividends found." });
 
         }
 

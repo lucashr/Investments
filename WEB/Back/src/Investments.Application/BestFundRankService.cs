@@ -9,7 +9,7 @@ using Investments.Persistence.Contracts;
 
 namespace Investments.Application
 {
-    public class RankOfTheBestFundsService : IRankOfTheBestFundsService
+    public class BestFundRankService : IRankOfTheBestFundsService
     {
 
         private readonly IRankOfTheBestFundsPersist _rankOfTheBestFundsPersist;
@@ -17,10 +17,10 @@ namespace Investments.Application
         private readonly IFundDividendsService _fundsDividendsService;
         private readonly IMapper _mapper;
 
-        public RankOfTheBestFundsService(IRankOfTheBestFundsPersist rankOfTheBestFundsPersist,
-                                         IDetailedFundService detailedFundService,
-                                         IFundDividendsService fundsDividendsService,
-                                         IMapper mapper)
+        public BestFundRankService(IRankOfTheBestFundsPersist rankOfTheBestFundsPersist,
+                                    IDetailedFundService detailedFundService,
+                                    IFundDividendsService fundsDividendsService,
+                                    IMapper mapper)
         {
             _rankOfTheBestFundsPersist = rankOfTheBestFundsPersist;
             _detailedFundService = detailedFundService;

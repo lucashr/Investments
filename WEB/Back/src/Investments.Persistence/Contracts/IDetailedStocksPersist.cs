@@ -5,7 +5,7 @@ using Investments.Domain.Models;
 
 namespace Investments.Persistence.Contracts
 {
-    public interface IDetailedStocksPersist
+    public interface IDetailedStocksPersist : IRepositoryPersist
     {
         Task<DetailedStock> GetDetailedStockByCodeAsync(string stockCode);
         Task<IEnumerable<DetailedStock>> GetAllDetailedStocksAsync();

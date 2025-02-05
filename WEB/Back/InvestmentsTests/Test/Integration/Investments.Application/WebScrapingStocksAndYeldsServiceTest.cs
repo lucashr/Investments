@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Investments.Application;
 using Investments.Persistence.Contexts;
 using Investments.Persistence.Contracts;
+using Investments.VariablesManager;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -17,20 +18,25 @@ namespace Investments.Tests
 
         private readonly Mock<IDetailedStocksPersist> _mockDetailedStocksPersist;
         private readonly Mock<IStockDividendPersist> _mockStocksDividendsPersist;
-        private readonly WebScrapingStocksAndDividendsService _service;
+        private readonly StocksAndDividendsWebScrapingService _service;
         private InvestmentsContext _context;
         private string DatabasePath = $"{AppDomain.CurrentDomain.BaseDirectory}/Investments.db";
-        ILogger<WebScrapingStocksAndDividendsService> logger = null;
+        ILogger<StocksAndDividendsWebScrapingService> logger = null;
         private DbContextOptions<InvestmentsContext> options;
+        private Mock<SessionContext> _mockSessionContext;
 
         public WebScrapingStocksAndDividendsServiceTest()
         {
             _mockDetailedStocksPersist = new Mock<IDetailedStocksPersist>();
             _mockStocksDividendsPersist = new Mock<IStockDividendPersist>();
-            _service = new WebScrapingStocksAndDividendsService(
+            _mockSessionContext = new Mock<SessionContext>();
+            _mockSessionContext.Object.SessionId = "abcd-derfg-achg-1234";
+
+            _service = new StocksAndDividendsWebScrapingService(
                 _mockDetailedStocksPersist.Object,
                 _mockStocksDividendsPersist.Object,
-                logger
+                logger,
+                _mockSessionContext.Object
             );
 
             options = new DbContextOptionsBuilder<InvestmentsContext>()
@@ -43,10 +49,8 @@ namespace Investments.Tests
         [Fact]
         public async Task GetStocksAsync_ShouldReturnDetailedStocks_WhenSuccessful()
         {
-            // Arrange
             var cancellationTokenSource = new CancellationTokenSource();
 
-            // Act
             var result = await _service.GetStocksAsync(cancellationTokenSource);
 
             _context.DetailedStocks.RemoveRange(_context.DetailedStocks.AsNoTracking());
@@ -55,17 +59,14 @@ namespace Investments.Tests
             _context.AddRange(result);
             await _context.SaveChangesAsync();
 
-            // Assert
             Assert.NotNull(result);
         }
 
         [Fact]
         public async Task GetFundsDividendsAsync_ShouldReturnStocksDividends_WhenSuccessful()
         {
-            // Arrange
             var cancellationTokenSource = new CancellationTokenSource();
 
-            // Act
             var result = await _service.GetStocksDividendsAsync(_context.DetailedStocks, cancellationTokenSource);
             
             _context.StocksDividends.RemoveRange(_context.StocksDividends);
@@ -74,7 +75,6 @@ namespace Investments.Tests
             _context.AddRange(result);
             await _context.SaveChangesAsync();
 
-            // Assert
             Assert.NotNull(result);
         }
     }

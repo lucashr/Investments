@@ -1,9 +1,7 @@
 using System;
-using System.Threading.Tasks;
 using Investments.Domain;
 using Investments.Domain.Identity;
 using Investments.Domain.Models;
-using Investments.Persistence.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

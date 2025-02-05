@@ -13,18 +13,18 @@ namespace Investments.Tests
 {
     public class AccountsControllerTests
     {
-        private readonly Mock<IAccountService> _accountServiceMock;
+        private readonly Mock<IAccountServiceFactory> _accountServiceMock;
         private readonly Mock<IEnderecoUsuarioService> _enderecoUsuarioServiceMock;
         private readonly Mock<ITokenService> _tokenServiceMock;
-        private readonly AccountsController _controller;
+        private readonly AccountController _controller;
 
         public AccountsControllerTests()
         {
-            _accountServiceMock = new Mock<IAccountService>();
+            _accountServiceMock = new Mock<IAccountServiceFactory>();
             _enderecoUsuarioServiceMock = new Mock<IEnderecoUsuarioService>();
             _tokenServiceMock = new Mock<ITokenService>();
 
-            _controller = new AccountsController(
+            _controller = new AccountController(
                 _accountServiceMock.Object,
                 _enderecoUsuarioServiceMock.Object,
                 _tokenServiceMock.Object
@@ -81,7 +81,6 @@ namespace Investments.Tests
         [Fact]
         public async Task UpdateUserShouldReturnOkWhenRoleIsUpdated()
         {
-            // Arrange
             var user = GenerateRandomUserDto();
             var username = user.UserName;
             var role = user.Function;
@@ -91,10 +90,8 @@ namespace Investments.Tests
             _accountServiceMock.Setup(s => s.UpdateUserRoleAsync(user.Id, role))
                 .ReturnsAsync(true);
 
-            // Act
             var result = await _controller.UpdateUser(username, role);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             okResult.Value.Should().Be("Role atualizada com sucesso!");
         }
@@ -102,17 +99,14 @@ namespace Investments.Tests
         [Fact]
         public async Task UpdateUserShouldReturnBadRequestWhenUserNotFound()
         {
-            // Arrange
             var username = "invaliduser";
             var role = "Admin";
 
             _accountServiceMock.Setup(s => s.GetUserByUserNameAsync(username))
                 .ReturnsAsync((UserUpdateDto)null);
 
-            // Act
             var result = await _controller.UpdateUser(username, role);
 
-            // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             badRequestResult.Value.Should().Be("Falha ao tentar obter usuario pelo username!");
         }
@@ -120,7 +114,6 @@ namespace Investments.Tests
         [Fact]
         public async Task RegisterShouldReturnOkWhenUserIsCreated()
         {
-            // Arrange
             var model = GenerateRandomUserDto();
 
             var createdUser = new UserDto { UserName = model.UserName };
@@ -140,10 +133,8 @@ namespace Investments.Tests
             _tokenServiceMock.Setup(s => s.CreateToken(It.IsAny<UserUpdateDto>()))
                 .ReturnsAsync("AJHSAd545616!!@$");
 
-            // Act
             var result = await _controller.Register(model);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var response = okResult.Value as RegisterResponse;
             
@@ -155,16 +146,13 @@ namespace Investments.Tests
         [Fact]
         public async Task RegisterShouldReturnBadRequestWhenUserCreationFails()
         {
-            // Arrange
             var model = GenerateRandomUserDto();
 
             _accountServiceMock.Setup(s => s.CreateAccountAsync(It.IsAny<UserDto>()))
                 .ReturnsAsync(new UserDto { UserName = null });
 
-            // Act
             var result = await _controller.Register(model);
 
-            // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             badRequestResult.Value.Should().Be("Falha ao tentar criar uma conta!");
         }
@@ -172,7 +160,6 @@ namespace Investments.Tests
         [Fact]
         public async Task LoginShouldReturnOkWhenCredentialsAreValid()
         {
-            // Arrange
             var loginDto = GenerateRandomUserLoginDto();
             var user = new UserUpdateDto { UserName = loginDto.UserName, FirstName = "Karen" };
 
@@ -184,10 +171,8 @@ namespace Investments.Tests
             _tokenServiceMock.Setup(s => s.CreateToken(It.IsAny<UserUpdateDto>()))
                 .ReturnsAsync("AJHSAd545616!!@$");
 
-            // Act
             var result = await _controller.Login(loginDto);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var response = okResult.Value as RegisterResponse;
             
@@ -199,16 +184,13 @@ namespace Investments.Tests
         [Fact]
         public async Task LoginShouldReturnUnauthorizedWhenCredentialsAreInvalid()
         {
-            // Arrange
             var loginDto = GenerateRandomUserLoginDto();
 
             _accountServiceMock.Setup(s => s.GetUserByUserNameAsync(loginDto.UserName))
                 .ReturnsAsync((UserUpdateDto)null);
 
-            // Act
             var result = await _controller.Login(loginDto);
 
-            // Assert
             var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
             unauthorizedResult.Value.Should().Be("Usuário ou senha está inválido!");
         }
