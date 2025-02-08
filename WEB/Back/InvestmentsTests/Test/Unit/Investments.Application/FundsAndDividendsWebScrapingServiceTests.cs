@@ -49,7 +49,6 @@ namespace InvestmentsTests.Test
             _mockDetailedFundPersist.Setup(d => d.AddDetailedFundsAsync(It.IsAny<IEnumerable<DetailedFund>>())).ReturnsAsync(true);
 
             var result = await _scrapingService.GetFundsAsync(cancellationTokenSource);
-
             result.Should().HaveCountGreaterThan(0);
         }
 
@@ -72,7 +71,7 @@ namespace InvestmentsTests.Test
         }
 
         [Fact]
-        public async Task DriverGetFundsDividendsAsyncShouldReturnEmptyListWhenNavigationFails()
+        public async Task DriverGetFundsDividendsAsyncShouldReturnEmptyListWhenFundNotFound()
         {
             var detailedFunds = new List<DetailedFund> { new DetailedFund { FundCode = "XPTO" } };
 

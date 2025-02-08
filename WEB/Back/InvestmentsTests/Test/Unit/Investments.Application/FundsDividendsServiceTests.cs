@@ -65,7 +65,7 @@ namespace Investments.Tests
         [Fact]
         public async Task GetFundDividendsByCodeAsync_ShouldReturnEmpty_WhenFundCodeNotFound()
         {
-            var fundCode = "UNKNOWN";
+            var fundCode = "XPTO";
             _mockFundDividendPersist
                 .Setup(repo => repo.GetFundDividendsByCodeAsync(fundCode))
                 .ReturnsAsync(new List<FundDividend>());
