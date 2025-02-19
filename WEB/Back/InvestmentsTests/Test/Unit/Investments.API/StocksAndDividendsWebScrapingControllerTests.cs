@@ -43,7 +43,7 @@ namespace Investments.Tests
 
         private List<DetailedStock> GenerateFakeStocks(int count)
         {
-            var stockFaker = new Faker<DetailedStock>()
+            var stockFaker = new Bogus.Faker<DetailedStock>()
                 .RuleFor(s => s.FundCode, f => f.Random.AlphaNumeric(6))
                 .RuleFor(s => s.PriceOnWorkingCapital, f => f.Random.Double(1, 100))
                 .RuleFor(s => s.ROE, f => f.Random.Double(1, 30));
@@ -53,7 +53,7 @@ namespace Investments.Tests
 
         private List<StockDividend> GenerateFakeDividends(int count)
         {
-            var dividendFaker = new Faker<StockDividend>()
+            var dividendFaker = new Bogus.Faker<StockDividend>()
                 .RuleFor(d => d.Id, f => f.Random.Guid().ToString())
                 .RuleFor(d => d.FundCode, f => f.Random.AlphaNumeric(6))
                 .RuleFor(d => d.Value, f => f.Random.Double(1, 100));
@@ -63,7 +63,7 @@ namespace Investments.Tests
 
         private List<BestStockRank> GenerateFakeBestStockRanks(int count)
         {
-            var rankFaker = new Faker<BestStockRank>()
+            var rankFaker = new Bogus.Faker<BestStockRank>()
                 .RuleFor(r => r.Id, f => f.Random.Guid().ToString())
                 .RuleFor(r => r.FundCode, f => f.Random.AlphaNumeric(6));
 

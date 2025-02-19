@@ -35,6 +35,7 @@ namespace InvestmentsTests.Test.Unit.Investments.Application
                 _mockLogger.Object,
                 _sessionContext
             );
+            _service.IsRunningTests = true;
         }
 
         [Fact]
@@ -73,9 +74,11 @@ namespace InvestmentsTests.Test.Unit.Investments.Application
         [Fact]
         public async Task DriverGetFundsDividendsAsyncShouldReturnEmptyListWhenStockNotFound()
         {
+
+            var cancellationTokenSource = new CancellationTokenSource();
             var detailedFunds = new List<DetailedStock> { new DetailedStock { FundCode = "XPTO" } };
 
-            var result = await _service.DriverGetStocksDividendsAsync(detailedFunds);
+            var result = await _service.GetStocksDividendsAsync(detailedFunds, cancellationTokenSource);
 
             result.Should().BeEmpty();
         }

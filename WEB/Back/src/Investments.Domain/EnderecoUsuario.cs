@@ -1,5 +1,7 @@
+using System.Text.Json.Serialization;
 using Investments.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 
 namespace Investments.Domain
 {
@@ -7,6 +9,7 @@ namespace Investments.Domain
     {
         public string Id { get; set; }
         public string UserId { get; set; }
+        [JsonPropertyName("cep")]
         public string ZipCode { get; set; }
         public string Address { get; set; }
         public string District { get; set; }

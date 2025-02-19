@@ -68,12 +68,10 @@ namespace Investments.Tests
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-
                     result.Item1 = null;
                     result.Item2 = response;
 
                     return result;
-
                 }
                     
                 var content = await response.Content.ReadAsStringAsync();

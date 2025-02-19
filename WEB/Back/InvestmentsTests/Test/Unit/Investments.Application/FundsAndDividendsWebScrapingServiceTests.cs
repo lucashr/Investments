@@ -38,16 +38,18 @@ namespace InvestmentsTests.Test
                 _mockLogger.Object,
                 _mockSessionContext.Object
             );
+
+            _scrapingService.IsRunningTests = true;
         }
 
         [Fact]
         public async Task GetFundsAsyncShouldReturnListOfDetailedFundsWhenScrapingIsSuccessful()
         {
             var cancellationTokenSource = new CancellationTokenSource();
-
             _mockDriver.Setup(d => d.FindElements(It.IsAny<By>())).Returns(new System.Collections.ObjectModel.ReadOnlyCollection<IWebElement>(new List<IWebElement>()));
             _mockDetailedFundPersist.Setup(d => d.AddDetailedFundsAsync(It.IsAny<IEnumerable<DetailedFund>>())).ReturnsAsync(true);
 
+            _scrapingService.IsRunningTests = true;
             var result = await _scrapingService.GetFundsAsync(cancellationTokenSource);
             result.Should().HaveCountGreaterThan(0);
         }

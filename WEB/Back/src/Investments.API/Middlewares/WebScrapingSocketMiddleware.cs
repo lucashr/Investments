@@ -32,6 +32,8 @@ namespace Investments.API
             string sessionId = context.Request.Query["sessionId"];
 
             var sessionContext = context.RequestServices.GetRequiredService<SessionContext>();
+            // using var scope = context.RequestServices.CreateScope();
+            // var sessionContext = scope.ServiceProvider.GetRequiredService<SessionContext>();
             sessionContext.SessionId = sessionId;
 
             var socket = await context.WebSockets.AcceptWebSocketAsync();

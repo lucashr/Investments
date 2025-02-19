@@ -1,15 +1,14 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using AutoMapper;
 using Investments.Application.Contracts;
 using Investments.Application.Dtos;
+using Investments.Application.helpers;
 using Investments.Domain;
-using Investments.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Investments.API.Controllers
 {

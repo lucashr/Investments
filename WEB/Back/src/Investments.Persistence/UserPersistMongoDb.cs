@@ -42,16 +42,21 @@ namespace Investments.Persistence
 
         public async Task<IList<string>> GetRolesAsync(string idUser)
         {
-            // Buscar as associações de roles do usuário na coleção ApplicationUserRole
+            
+            var ccc = _mongoDatabase.GetCollection<ApplicationUser>("Users");
+            var UserRolesColl = _mongoDatabase.GetCollection<ApplicationUserRole>("UserRoles");
+            List<ApplicationUser> users = await ccc.Find(_ => true).ToListAsync();
+            List<ApplicationUserRole> userRolesss = await UserRolesColl.Find(_ => true).ToListAsync();
+            // Buscar as associaï¿½ï¿½es de roles do usuï¿½rio na coleï¿½ï¿½o ApplicationUserRole
             var filter = Builders<ApplicationUserRole>.Filter.Eq(ur => ur.UserId, idUser);
             var userRoles = await _mongoDatabase.GetCollection<ApplicationUserRole>("UserRoles")
                                                 .Find(filter)
                                                 .ToListAsync();
 
-            // Obter os RoleIds de todos os documentos ApplicationUserRole associados ao usuário
+            // Obter os RoleIds de todos os documentos ApplicationUserRole associados ao usuï¿½rio
             var roleIds = userRoles.Select(ur => ur.RoleId).ToList();
 
-            // Buscar as roles associadas a esses RoleIds na coleção ApplicationRole
+            // Buscar as roles associadas a esses RoleIds na coleï¿½ï¿½o ApplicationRole
             var roleFilter = Builders<ApplicationRole>.Filter.In(role => role.Id, roleIds);
             var roles = await _mongoDatabase.GetCollection<ApplicationRole>("Roles")
                                             .Find(roleFilter)

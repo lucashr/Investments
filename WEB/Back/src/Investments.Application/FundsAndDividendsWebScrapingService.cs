@@ -12,6 +12,7 @@ using Investments.Domain.Models;
 using Investments.Persistence.Contracts;
 using Investments.VariablesManager;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver.Linq;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -23,13 +24,13 @@ namespace Investments.Application
 
         const string WEBPAGE_FUNDS = "https://www.fundamentus.com.br/fii_resultado.php";
         const string WEBPAGE_DIVIDENDS = "https://www.fundamentus.com.br/fii_proventos.php?papel";
-        IWebDriver _driver;
         IDetailedFundPersist _detailedFundPersist;
         IFundDividendPersist _fundDividendPersist;
         CancellationTokenSource _cancellationTokenSource;
         ILogger _logger;
         SessionContext _sessionContext;
         string _sessionId;
+        public bool IsRunningTests = false;
 
         public FundsAndDividendsWebScrapingService(IDetailedFundPersist detailedFundPersist,
                                                    IFundDividendPersist fundsDividendsPersist,
@@ -40,7 +41,6 @@ namespace Investments.Application
             _detailedFundPersist = detailedFundPersist;
             _fundDividendPersist = fundsDividendsPersist;
             _logger = logger;
-            _driver = WebDriverSelenium.ConfigDriver();
             _sessionId = _sessionContext.SessionId;
         }
 
@@ -96,7 +96,9 @@ namespace Investments.Application
 
             await LogUtils.LogActions(PageIdentification.FundsAndDividends, "Started: Capture of FIIs", _sessionId);
 
-            bool navigateOK = await GoToPage(WEBPAGE_FUNDS);
+            using IWebDriver _driver = WebDriverSelenium.ConfigDriver();
+
+            bool navigateOK = await GoToPage(_driver, WEBPAGE_FUNDS);
 
             if (!navigateOK)
                         return Enumerable.Empty<DetailedFund>();
@@ -115,7 +117,7 @@ namespace Investments.Application
 
             try
             {
-
+                
                 if(AbortarProcesso())
                         return Enumerable.Empty<DetailedFund>();
                         
@@ -125,12 +127,13 @@ namespace Investments.Application
 
                 var rows = _driver.FindElements(By.XPath("//*[@id='tabelaResultado']/tbody/tr"));
 
-                #if DEBUG
-                    int numberOfLines = 10;
-                #else
-                int numberOfLines = rows.Count;
-                #endif
+                int numberOfLines = 0;
 
+                if(IsRunningTests)
+                    numberOfLines = 10;
+                else
+                    numberOfLines = rows.Count;
+                    
                 Console.WriteLine($"Total de linhas {numberOfLines}");
 
                 var columns = _driver.FindElements(By.XPath("//*[@id='tabelaResultado']/thead/tr/th"));
@@ -212,8 +215,8 @@ namespace Investments.Application
                 return await Task.FromResult<IEnumerable<DetailedFund>>(detailedFunds);
             }
             finally{
-                _driver.Quit();
-
+                if(_driver != null)
+                    _driver.Close();
                 var elapsed = clock.Elapsed;
                 var elapsedTime = string.Format("Tempo decorrido: {0:00}:{1:00}:{2:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
                 await LogUtils.LogActions(PageIdentification.FundsAndDividends, elapsedTime, _sessionId);
@@ -235,9 +238,11 @@ namespace Investments.Application
             };
 
             int totalOfColumnExpected = orderColumnTableOfFunds.Count;
-
+            using IWebDriver _driver = WebDriverSelenium.ConfigDriver();
+            
             try
             {
+
                 await VariablesManager.ConectionsWebSocket.socketManager.SendMessageAsync(_sessionId, JsonConvert.SerializeObject("Started: Capture Dividends Funds"));
 
                 var fundsDividendsTmp = new List<FundDividend>();
@@ -249,7 +254,7 @@ namespace Investments.Application
                     if(AbortarProcesso())
                         return Enumerable.Empty<FundDividend>();
                     
-                    bool navigateOK = await GoToPage($"{WEBPAGE_DIVIDENDS}={fund.FundCode}");
+                    bool navigateOK = await GoToPage(_driver, $"{WEBPAGE_DIVIDENDS}={fund.FundCode}");
 
                     if (!navigateOK)
                         return Enumerable.Empty<FundDividend>();
@@ -322,6 +327,7 @@ namespace Investments.Application
                         };
 
                         await LogUtils.LogActions(PageIdentification.FundsAndDividends, fundDividends, _sessionId);
+
                         fundsDividendsTmp.Add(fundDividends);
 
                     }
@@ -347,9 +353,8 @@ namespace Investments.Application
                 return await Task.FromResult<IEnumerable<FundDividend>>(Enumerable.Empty<FundDividend>());
             }
             finally{
-
-                _driver.Quit();
-
+                if(_driver != null)
+                    _driver.Close();
                 var elapsed = clock.Elapsed;
                 var elapsedTime = string.Format("Tempo decorrido: {0:00}:{1:00}:{2:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
 
@@ -358,7 +363,7 @@ namespace Investments.Application
             }
         }
 
-        public async Task<bool> GoToPage(string linkPage)
+        public async Task<bool> GoToPage(IWebDriver _driver, string linkPage)
         {
 
             int attempts = 0;
@@ -380,7 +385,7 @@ namespace Investments.Application
                     
                 attempts++;
 
-                return await GoToPage(linkPage);
+                return await GoToPage(_driver, linkPage);
                 
             }
         }

@@ -1,13 +1,10 @@
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Investments.Application.Contracts;
-using Investments.Domain.Identity;
 using Investments.VariablesManager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson.IO;
 
 namespace Investments.API.Controllers
 {
@@ -63,6 +60,9 @@ namespace Investments.API.Controllers
                 return Ok();
 
             var detailedFunds = await _detailedFundService.GetAllDetailedFundsAsync();
+
+            if(detailedFunds.Any() == false)
+                return NotFound();
 
             var dividends = await _webScrapingFundsAndDividends.GetFundDividendsAsync(detailedFunds, _cancellationTokenSource);
             

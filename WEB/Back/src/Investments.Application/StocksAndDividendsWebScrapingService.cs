@@ -33,6 +33,7 @@
             IHttpContextAccessor _httpContextAccessor;
             SessionContext _sessionContext;
             string _sessionId;
+            public bool IsRunningTests = false;
 
             public StocksAndDividendsWebScrapingService(IDetailedStocksPersist detailedStocksPersist,
                                                         IStockDividendPersist stocksDividendsPersist,
@@ -136,7 +137,13 @@
                             continue;
 
                         var rows = _driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr"));
-                        int numberOfLines = rows.Count;
+                        
+                        int numberOfLines = 0;
+                
+                        if(IsRunningTests)
+                            numberOfLines = 10;
+                        else
+                            numberOfLines = rows.Count;
 
                         Console.WriteLine($"Total de linhas {numberOfLines}");
 
@@ -270,11 +277,10 @@
 
                     wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//*[@id='resultado']/tbody/tr")));
 
-                    #if DEBUG
+                    if(IsRunningTests)
                         totalRows = new ReadOnlyCollection<IWebElement>(_driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr")).Take(10).ToList());
-                    #else
+                    else
                         totalRows = new ReadOnlyCollection<IWebElement>(_driver.FindElements(By.XPath("//*[@id='resultado']/tbody/tr")).ToList());
-                    #endif
 
                     Console.WriteLine($"Total de linhas {totalRows.Count}");
 

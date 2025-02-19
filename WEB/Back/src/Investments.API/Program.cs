@@ -1,25 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace Investments.API
 {
-    public class Program
+    public partial class Program
     {
         public static void Main(string[] args)
         {
 
             Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Debug() // Define o nível mínimo de log
+                    .MinimumLevel.Debug() // Define o nï¿½vel mï¿½nimo de log
                     .WriteTo.Console()    // Escreve logs no console
                     .WriteTo.Seq("http://localhost:5341") // Envia logs para o Seq
-                    .Enrich.FromLogContext() // Enriquecimento automático de logs
+                    .Enrich.FromLogContext() // Enriquecimento automï¿½tico de logs
                     .CreateLogger();
 
             CreateHostBuilder(args).Build().Run();

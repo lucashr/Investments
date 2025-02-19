@@ -65,30 +65,26 @@ namespace Investments.Tests.Test.Cep.awesomeapi.UnitTest
             var url = $"{ApiCotacao}/{moeda}";
             (Dictionary<string, Moeda>, HttpResponseMessage) result = (null, null);
 
-            using (var client = new HttpClient())
+            using var client = new HttpClient();
+
+            HttpResponseMessage response = await client.GetAsync(url);
+
+            if (response.StatusCode != HttpStatusCode.OK)
             {
-
-                HttpResponseMessage response = await client.GetAsync(url);
-
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-
-                    result.Item1 = null;
-                    result.Item2 = response;
-
-                    return result;
-
-                }
-
-                var content = await response.Content.ReadAsStringAsync();
-
-                result.Item1 = JsonSerializer.Deserialize<Dictionary<string, Moeda>> (content, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-
+                result.Item1 = null;
                 result.Item2 = response;
+
+                return result;
             }
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            result.Item1 = JsonSerializer.Deserialize<Dictionary<string, Moeda>> (content, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            result.Item2 = response;
 
             return result;
         }

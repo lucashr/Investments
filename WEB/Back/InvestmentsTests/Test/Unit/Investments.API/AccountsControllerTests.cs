@@ -33,7 +33,7 @@ namespace Investments.Tests
 
         private UserDto GenerateRandomUserDto()
         {
-            var faker = new Faker<UserDto>()
+            var faker = new Bogus.Faker<UserDto>()
                 .RuleFor(u => u.Id, f => f.Internet.Random.GetHashCode().ToString())
                 .RuleFor(u => u.UserName, f => f.Internet.UserName())
                 .RuleFor(u => u.FirstName, f => f.Name.FirstName())
@@ -52,7 +52,7 @@ namespace Investments.Tests
 
         private UserUpdateDto GenerateRandomUserUpdateDto()
         {
-            var faker = new Faker<UserUpdateDto>()
+            var faker = new Bogus.Faker<UserUpdateDto>()
                 .RuleFor(u => u.Id, f => f.Internet.Random.GetHashCode().ToString())
                 .RuleFor(u => u.UserName, f => f.Internet.UserName())
                 .RuleFor(u => u.FirstName, f => f.Name.FirstName())
@@ -71,7 +71,7 @@ namespace Investments.Tests
 
         private UserLoginDto GenerateRandomUserLoginDto()
         {
-            var faker = new Faker<UserLoginDto>()
+            var faker = new Bogus.Faker<UserLoginDto>()
                 .RuleFor(u => u.UserName, f => f.Internet.UserName())
                 .RuleFor(u => u.Password, f => f.Internet.Password());
 

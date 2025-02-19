@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Investments.Application.Contracts;
 using Investments.Application.Dtos;
+using Investments.Application.helpers;
 using Investments.Domain;
 using Investments.Domain.Identity;
 using Investments.Persistence.Contracts;
@@ -47,6 +49,36 @@ namespace Investments.Application.Factory
         public async Task<UserDto> CreateAccountAsync(UserDto userDto)
         {
             UserDto userToReturn = null;
+
+            // string erro = string.Empty;
+            // var config = new MapperConfiguration(cfg =>
+            // {
+            //     cfg.AddProfile<InvestmentsProfile>();
+            // });
+
+            // try
+            // {
+            //     config.AssertConfigurationIsValid();
+            // }
+            // catch (AutoMapperConfigurationException ex)
+            // {
+            //     foreach (var error in ex.Errors)
+            //     {
+
+            //         Debug.WriteLine($"Erro: {error.TypeMap.Types} -> ");
+            //         erro = string.Empty;
+            //         foreach (var item in error.UnmappedPropertyNames)
+            //         {
+            //             if(erro == "")
+            //                 erro = item;
+            //             else
+            //                 erro = string.Concat(erro, ", ", item);
+
+            //             Debug.WriteLine($"Erro: {error.TypeMap} -> ");
+            //         }
+            //     }
+            //     throw;
+            // }
 
             var user = _mapper.Map<ApplicationUser>(userDto);
             var result = await _userManager.CreateAsync(user, userDto.Password);

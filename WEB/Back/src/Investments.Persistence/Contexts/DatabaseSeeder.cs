@@ -1,7 +1,9 @@
 ﻿using Investments.Domain;
 using Investments.Domain.Models;
 using Microsoft.AspNetCore.Identity;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,6 +18,12 @@ namespace Investments.Persistence.Contexts
         private static IMongoDatabase _database;
         private static IMongoClient _mongoClient;
 
+        private static List<string> collectionsMongoDb = new List<string>
+        { 
+            "DetailedFunds", "FundDividends", "BestFundRanks", "UserAddresses",
+            "DetailedStocks", "StockDividends", "BestStockRanks", "Users"
+        };
+
         public static async Task SeedAsync(IMongoDatabase database, IMongoClient mongoClient)
         {
 
@@ -24,7 +32,8 @@ namespace Investments.Persistence.Contexts
 
             if(await DatabaseExists())
                 return;
-
+            
+            CreateCollections();
             CreateIndexs();
 
             var users = await SeedUsersAsync();
@@ -34,10 +43,35 @@ namespace Investments.Persistence.Contexts
 
         private async static Task<bool> DatabaseExists()
         {
-            var databases = await _mongoClient.ListDatabaseNamesAsync();
-            var databaseList = await databases.ToListAsync();
 
-            return databaseList.Where(x => x == "InvestmentsDb").Any();
+            var database = _mongoClient.GetDatabase("InvestmentsDb");
+            var collections = database.ListCollectionNames().ToList();
+
+            if(!collections.Contains("InvestmentsDb"))
+            {
+                _database.CreateCollection("InvestmentsDb");
+                return false;
+            }
+
+            return true;
+
+        }
+
+        private static void CreateCollections()
+        {
+            // var database = _mongoClient.GetDatabase("InvestmentsDb");
+            var collections = _database.ListCollectionNames().ToList();
+            var collectionsToCreate = new List<string>();
+
+            if(collections.ToList().Any() == false)
+                collectionsToCreate.AddRange(collectionsMongoDb);
+            else
+                collectionsToCreate.AddRange(collectionsMongoDb.Except(collections.ToList()));
+
+            foreach (var collection in collectionsToCreate)
+            {
+                _database.CreateCollection(collection);
+            }
 
         }
 
@@ -59,9 +93,10 @@ namespace Investments.Persistence.Contexts
                 };
 
                 await rolesCollection.InsertManyAsync(allRoles);
+                
             }
 
-            foreach (var user in allUsers)
+            foreach (var user in users)
             {
                 var rolesToAssign = allRoles.Where(role => string.Equals(role.Name, user.UserName, StringComparison.OrdinalIgnoreCase));
 
@@ -83,6 +118,9 @@ namespace Investments.Persistence.Contexts
                     }
                 }
             }
+            // var roleee = await rolesCollection.Find(Builders<ApplicationRole>.Filter.Empty).ToListAsync();
+            // var usersX= await usersCollection.Find(Builders<ApplicationUser>.Filter.Empty).ToListAsync();
+            // var ApplicationRole = await rolesCollection.Find(Builders<ApplicationRole>.Filter.Empty).ToListAsync();
         }
 
 
@@ -90,7 +128,7 @@ namespace Investments.Persistence.Contexts
         {
             var usersCollection = _database.GetCollection<ApplicationUser>("Users");
             var users = new List<ApplicationUser>();
-            string userRoleId = Guid.NewGuid().ToString("D");
+            // string userRoleId = Guid.NewGuid().ToString("D");
             string idUserAdmin = Guid.NewGuid().ToString("D");
             string idUser = Guid.NewGuid().ToString("D");
 
@@ -138,46 +176,63 @@ namespace Investments.Persistence.Contexts
         private static void CreateIndexs()
         {
 
-            var collectionDetailedFund = _database.GetCollection<DetailedFund>("DetailedFunds");
+            var collectionDetailedFund = _database.GetCollection<DetailedFund>(
+                                            collectionsMongoDb.Where(x => x.Contains("DetailedFund")).First());
+
             var indexKeysDetailedFund = Builders<DetailedFund>.IndexKeys.Ascending(u => u.FundCode);
             var indexOptionsDetailedFund = new CreateIndexOptions { Unique = true };
             var indexModelDetailedFund = new CreateIndexModel<DetailedFund>(indexKeysDetailedFund, indexOptionsDetailedFund);
+
             collectionDetailedFund.Indexes.CreateOne(indexModelDetailedFund);
 
-            var collectionFundDividend = _database.GetCollection<FundDividend>("FundDividends");
+            var collectionFundDividend = _database.GetCollection<FundDividend>(
+                                            collectionsMongoDb.Where(x => x.Contains("FundDividend")).First());
+            
             var indexKeysFundDividend = Builders<FundDividend>.IndexKeys.Ascending(u => u.FundCode);
             var indexModelFundDividend = new CreateIndexModel<FundDividend>(indexKeysFundDividend);
             collectionFundDividend.Indexes.CreateOne(indexModelFundDividend);
 
-            var collectionBestFundRank = _database.GetCollection<BestFundRank>("BestFundRanks");
+            var collectionBestFundRank = _database.GetCollection<BestFundRank>(
+                                            collectionsMongoDb.Where(x => x.Contains("BestFundRank")).First());
+            
             var indexKeysBestFundRank = Builders<BestFundRank>.IndexKeys.Ascending(u => u.FundCode);
             var indexOptionsBestFundRank = new CreateIndexOptions { Unique = true };
             var indexModelBestFundRank = new CreateIndexModel<BestFundRank>(indexKeysBestFundRank, indexOptionsBestFundRank);
             collectionBestFundRank.Indexes.CreateOne(indexModelBestFundRank);
 
-            var collectionUserAddress = _database.GetCollection<UserAddress>("UserAddresses");
+            var collectionUserAddress = _database.GetCollection<UserAddress>(
+                                            collectionsMongoDb.Where(x => x.Contains("UserAddress")).First());
+            
             var indexKeysUserAddress = Builders<UserAddress>.IndexKeys.Ascending(u => u.UserId);
             var indexOptionsUserAddress = new CreateIndexOptions { Unique = true };
             var indexModelUserAddress = new CreateIndexModel<UserAddress>(indexKeysUserAddress, indexOptionsUserAddress);
             collectionUserAddress.Indexes.CreateOne(indexModelUserAddress);
 
-            var collectionDetailedStock = _database.GetCollection<DetailedStock>("DetailedStocks");
+            var collectionDetailedStock = _database.GetCollection<DetailedStock>(
+                                            collectionsMongoDb.Where(x => x.Contains("DetailedStock")).First());
+            
             var indexKeysDetailedStock = Builders<DetailedStock>.IndexKeys.Ascending(u => u.FundCode);
             var indexOptionsDetailedStock = new CreateIndexOptions { Unique = true };
             var indexModelDetailedStock = new CreateIndexModel<DetailedStock>(indexKeysDetailedStock, indexOptionsDetailedStock);
             collectionDetailedStock.Indexes.CreateOne(indexModelDetailedStock);
            
-            var collectionStockDividend = _database.GetCollection<StockDividend>("StocksDividends");
+            var collectionStockDividend = _database.GetCollection<StockDividend>(
+                                            collectionsMongoDb.Where(x => x.Contains("StockDividend")).First());
+
             var indexKeysStockDividend = Builders<StockDividend>.IndexKeys.Ascending(u => u.FundCode);
             var indexModelStockDividend = new CreateIndexModel<StockDividend>(indexKeysStockDividend);
             collectionStockDividend.Indexes.CreateOne(indexModelStockDividend);
 
-            var collectionBestStockRank = _database.GetCollection<BestStockRank>("BestStockRanks");
+            var collectionBestStockRank = _database.GetCollection<BestStockRank>(
+                                            collectionsMongoDb.Where(x => x.Contains("BestStockRank")).First());
+            
             var indexKeysBestStockRank = Builders<BestStockRank>.IndexKeys.Ascending(u => u.FundCode);
             var indexModelBestStockRank = new CreateIndexModel<BestStockRank>(indexKeysBestStockRank);
             collectionBestStockRank.Indexes.CreateOne(indexModelBestStockRank);
 
-            var collectionApplicationUser = _database.GetCollection<ApplicationUser>("Users");
+            var collectionApplicationUser = _database.GetCollection<ApplicationUser>(
+                                                collectionsMongoDb.Where(x => x.Contains("Users")).First());
+            
             var indexKeysApplicationUser = Builders<ApplicationUser>.IndexKeys.Ascending(u => u.UserName);
             var indexOptionsApplicationUser = new CreateIndexOptions { Unique = true };
             var indexModelApplicationUser = new CreateIndexModel<ApplicationUser>(indexKeysApplicationUser, indexOptionsApplicationUser);
