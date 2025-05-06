@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>be0cdd60-337f-4ad8-b0aa-a8be5ce5d7b6</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,7 +42,7 @@
     <PackageReference Include="MongoDB.Driver" Version="2.30.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="RestSharp" Version="112.1.0" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="131.0.6778.6900" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="134.0.6998.9000" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
     <PackageReference Include="Serilog.Sinks.Seq" Version="6.0.0" />
