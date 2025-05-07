@@ -83,6 +83,7 @@ namespace Investments.Persistence.Contexts
                 string adminRoleId = Guid.NewGuid().ToString("D");
                 string userRoleId = Guid.NewGuid().ToString("D");
                 string adminUserId = Guid.NewGuid().ToString("D");
+                string userId = Guid.NewGuid().ToString("D");
 
                 // Inserir roles
                 modelBuilder.Entity<Role>().HasData(
@@ -106,9 +107,17 @@ namespace Investments.Persistence.Contexts
 
                 modelBuilder.Entity<User>().HasData(adminUser);
 
+                var userRole = new UserRole
+                {
+                    UserId = adminUserId,
+                    RoleId = adminRoleId
+                };
+
+                modelBuilder.Entity<UserRole>().HasData(userRole);
+
                 var user = new User
                 {
-                    Id = adminUserId,
+                    Id = userId,
                     UserName = "user",
                     NormalizedUserName = "USER",
                     Email = "user@example.com",
@@ -121,12 +130,12 @@ namespace Investments.Persistence.Contexts
 
                 modelBuilder.Entity<User>().HasData(user);
 
-                var userRole = new UserRole
-                {
-                    UserId = adminUserId,
-                    RoleId = adminRoleId
-                };
-
+                 userRole = new UserRole
+                 {
+                     UserId = userId,
+                     RoleId = userRoleId
+                 };
+                
                 modelBuilder.Entity<UserRole>().HasData(userRole);
 
             }
