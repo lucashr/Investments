@@ -106,6 +106,21 @@ namespace Investments.Persistence.Contexts
 
                 modelBuilder.Entity<User>().HasData(adminUser);
 
+                var user = new User
+                {
+                    Id = adminUserId,
+                    UserName = "user",
+                    NormalizedUserName = "USER",
+                    Email = "user@example.com",
+                    NormalizedEmail = "USER@EXAMPLE.COM",
+                    EmailConfirmed = true,
+                    PasswordHash = new PasswordHasher<User>().HashPassword(null, "user"),
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                    ConcurrencyStamp = Guid.NewGuid().ToString("D")
+                };
+
+                modelBuilder.Entity<User>().HasData(user);
+
                 var userRole = new UserRole
                 {
                     UserId = adminUserId,
