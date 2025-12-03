@@ -11,10 +11,14 @@ namespace Investments.Application
     {
 
         private readonly IDetailedFundPersist _detailedFundPersist;
+        private readonly ICacheService _cache;
+        private const string AllFundsCacheKey = "All_Detailed_Funds";
+        private static readonly TimeSpan CacheExpiration = TimeSpan.FromHours(1);
 
-        public DetailedFundService(IDetailedFundPersist detailedFundPersist)
+        public DetailedFundService(IDetailedFundPersist detailedFundPersist, ICacheService cache)
         {
             _detailedFundPersist = detailedFundPersist;
+            _cache = cache;
         }
 
         public async Task<bool> AddDetailedFundsAsync(IEnumerable<DetailedFund> detailedFunds)
@@ -24,7 +28,12 @@ namespace Investments.Application
 
         public async Task<IEnumerable<DetailedFund>> GetAllDetailedFundsAsync()
         {
-            return await _detailedFundPersist.GetAllDetailedFundsAsync();
+            var cached = await _cache.GetRecordAsync<IEnumerable<DetailedFund>>(AllFundsCacheKey);
+            if (cached is not null) return cached;
+            
+            var funds = await _detailedFundPersist.GetAllDetailedFundsAsync();
+            await _cache.SetRecordAsync(AllFundsCacheKey, funds, CacheExpiration);
+            return funds;
         }
 
         public async Task<DetailedFund> GetDetailedFundByCodeAsync(string fundCode)

@@ -6,6 +6,7 @@ using AutoMapper;
 using Investments.Application.Contracts;
 using Investments.Domain.Models;
 using Investments.Persistence.Contracts;
+ 
 
 namespace Investments.Application
 {
@@ -16,16 +17,19 @@ namespace Investments.Application
         private readonly IDetailedFundService _detailedFundService;
         private readonly IFundDividendsService _fundsDividendsService;
         private readonly IMapper _mapper;
+        private readonly ICacheService _cache;
 
         public BestFundRankService(IRankOfTheBestFundsPersist rankOfTheBestFundsPersist,
                                     IDetailedFundService detailedFundService,
                                     IFundDividendsService fundsDividendsService,
-                                    IMapper mapper)
+                                    IMapper mapper,
+                                    ICacheService cache)
         {
             _rankOfTheBestFundsPersist = rankOfTheBestFundsPersist;
             _detailedFundService = detailedFundService;
             _fundsDividendsService = fundsDividendsService;
             _mapper = mapper;
+            _cache = cache;
         }
 
         public async Task<bool> AddRankOfTheBestFundsAsync(IEnumerable<BestFundRank> rankOfTheBestFunds)
@@ -118,7 +122,27 @@ namespace Investments.Application
 
         public async Task<IEnumerable<BestFundRank>> GetRankOfTheBestFundsAsync(int? totalFundsInRank = null)
         {
-            return await _rankOfTheBestFundsPersist.GetRankOfTheBestFundsAsync(totalFundsInRank);;
+            IEnumerable<BestFundRank> rank;
+            var rankCache = await _cache.GetRecordAsync<IEnumerable<BestFundRank>>("Best_Funds_Rank");
+
+            if (rankCache != null && rankCache.Any())
+            {
+                if (totalFundsInRank > rankCache.Count())
+                {
+                    rank = await _rankOfTheBestFundsPersist.GetRankOfTheBestFundsAsync(totalFundsInRank > 0 ? totalFundsInRank : null);
+                }
+                else
+                {
+                    rank = rankCache.Take((int)(totalFundsInRank > 0 ? totalFundsInRank : rankCache.Count()));
+                }
+            }
+            else
+            {
+                rank = await _rankOfTheBestFundsPersist.GetRankOfTheBestFundsAsync(totalFundsInRank > 0 ? totalFundsInRank : null);
+                await _cache.SetRecordAsync("Best_Funds_Rank", rank);
+            }   
+
+            return rank;
         }
 
     }

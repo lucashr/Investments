@@ -32,6 +32,9 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Serilog;
+using StackExchange.Redis;
+using Investments.API.Services.Cache;
+
 
 namespace Investments.API
 {
@@ -40,6 +43,7 @@ namespace Investments.API
         public static void AddServices(IServiceCollection services, IConfiguration Configuration)
         {
 
+            AddCacheRedis(services, Configuration);
             AddDatabaseServices(services, Configuration);
 
             services.AddControllers()
@@ -119,6 +123,36 @@ namespace Investments.API
 
         }
 
+        private static void AddCacheRedis(IServiceCollection services, IConfiguration Configuration)
+        { 
+            // Register Redis connection multiplexer (if needed elsewhere)
+            services.AddSingleton<IConnectionMultiplexer>(sp =>
+                ConnectionMultiplexer.Connect(Configuration.GetValue<string>("Redis:Configuration") ?? "localhost:6379"));
+
+            // Register distributed Redis cache
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = Configuration.GetValue<string>("Redis:Configuration") ?? "localhost:6379";
+                options.InstanceName = Configuration.GetValue<string>("Redis:InstanceName") ?? "MyApp_";
+            });
+
+            // Register in-memory cache
+            services.AddMemoryCache();
+
+            // Register concrete cache services
+            services.AddSingleton<DistributedCacheService>();
+            services.AddSingleton<MemoryCacheService>();
+
+            // Register ICacheService selecting implementation from configuration (Cache:Provider = "Memory"|"Redis")
+            services.AddSingleton<Investments.Application.Contracts.ICacheService>(sp =>
+            {
+                var provider = Configuration.GetValue<string>("Cache:Provider");
+                if (!string.IsNullOrEmpty(provider) && provider.Equals("Memory", StringComparison.OrdinalIgnoreCase))
+                    return sp.GetRequiredService<MemoryCacheService>();
+                return sp.GetRequiredService<DistributedCacheService>();
+            });
+
+        }
         private static void AddSwaggerServices(IServiceCollection services, IConfiguration Configuration)
         {
             services.AddSwaggerGen(options =>
@@ -274,10 +308,10 @@ namespace Investments.API
                     options.Password.RequireUppercase = false;
                     options.Password.RequiredLength = 0;
                 })
-                .AddRoles<Role>()
-                .AddRoleManager<RoleManager<Role>>()
-                .AddSignInManager<SignInManager<User>>()
-                .AddRoleValidator<RoleValidator<Role>>()
+                .AddRoles<Domain.Identity.Role>()
+                .AddRoleManager<RoleManager<Domain.Identity.Role>>()
+                .AddSignInManager<SignInManager<Domain.Identity.User>>()
+                .AddRoleValidator<RoleValidator<Domain.Identity.Role>>()
                 .AddEntityFrameworkStores<InvestmentsContext>()
                 .AddDefaultTokenProviders();
 

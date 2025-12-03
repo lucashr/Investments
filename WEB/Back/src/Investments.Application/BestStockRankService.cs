@@ -19,16 +19,21 @@ namespace Investments.Application
         private readonly IDetailedStockService _detailedStocksService;
         private readonly IStocksDividendService _stocksDividendsService;
         private readonly IMapper _mapper;
+        private readonly ICacheService _cache;
+        private const string BestStockRankCacheKey = "Best_Stocks_Rank";
+        private static readonly TimeSpan CacheExpiration = TimeSpan.FromHours(2);
 
         public BestStockRankService(IRankOfTheBestStocksPersist rankOfTheBestStocksPersist,
                                     IDetailedStockService detailedStocksService,
                                     IStocksDividendService stocksDividendsService,
-                                    IMapper mapper)
+                                    IMapper mapper,
+                                    ICacheService cache)
         {
             _rankOfTheBestStocksPersist = rankOfTheBestStocksPersist;
             _detailedStocksService = detailedStocksService;
             _stocksDividendsService = stocksDividendsService;
             _mapper = mapper;
+            _cache = cache;
         }
 
         /*
@@ -82,6 +87,10 @@ namespace Investments.Application
 
         public async Task<IEnumerable<BestStockRank>> GetRankOfTheBestStocksAsync(int totalStocksRank = 0)
         {
+            var cacheKey = $"{BestStockRankCacheKey}_{totalStocksRank}";
+            var cached = await _cache.GetRecordAsync<IEnumerable<BestStockRank>>(cacheKey);
+            if (cached is not null) return cached;
+
             var stocks = await _detailedStocksService.GetAllDetailedStocksAsync();
             stocks = FilterStocks(stocks);
             
@@ -100,9 +109,11 @@ namespace Investments.Application
                                           .Select(stock => stock.Stock)
                                           .Take(totalStocksRank > 0 ? totalStocksRank : stockScores.Count());
 
-            var result = _mapper.Map<IEnumerable<BestStockRank>>(rankedStocks);  
-                    
-            return  result;
+            var result = _mapper.Map<IEnumerable<BestStockRank>>(rankedStocks);
+            
+            await _cache.SetRecordAsync(cacheKey, result, CacheExpiration);
+            
+            return result;
 
         }
 

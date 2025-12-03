@@ -26,6 +26,8 @@ namespace Investments.Application.Utils
 
             Console.WriteLine(jsonMessage);
             Debug.WriteLine(jsonMessage);
+
+            if(string.IsNullOrEmpty(sessionId)) return;
             
             if(toAllSessions)
                 await VariablesManager.ConectionsWebSocket.socketManager.SendMessageToAllAsync(sessionId, $"{jsonMessage}");

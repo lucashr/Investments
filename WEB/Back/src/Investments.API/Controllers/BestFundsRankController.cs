@@ -1,10 +1,12 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Investments.API.Extensions;
 using Investments.Application.Contracts;
+using Investments.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
 namespace Investments.API.Controllers
 {
     [Authorize]
@@ -20,11 +22,11 @@ namespace Investments.API.Controllers
             _rankOfTheBestFundsService = rankOfTheBestFundsService;
         }
 
-        [HttpGet("GetRank/{quantity}")]
+        [HttpGet("GetRank")]
         [Authorize(policy: "Admin")]
-        public async Task<IActionResult> GetRank(int? quantity = null)
+        public async Task<IActionResult> GetRank([FromQuery] int quantity = 0)
         {
-            var rank = await _rankOfTheBestFundsService.GetRankOfTheBestFundsAsync(quantity);
+            IEnumerable<BestFundRank> rank; rank = await _rankOfTheBestFundsService.GetRankOfTheBestFundsAsync(quantity > 0 ? quantity : null);  
             return rank.Any() ? Ok(rank) : NotFound("No rank found");
         }
 

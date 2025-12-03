@@ -12,15 +12,24 @@ namespace Investments.Application
     {
 
         private readonly IFundDividendPersist _fundsDividendsPersist;
+        private readonly ICacheService _cache;
+        private const string AllFundDividendsCacheKey = "All_Fund_Dividends";
+        private static readonly TimeSpan CacheExpiration = TimeSpan.FromHours(1);
 
-        public FundsDividendsService(IFundDividendPersist fundsDividendsPersist)
+        public FundsDividendsService(IFundDividendPersist fundsDividendsPersist, ICacheService cache)
         {
             _fundsDividendsPersist = fundsDividendsPersist;
+            _cache = cache;
         }
 
         public async Task<IEnumerable<FundDividend>> GetAllFundsDividendsAsync()
         {
-            return await _fundsDividendsPersist.GetAllFundsDividendsAsync();
+            var cached = await _cache.GetRecordAsync<IEnumerable<FundDividend>>(AllFundDividendsCacheKey);
+            if (cached is not null) return cached;
+            
+            var dividends = await _fundsDividendsPersist.GetAllFundsDividendsAsync();
+            await _cache.SetRecordAsync(AllFundDividendsCacheKey, dividends, CacheExpiration);
+            return dividends;
         }
 
         public async Task<IEnumerable<FundDividend>> GetFundDividendsByCodeAsync(string fundCode)
